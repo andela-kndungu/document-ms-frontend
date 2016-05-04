@@ -6,7 +6,7 @@
   var request = require('supertest');
   var loginHelper = require('./helpers/login');
 
-  var adminToken;
+  var adminToken, adminId;
 
   describe('Users', function() {
     // Uncomment when ready
@@ -16,6 +16,7 @@
     //       throw error;
     //     } else {
     //       adminToken = res.body.token;
+    //       adminId = res.body.id;
     //     }
     //     done();
     //   });
@@ -52,6 +53,44 @@
             res.status.should.equal(200);
             res.body.success.should.equal(true);
             (res.body.message).should.containEql('created successfully');
+            done();
+          });
+      });
+      it('requires an email to be provided', function(done) {
+        request(app)
+          .post('/users')
+          .send({
+            username: 'uniquename',
+            firstName: 'Unique',
+            lastName: 'Name',
+            password: 'uniquePass',
+            role: 'user'
+          })
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            should.not.exist(error);
+            res.status.should.equal(400);
+            (res.body.success).should.equal(false);
+            (res.body.message).should.containEql('Email must be provided');
+            done();
+          });
+      });
+      it('requires a username to be provided', function(done) {
+        request(app)
+          .post('/users')
+          .send({
+            email: 'unique@email.com',
+            firstName: 'Unique',
+            lastName: 'Name',
+            password: 'uniquePass',
+            role: 'user'
+          })
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            should.not.exist(error);
+            res.status.should.equal(400);
+            (res.body.success).should.equal(false);
+            (res.body.message).should.containEql('Username must be provided');
             done();
           });
       });
@@ -149,6 +188,20 @@
             res.status.should.equal(400);
             (res.body.success).should.equal(false);
             (res.body.message).should.containEql('Role must be provided');
+            done();
+          });
+      });
+    });
+    describe('Returns all documents created by a user', function() {
+      it('responds with an array of all user\'s documents', function(done) {
+        request(app)
+          .get('/users/adminId/documents')
+          .set('x-access-token', adminToken)
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            should.not.exist(error);
+            (res.body).should.be.an.Array;
+            should(res.body.length).be.exactly(3);
             done();
           });
       });
