@@ -5,22 +5,23 @@
   var should = require('should');
   var request = require('supertest');
   var loginHelper = require('./helpers/login');
+  var Users = require('../../server/models/users');
 
   var adminToken, adminId;
 
   describe('Users', function() {
-    // Uncomment when ready
-    // before(function(done) {
-    //   loginHelper.admin(function(error, res) {
-    //     if (error) {
-    //       throw error;
-    //     } else {
-    //       adminToken = res.body.token;
-    //       adminId = res.body.id;
-    //     }
-    //     done();
-    //   });
-    // });
+    before(function(done) {
+      Users.remove({}, function() {});
+      loginHelper.admin(function(error, res) {
+        if (error) {
+          throw error;
+        } else {
+          adminToken = res.body.token;
+          adminId = res.body.id;
+        }
+        done();
+      });
+    });
     describe('Returns all users', function() {
       it('responds with an array of all users', function(done) {
         request(app)
@@ -71,7 +72,7 @@
             should.not.exist(error);
             res.status.should.equal(400);
             (res.body.success).should.equal(false);
-            (res.body.message).should.containEql('Email must be provided');
+            (res.body.message).should.containEql('email must be provided');
             done();
           });
       });
@@ -90,7 +91,7 @@
             should.not.exist(error);
             res.status.should.equal(400);
             (res.body.success).should.equal(false);
-            (res.body.message).should.containEql('Username must be provided');
+            (res.body.message).should.containEql('username must be provided');
             done();
           });
       });
@@ -149,7 +150,7 @@
             should.not.exist(error);
             res.status.should.equal(400);
             (res.body.success).should.equal(false);
-            (res.body.message).should.containEql('First name must be provided');
+            (res.body.message).should.containEql('first name must be provided');
             done();
           });
       });
@@ -168,7 +169,7 @@
             should.not.exist(error);
             res.status.should.equal(400);
             (res.body.success).should.equal(false);
-            (res.body.message).should.containEql('Last name must be provided');
+            (res.body.message).should.containEql('last name must be provided');
             done();
           });
       });
@@ -187,7 +188,7 @@
             should.not.exist(error);
             res.status.should.equal(400);
             (res.body.success).should.equal(false);
-            (res.body.message).should.containEql('Role must be provided');
+            (res.body.message).should.containEql('role must be provided');
             done();
           });
       });

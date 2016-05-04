@@ -5,6 +5,20 @@ require('dotenv').config();
 var express = require('express');
 var app = express();
 
+// Set up the database
+var mongoose = require('mongoose');
+var dataseUri = process.env.DATABASE_URI;
+var db = mongoose.connect(dataseUri);
+
+// Provide feedback
+var db = mongoose.connection;
+db.on('error', function(error) {
+    console.log(error);
+});
+db.once('open', function() {
+    console.log('Successfully connected to db');
+});
+
 // Port set to value in .env file or 3000 default
 app.set('port', process.env.PORT || 3000);
 
