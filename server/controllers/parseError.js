@@ -50,21 +50,23 @@ module.exports = function(res, error) {
 
   // Handle save errors due to validation
   if (error.name === 'ValidationError') {
-
     // Get the first validation that failed
     var failedValidations = Object.keys(error.errors);
     var firstFailed = failedValidations[0];
 
     // Get validation error message
     errorMessage = error.errors[firstFailed].message;
+    res.status(400);
   } else if (error.code === 11000) {
+    res.status(409);
     // Handle unexpected errors
     errorMessage = 'Duplicate key error';
   } else {
+    errorMessage = error;
     // Done, send to user
-    res.status(403).send({
-      success: false,
-      message: errorMessage
-    });
   }
+  res.send({
+    success: false,
+    message: errorMessage
+  });
 };

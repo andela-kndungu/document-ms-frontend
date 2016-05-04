@@ -36,7 +36,7 @@ var UserSchema = new Schema({
   updated: Date,
   role: {
     type: String,
-    required: [true, 'A role must be defined'],
+    required: [true, 'A role must be provided'],
     enum: ['admin', 'user']
   }
 });

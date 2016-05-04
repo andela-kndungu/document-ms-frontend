@@ -5,7 +5,7 @@ module.exports = {
   addUser: function(req, res) {
     // Declare new instance of the Users "table"
     var user = new Users();
-    
+
     // Define values of the new "row" to add
     user.username = req.body.username;
     user.name.first = req.body.firstName;
@@ -25,6 +25,5 @@ module.exports = {
         });
       }
     });
-
   }
 };
