@@ -1,10 +1,17 @@
 {
-  "name": "document-ms",
-  "version": "0.0.0",
-  "private": true,
-  "dependencies": {
-    "body-parser": "~1.13.2",
-    "express": "~4.13.1",
-    "morgan": "~1.6.1",
-  }
+    "name": "document-ms",
+    "version": "0.0.0",
+    "private": true,
+    "scripts": {
+        "test": "./node_modules/mocha/bin/mocha ./test/server/*.spec.js"
+    },
+    "dependencies": {
+        "body-parser": "~1.13.2",
+        "express": "~4.13.1",
+        "morgan": "~1.6.1"
+    },
+    "devDependencies": {
+        "mocha": "^2.4.5",
+        "should": "^8.3.1"
+    }
 }
