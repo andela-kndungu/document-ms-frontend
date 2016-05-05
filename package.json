@@ -2,9 +2,20 @@
   "name": "document-ms",
   "version": "0.0.0",
   "private": true,
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha ./test/server/*.spec.js"
+  },
   "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
     "body-parser": "~1.13.2",
+    "dotenv": "^2.0.0",
     "express": "~4.13.1",
-    "morgan": "~1.6.1",
+    "jsonwebtoken": "^6.2.0",
+    "mongoose": "^4.4.14"
+  },
+  "devDependencies": {
+    "mocha": "^2.4.5",
+    "should": "^8.3.1",
+    "supertest": "^1.2.0"
   }
 }
