@@ -3,7 +3,7 @@ var UsersController = require('../../controllers/users');
 // var DocumentsController = require('../../controllers/documents');
 
 // e.g. GET localhost:8080/users
-// router.get('/', UsersController.getAll);
+router.get('/', UsersController.getAll);
 //
 // // e.g. GET localhost:8080/users/13
 // router.get('/:id', UsersController.getById);
