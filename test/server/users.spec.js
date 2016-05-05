@@ -6,7 +6,6 @@
   var request = require('supertest');
   var loginHelper = require('./helpers/login');
   var Users = require('../../server/models/users');
-
   var adminToken, adminId;
 
   describe('Users', function() {
