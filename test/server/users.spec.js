@@ -10,7 +10,7 @@
 
   describe('Users', function() {
     before(function(done) {
-      seeder.users(function(error, data) {
+      seeder(function(error) {
         if (error) {
           throw error;
         } else {
@@ -19,7 +19,7 @@
               throw error;
             } else {
               adminToken = res.body.token;
-              adminId = res.body.id;
+              adminId = res.body._id;
             }
             done();
           });
