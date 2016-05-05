@@ -35,7 +35,7 @@
             should.not.exist(error);
             res.status.should.equal(200);
             res.body.success.should.equal(true);
-            (res.body.message).should.containEql('created successfully');
+            (res.body.message).should.containEql('Role created successfully');
             done();
           });
       });
