@@ -9,8 +9,8 @@
       request(app)
         .post('/users/login')
         .send({
-          username: 'admin',
-          password: 'adminPass'
+          username: 'first',
+          password: 'firstPassword'
         })
         .set('Accept', 'application/json')
         .end(function(error, res) {
