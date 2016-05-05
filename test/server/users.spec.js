@@ -27,7 +27,7 @@
       });
     });
     describe('Returns all users', function() {
-      xit('responds with an array of all users', function(done) {
+      it('responds with an array of all users', function(done) {
         request(app)
           .get('/users')
           .set('x-access-token', adminToken)

@@ -1,3 +1,4 @@
+var jwt = require('jsonwebtoken');
 var Users = require('../models/users');
 var parseError = require('./parseError');
 
@@ -39,4 +40,51 @@ module.exports = {
       }
     });
   },
+  login: function(req, res) {
+    // Look for user in the database
+    Users.findOne({
+      username: req.body.username
+    }, function(error, user) {
+      // In case of a server error inform the user
+      if (error) {
+        res.status(500);
+        res.send('There was an error reading from the database');
+      }
+
+      // User not in the database
+      if (!user) {
+        res.json({
+          success: false,
+          message: 'Authentication failed. User not found.'
+        });
+      } else {
+        // Verify provided password is valid
+        user.validatePassword(req.body.password, function(error, isMatch) {
+          if (error) {
+            throw error;
+          }
+          if (isMatch) {
+            // All's good, create a token
+            var token = jwt.sign(user, process.env.SECRET_KEY, {
+              expiresIn: '90 days'
+            });
+
+            // Return token and success message in JSON
+            res.json({
+              success: true,
+              message: 'You\'ve successfully been logged in.',
+              token: token
+            });
+          }
+          // Passwords do not match
+          else {
+            res.json({
+              success: false,
+              message: 'Authentication failed. Wrong password.'
+            });
+          }
+        });
+      }
+    });
+  }
 };

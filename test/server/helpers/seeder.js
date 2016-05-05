@@ -3,7 +3,7 @@
 
   var Users = require('../../../server/models/users');
   module.exports = {
-    users: function() {
+    users: function(callback) {
       Users.remove({}, function() {
 
         Users.create([{
