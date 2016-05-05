@@ -2,6 +2,7 @@
   'use strict';
 
   var Users = require('../../../server/models/users');
+  var Roles = require('../../../server/models/roles');
   module.exports = {
     users: function(callback) {
       Users.remove({}, function() {
@@ -31,6 +32,25 @@
           } else {
             console.log('Successfully seeded users');
             callback(null, users);
+          }
+        });
+      });
+
+    },
+    roles: function(callback) {
+      Roles.remove({}, function() {
+
+        Roles.create([{
+          'title': 'admin',
+        }, {
+          'title': 'user',
+        }], function(error, roles) {
+          if (error) {
+            console.log('Could not seed roles' + error);
+            callback(null);
+          } else {
+            console.log('Successfully seeded roles');
+            callback(null, roles);
           }
         });
       });

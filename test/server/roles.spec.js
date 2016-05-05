@@ -8,10 +8,26 @@
   var seeder = require('./helpers/seeder');
   var adminToken;
   describe('Roles', function() {
+    before(function(done) {
+      seeder.roles(function(error, data) {
+        if (error) {
+          throw error;
+        } else {
+          loginHelper.admin(function(error, res) {
+            if (error) {
+              throw error;
+            } else {
+              adminToken = res.body.token;
+            }
+            done();
+          });
+        }
+      });
+    });
     describe('Returns all roles', function() {
       it('responds with an array of all roles', function(done) {
         request(app)
-          .get('/users')
+          .get('/roles')
           .set('x-access-token', adminToken)
           .set('Accept', 'application/json')
           .end(function(error, res) {
@@ -25,7 +41,7 @@
     describe('Creates a new role', function() {
       it('successfully creates a new role', function(done) {
         request(app)
-          .post('/users')
+          .post('/roles')
           .set('x-access-token', adminToken)
           .send({
             title: 'viewer'
