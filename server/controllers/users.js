@@ -25,5 +25,18 @@ module.exports = {
         });
       }
     });
-  }
+  },
+  getAll: function(req, res) {
+    // Get all entries in the users "table"
+    Users.find({}, function(error, users) {
+      //  Inform user if anything goes wrong
+      if (error) {
+        res.status(500);
+        res.send('There was an error reading from the database');
+      } else {
+        // Else all's good, send results
+        res.json(users);
+      }
+    });
+  },
 };

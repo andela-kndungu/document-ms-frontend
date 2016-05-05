@@ -5,20 +5,25 @@
   var should = require('should');
   var request = require('supertest');
   var loginHelper = require('./helpers/login');
-  var Users = require('../../server/models/users');
+  var seeder = require('./helpers/seeder');
   var adminToken, adminId;
 
   describe('Users', function() {
     before(function(done) {
-      Users.remove({}, function() {});
-      loginHelper.admin(function(error, res) {
+      seeder.users(function(error, data) {
         if (error) {
           throw error;
         } else {
-          adminToken = res.body.token;
-          adminId = res.body.id;
+          loginHelper.admin(function(error, res) {
+            if (error) {
+              throw error;
+            } else {
+              adminToken = res.body.token;
+              adminId = res.body.id;
+            }
+            done();
+          });
         }
-        done();
       });
     });
     describe('Returns all users', function() {
