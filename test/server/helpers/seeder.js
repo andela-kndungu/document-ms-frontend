@@ -3,58 +3,46 @@
 
   var Users = require('../../../server/models/users');
   var Roles = require('../../../server/models/roles');
-  module.exports = {
-    users: function(callback) {
-      Users.remove({}, function() {
-
-        Users.create([{
-          'username': 'first',
-          'name': {
-            'first': 'First',
-            'last': 'User'
-          },
-          'email': 'first@user.com',
-          'password': 'firstPassword',
-          'role': 'admin'
-        }, {
-          'username': 'second',
-          'name': {
-            'first': 'Second',
-            'last': 'User'
-          },
-          'email': 'second@user.com',
-          'password': 'secondPassword',
-          'role': 'user'
-        }], function(error, users) {
-          if (error) {
-            console.log('Could not seed users' + error);
-            callback(null);
-          } else {
-            console.log('Successfully seeded users');
-            callback(null, users);
-          }
-        });
-      });
-
-    },
-    roles: function(callback) {
-      Roles.remove({}, function() {
-
-        Roles.create([{
-          'title': 'admin',
-        }, {
-          'title': 'user',
-        }], function(error, roles) {
-          if (error) {
-            console.log('Could not seed roles' + error);
-            callback(null);
-          } else {
-            console.log('Successfully seeded roles');
-            callback(null, roles);
-          }
-        });
-      });
-
-    }
+  var seeds = require('./seedData');
+  // Redefine the return value of Model.create to be a promise
+  var mongoose = require('mongoose');
+  mongoose.Model.seed = function(insertArray) {
+    var promise = new mongoose.Promise();
+    this.create(insertArray, function(error) {
+      if (error) {
+        promise.reject(error);
+      } else {
+        promise.resolve();
+      }
+    });
+    return promise;
   };
+
+  module.exports = function(callback) {
+    // Reset collections
+    Users.remove().exec()
+      .then(function() {
+        return Roles.remove().exec();
+      })
+
+    // Seed data
+    .then(function() {
+        return Roles.seed(
+          seeds.roles);
+      })
+      .then(function() {
+        return Users.seed(
+          seeds.users);
+      })
+
+    // Finish up
+    .then(function() {
+      console.log('Data successfully seeded');
+      callback(null);
+    }, function(error) {
+      callback(error);
+    });
+  };
+
+
 })();
