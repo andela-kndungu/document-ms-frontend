@@ -9,7 +9,7 @@
   var adminToken;
   describe('Roles', function() {
     before(function(done) {
-      seeder.roles(function(error, data) {
+      seeder(function(error) {
         if (error) {
           throw error;
         } else {
