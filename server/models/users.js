@@ -1,6 +1,7 @@
 var bcrypt = require('bcrypt-nodejs');
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+var Roles = require('../models/roles');
 
 
 // Define a "Table"
@@ -37,22 +38,55 @@ var UserSchema = new Schema({
   role: {
     type: String,
     required: [true, 'A role must be provided'],
-    enum: ['admin', 'user']
+    ref: 'Role'
   }
 });
 
-// Before saving hash the plain text password
-UserSchema.pre('save', function(next) {
-  // To be able to access the object from within the bcrypt function
-  var user = this;
-  bcrypt.hash(this.password, null, null, function(error, hashedPassword) {
+// Helper function to hash plain text passwords
+var hashPassword = function(plainPassword, callback) {
+  bcrypt.hash(plainPassword, null, null, function(error, hashedPassword) {
     if (error) {
       var err = new Error('something went wrong');
-      console.log(error);
-      next(err);
+      callback(err);
+    } else {
+      callback(null, hashedPassword);
     }
-    user.password = hashedPassword;
-    next();
+  });
+};
+
+// Helper function to get role's object id
+var stringToObjectId = function(roleString, callback) {
+  Roles.findOne({'title': roleString}, function(error, role) {
+    if (error) {
+      callback(error);
+    } else {
+      callback(null, role);
+    }
+  });
+};
+
+// Before saving hash the plain text password
+UserSchema.pre('save', function(next) {
+  // To be able to access the user object from within the bcrypt function
+  var user = this;
+  // First check whether a valid role has been given
+  stringToObjectId(user.role, function(error, role) {
+    if (error) {
+      next(error);
+    } else {
+      // Replace the role string with its corresponding object id
+      user.role = role._id;
+
+      // Then hash the password
+      hashPassword(user.password, function(error, hashedPassword) {
+        if (error) {
+          next(error);
+        } else {
+          user.password = hashedPassword;
+          next();
+        }
+      });
+    }
   });
 });
 
