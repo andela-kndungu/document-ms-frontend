@@ -4,6 +4,7 @@ var jwt = require('jsonwebtoken');
 // Get the routes
 var publicRoutes = require('./routes/public');
 var usersRoutes = require('./routes/users');
+var rolesRoutes = require('./routes/roles');
 
 // Middleware to protect sensitive routes
 var authenticateUser = function(req, res, next) {
@@ -46,4 +47,5 @@ module.exports = function(app) {
   // Protect sensitive routes
   app.use(authenticateUser);
   app.use('/users', usersRoutes);
+  app.use('/roles', rolesRoutes);
 };
