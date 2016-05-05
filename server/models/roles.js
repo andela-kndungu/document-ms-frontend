@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 
 
 // Define a "Table"
-var UserSchema = new Schema({
+var RoleSchema = new Schema({
   title: {
     type: String,
     required: [true, 'A role title must be provided'],
