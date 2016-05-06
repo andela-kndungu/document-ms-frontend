@@ -3,7 +3,10 @@
 
   var Users = require('../../../server/models/users');
   var Roles = require('../../../server/models/roles');
+  var Categories = require('../../../server/models/categories');
+  var Documents = require('../../../server/models/documents');
   var seeds = require('./seedData');
+  var generateDocuments = require('./generateDocuments');
   // Redefine the return value of Model.create to be a promise
   var mongoose = require('mongoose');
   mongoose.Model.seed = function(insertArray) {
@@ -24,6 +27,9 @@
       .then(function() {
         return Roles.remove().exec();
       })
+      .then(function() {
+        return Categories.remove().exec();
+      })
 
     // Seed data
     .then(function() {
@@ -33,6 +39,20 @@
       .then(function() {
         return Users.seed(
           seeds.users);
+      })
+      .then(function() {
+        return Categories.seed(
+          seeds.categories);
+      })
+      .then(function() {
+        generateDocuments(function(error, documents) {
+          if (error) {
+            console.log(error);
+            throw error;
+          } else {
+            return Documents.seed(documents);
+          }
+        }); 
       })
 
     // Finish up

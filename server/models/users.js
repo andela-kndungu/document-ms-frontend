@@ -38,7 +38,7 @@ var UserSchema = new Schema({
   role: {
     type: String,
     required: [true, 'A role must be provided'],
-    ref: 'Role'
+    ref: 'Roles'
   }
 });
 
@@ -102,4 +102,4 @@ UserSchema.methods.validatePassword = function(providedPassword, callback) {
   });
 };
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.model('Users', UserSchema);
