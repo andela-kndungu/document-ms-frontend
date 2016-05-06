@@ -24,6 +24,11 @@
       'title': 'admin',
     }, {
       'title': 'user',
+    }],
+    categories: [{
+      'title': 'education',
+    }, {
+      'title': 'business',
     }]
   };
 
