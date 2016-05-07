@@ -9,22 +9,56 @@
       // Number of documents to be returned
       var limit = req.query.limit;
 
-      // If no limit is defined return all documents
-      if (!limit) {
-        // Get all entries in the roles "table"
-        Documents.find({}, function(error, documents) {
-          //  Inform user if anything goes wrong
-          if (error) {
-            res.status(500);
-            res.send('There was an error reading from the database');
-          } else {
-            // Else all's good, send results
-            res.json(documents);
-          }
-        });
-      } else {
-        res.json({limit: limit});
+      // Returns the values when executed
+      var query = Documents.find();
+
+      // If a limit is defined add it to the query
+      if (limit) {
+        query.limit(parseInt(limit, 10));
       }
+
+      // Execute the query and return the results
+      // execute the query at a later time
+      query.exec(function(error, documents) {
+        //  Inform user if anything goes wrong
+        if (error) {
+          res.status(500);
+          console.log(error);
+          res.send('There was an error reading from the database');
+        } else {
+          // Else all's good, send results
+          res.json(documents);
+        }
+      });
+      //
+      // Documents.
+      // find().
+      // where('name.last').equals('Ghost').
+      // where('age').gt(17).lt(66).
+      // where('likes').in(['vaporizing', 'talking']).
+      // limit(10).
+      // sort('-occupation').
+      // select('name occupation').
+      // exec(callback);
+      //
+      // // If no limit is defined return all documents
+      // if (!limit) {
+      //   // Get all entries in the roles "table"
+      //   Documents.find({}, function(error, documents) {
+      //     //  Inform user if anything goes wrong
+      //     if (error) {
+      //       res.status(500);
+      //       res.send('There was an error reading from the database');
+      //     } else {
+      //       // Else all's good, send results
+      //       res.json(documents);
+      //     }
+      //   });
+      // } else {
+      //   res.json({
+      //     limit: limit
+      //   });
+      // }
 
     },
     addDocument: function(req, res) {
