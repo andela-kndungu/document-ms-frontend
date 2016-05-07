@@ -7,35 +7,45 @@
   module.exports = {
     getAll: function(req, res) {
       // Using query builder
-    var query =   Documents.find({});
+      var query = Documents.find({});
 
-    // If not admin return only specified role
-    if (req.query.role && req.query.role !== 'admin') {
-      console.log('THE LIMIT IS ' + req.query.limit);
-      query.where('role_of_creator').equals(req.query.role);
-    }
-
-    // If a limit is defined add it to the query
-    if (req.query.limit) {
-      console.log('THE LIMIT IS ' + req.query.limit);
-      query.limit(req.query.limit);
-    }
-
-    // Sort by date in descendig order (latest first)
-    query.sort({
-      created: -1
-    });
-
-    // Execute the query and return the results
-    query.exec(function(error, documents) {
-      //  Inform user if anything goes wrong
-      if (error) {
-        res.status(500);
-        res.send('There was an error reading from the database');
-      } else {// Else all's good, send results
-        res.json(documents);
+      // Return documents created on a specific day
+      if (req.query.date) {
+        var millisecondsInDay = 86400000;
+        var requestedDay = new Date(req.query.date);
+        var nextDay = new Date (requestedDay.getTime() + millisecondsInDay);
+        query.where('created')
+          .gte(requestedDay)
+          .lte(nextDay);
       }
-    });
+
+      // If not admin return only specified role
+      if (req.query.role && req.query.role !== 'admin') {
+        console.log('THE LIMIT IS ' + req.query.limit);
+        query.where('role_of_creator').equals(req.query.role);
+      }
+
+      // If a limit is defined add it to the query
+      if (req.query.limit) {
+        console.log('THE LIMIT IS ' + req.query.limit);
+        query.limit(req.query.limit);
+      }
+
+      // Sort by date in descendig order (latest first)
+      query.sort({
+        created: -1
+      });
+
+      // Execute the query and return the results
+      query.exec(function(error, documents) {
+        //  Inform user if anything goes wrong
+        if (error) {
+          res.status(500);
+          res.send('There was an error reading from the database');
+        } else { // Else all's good, send results
+          res.json(documents);
+        }
+      });
     },
     addDocument: function(req, res) {
       // Declare new instance of the Role "table"
