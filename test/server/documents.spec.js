@@ -7,7 +7,7 @@
   var loginHelper = require('./helpers/login');
   var seeder = require('./helpers/seeder');
   var adminToken, adminId, userToken, userId;
-  describe('Roles', function() {
+  describe('Documents', function() {
     before(function(done) {
       seeder(function(error) {
         if (error) {

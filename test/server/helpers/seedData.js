@@ -2,22 +2,22 @@
   'use strict';
   module.exports = {
     users: [{
-      'username': 'first',
+      'username': 'admin',
       'name': {
-        'first': 'First',
+        'first': 'Admin',
         'last': 'User'
       },
       'email': 'first@user.com',
-      'password': 'firstPassword',
+      'password': 'adminPassword',
       'role': 'admin'
     }, {
-      'username': 'second',
+      'username': 'user',
       'name': {
-        'first': 'Second',
+        'first': 'User',
         'last': 'User'
       },
       'email': 'second@user.com',
-      'password': 'secondPassword',
+      'password': 'userPassword',
       'role': 'user'
     }],
     roles: [{

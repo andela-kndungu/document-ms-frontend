@@ -7,10 +7,10 @@
   module.exports = {
     getAll: function(req, res) {
       // Number of documents to be returned
-      var limit = req.query.limit? parseInt(req.query.limit, 10): undefined;
+      var limit = req.query.limit ? parseInt(req.query.limit, 10) : undefined;
 
       // Start page
-      var page = req.query.page? parseInt(req.query.page, 10): undefined;
+      var page = req.query.page ? parseInt(req.query.page, 10) : undefined;
 
       // Returns the values when executed
       var query = Documents.find();
@@ -28,7 +28,9 @@
       }
 
       // Sort by date in descendig order (latest first)
-      query.sort({created: -1 });
+      query.sort({
+        created: -1
+      });
 
       // Execute the query and return the results
       query.exec(function(error, documents) {
