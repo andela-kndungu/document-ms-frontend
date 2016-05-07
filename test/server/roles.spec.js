@@ -11,7 +11,7 @@
     before(function(done) {
       seeder(function(error) {
         if (error) {
-          console.log(error);
+          throw(error);
         } else {
           loginHelper.admin(function(error, res) {
             if (error) {
