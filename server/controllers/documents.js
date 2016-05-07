@@ -27,6 +27,9 @@
         query.limit(limit);
       }
 
+      // Sort by date in descendig order (latest first)
+      query.sort({created: -1 });
+
       // Execute the query and return the results
       query.exec(function(error, documents) {
         //  Inform user if anything goes wrong
