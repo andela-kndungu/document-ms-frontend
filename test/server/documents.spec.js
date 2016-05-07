@@ -130,29 +130,6 @@
             done();
           });
       });
-      // it('document created by user has a date defined', function(done) {
-      //   request(app)
-      //     .post('/documents')
-      //     .set('x-access-token', userToken)
-      //     .send({
-      //       title: 'Admin test document',
-      //       content: 'I am an admin testing out the date field',
-      //       owner_id: adminId,
-      //       category: 'business'
-      //     })
-      //     .set('Accept', 'application/json')
-      //     .end(function(error, res) {
-      //       // Date arithmetic
-      //       var now = new Date().getTime();
-      //       var created = new Date(res.body.entry.created);
-      //       should.not.exist(error);
-      //       res.status.should.equal(200);
-      //       (res.body.success).should.equal(true);
-      //       should.exist(created);
-      //       (now - created).should.be.greaterThan(0);
-      //       done();
-      //     });
-      // });
     });
   });
 })();
