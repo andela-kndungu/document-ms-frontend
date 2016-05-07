@@ -29,6 +29,8 @@
       })
       .then(function() {
         return Categories.remove().exec();
+      }).then(function() {
+        return Documents.remove().exec();
       })
 
     // Seed data
@@ -52,7 +54,7 @@
           } else {
             return Documents.seed(documents);
           }
-        }); 
+        });
       })
 
     // Finish up

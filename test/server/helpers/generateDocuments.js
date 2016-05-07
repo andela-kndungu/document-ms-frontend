@@ -18,7 +18,6 @@ var generate = function() {
       category: categoriesArray[Math.floor(Math.random() * ownerIds.length)]
     });
   }
-  // console.log(generatedDocuments);
   return generatedDocuments;
 };
 
