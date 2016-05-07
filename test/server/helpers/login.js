@@ -25,8 +25,8 @@
       request(app)
         .post('/users/login')
         .send({
-          username: 'user',
-          password: 'userPass'
+          username: 'second',
+          password: 'secondPassword'
         })
         .set('Accept', 'application/json')
         .end(function(error, res) {
