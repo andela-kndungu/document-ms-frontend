@@ -7,59 +7,37 @@
   module.exports = {
     getAll: function(req, res) {
       // Number of documents to be returned
-      var limit = req.query.limit;
+      var limit = req.query.limit? parseInt(req.query.limit, 10): undefined;
+
+      // Start page
+      var page = req.query.page? parseInt(req.query.page, 10): undefined;
 
       // Returns the values when executed
       var query = Documents.find();
 
+      // If a specific page is requested
+      if (page && limit) {
+        // Move the cursor of the query result to skip
+        var skip = page > 0 ? ((page - 1) * limit) : 0;
+        query.skip(skip);
+      }
+
       // If a limit is defined add it to the query
       if (limit) {
-        query.limit(parseInt(limit, 10));
+        query.limit(limit);
       }
 
       // Execute the query and return the results
-      // execute the query at a later time
       query.exec(function(error, documents) {
         //  Inform user if anything goes wrong
         if (error) {
           res.status(500);
-          console.log(error);
           res.send('There was an error reading from the database');
         } else {
           // Else all's good, send results
           res.json(documents);
         }
       });
-      //
-      // Documents.
-      // find().
-      // where('name.last').equals('Ghost').
-      // where('age').gt(17).lt(66).
-      // where('likes').in(['vaporizing', 'talking']).
-      // limit(10).
-      // sort('-occupation').
-      // select('name occupation').
-      // exec(callback);
-      //
-      // // If no limit is defined return all documents
-      // if (!limit) {
-      //   // Get all entries in the roles "table"
-      //   Documents.find({}, function(error, documents) {
-      //     //  Inform user if anything goes wrong
-      //     if (error) {
-      //       res.status(500);
-      //       res.send('There was an error reading from the database');
-      //     } else {
-      //       // Else all's good, send results
-      //       res.json(documents);
-      //     }
-      //   });
-      // } else {
-      //   res.json({
-      //     limit: limit
-      //   });
-      // }
-
     },
     addDocument: function(req, res) {
       // Declare new instance of the Role "table"
