@@ -7,7 +7,7 @@
   var loginHelper = require('./helpers/login');
   var seeder = require('./helpers/seeder');
   var adminToken;
-  describe('Roles', function() {
+  describe('Categories', function() {
     before(function(done) {
       seeder(function(error) {
         if (error) {
@@ -24,10 +24,10 @@
         }
       });
     });
-    describe('Returns all roles', function() {
-      it('responds with an array of all roles', function(done) {
+    describe('Returns all categories', function() {
+      it('responds with an array of all categories', function(done) {
         request(app)
-          .get('/roles')
+          .get('/categories')
           .set('x-access-token', adminToken)
           .set('Accept', 'application/json')
           .end(function(error, res) {
@@ -38,20 +38,20 @@
           });
       });
     });
-    describe('Creates a new role', function() {
-      it('successfully creates a new role', function(done) {
+    describe('Creates a new category', function() {
+      it('successfully creates a new category', function(done) {
         request(app)
-          .post('/roles')
+          .post('/categories')
           .set('x-access-token', adminToken)
           .send({
-            title: 'viewer'
+            title: 'chores'
           })
           .set('Accept', 'application/json')
           .end(function(error, res) {
             should.not.exist(error);
             res.status.should.equal(200);
             res.body.success.should.equal(true);
-            (res.body.message).should.containEql('Role created successfully');
+            (res.body.message).should.containEql('Category created successfully');
             done();
           });
       });

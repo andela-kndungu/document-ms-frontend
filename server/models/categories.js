@@ -1,0 +1,14 @@
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+
+
+// Define a "Table"
+var CategorySchema = new Schema({
+  title: {
+    type: String,
+    required: [true, 'A category title must be provided'],
+    unique: true
+  },
+});
+
+module.exports = mongoose.model('Categories', CategorySchema);
