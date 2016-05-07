@@ -76,7 +76,8 @@
               res.json({
                 success: true,
                 message: 'You\'ve successfully been logged in.',
-                token: token
+                token: token,
+                entry: user
               });
             }
             // Passwords do not match
