@@ -11,7 +11,7 @@
     before(function(done) {
       seeder(function(error) {
         if (error) {
-          throw(error);
+          throw (error);
         } else {
           loginHelper.admin(function(error, res) {
             if (error) {
@@ -81,23 +81,78 @@
           });
       });
     });
-    describe('Creates a new role', function() {
-      it('successfully creates a new role', function(done) {
+    describe('Returned documents are sorted by date', function() {
+      it('sorts all the documents in descending order by date', function(done) {
         request(app)
-          .post('/roles')
+          .get('/documents')
           .set('x-access-token', adminToken)
-          .send({
-            title: 'viewer'
-          })
           .set('Accept', 'application/json')
           .end(function(error, res) {
-            should.not.exist(error);
-            res.status.should.equal(200);
-            res.body.success.should.equal(true);
-            (res.body.message).should.containEql('Role created successfully');
+            // For every document in the response
+            for (var i = 0; i < (res.body.length) - 1; i++) {
+              var documentCreated = new Date(res.body[i].created);
+              var nextDocumentCreated = new Date(res.body[i + 1].created);
+              // It was created after the next documcent in the array
+              (documentCreated - nextDocumentCreated).should.not.be.lessThan(0);
+            }
             done();
           });
       });
+      it('sorts paginated in descending order by date', function(done) {
+        request(app)
+          .get('/documents?limit=10&page=5')
+          .set('x-access-token', adminToken)
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            // For every document in the response
+            for (var i = 0; i < (res.body.length) - 1; i++) {
+              var documentCreated = new Date(res.body[i].created);
+              var nextDocumentCreated = new Date(res.body[i + 1].created);
+              // It was created after the next documcent in the array
+              (documentCreated - nextDocumentCreated).should.not.be.lessThan(0);
+            }
+            done();
+          });
+      });
+      it('sorts limited in descending order by date', function(done) {
+        request(app)
+          .get('/documents?limit=10')
+          .set('x-access-token', adminToken)
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            // For every document in the response
+            for (var i = 0; i < (res.body.length) - 1; i++) {
+              var documentCreated = new Date(res.body[i].created);
+              var nextDocumentCreated = new Date(res.body[i + 1].created);
+              // It was created after the next documcent in the array
+              (documentCreated - nextDocumentCreated).should.not.be.lessThan(0);
+            }
+            done();
+          });
+      });
+      // it('document created by user has a date defined', function(done) {
+      //   request(app)
+      //     .post('/documents')
+      //     .set('x-access-token', userToken)
+      //     .send({
+      //       title: 'Admin test document',
+      //       content: 'I am an admin testing out the date field',
+      //       owner_id: adminId,
+      //       category: 'business'
+      //     })
+      //     .set('Accept', 'application/json')
+      //     .end(function(error, res) {
+      //       // Date arithmetic
+      //       var now = new Date().getTime();
+      //       var created = new Date(res.body.entry.created);
+      //       should.not.exist(error);
+      //       res.status.should.equal(200);
+      //       (res.body.success).should.equal(true);
+      //       should.exist(created);
+      //       (now - created).should.be.greaterThan(0);
+      //       done();
+      //     });
+      // });
     });
   });
 })();
