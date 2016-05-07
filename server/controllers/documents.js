@@ -2,6 +2,7 @@
   'use strict';
 
   var Documents = require('../models/documents');
+  var Users = require('../models/users');
   var parseError = require('./parseError');
 
   module.exports = {
@@ -54,6 +55,13 @@
       document.content = req.body.content;
       document.category = req.body.category;
 
+      // Using query builder
+      Users.
+      findById(req.body.owner_id)
+        .populate('role')
+        .exec(function(error, user) {
+          document.accessed_by = user.role.type;
+        });
       document.save(function(error) {
         if (error) {
           parseError(res, error);

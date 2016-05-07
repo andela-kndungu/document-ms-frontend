@@ -6,7 +6,7 @@ var categoriesArray = [];
 var generate = function() {
   var generatedDocuments = [];
   // Generate 200 documents
-  for (var i = 0; i <= 200; i++) {
+  for (var i = 0; i < 30; i++) {
     generatedDocuments.push({
       // Random five character string
       title: Math.random().toString().substring(2, 7),

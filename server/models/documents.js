@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+var Users = require('../models/users');
 
 // Define a "Table"
 var DocumentsSchema = new Schema({
@@ -24,7 +25,23 @@ var DocumentsSchema = new Schema({
     type: String,
     required: [true, 'A category must be provided'],
     ref: 'Categories'
+  },
+  role_of_creator: {
+    type: String,
   }
+});
+
+// To enable searching of documents by role
+DocumentsSchema.pre('save', function(next) {
+  var document = this;
+  Users.findById(document.owner_id)
+    .populate('role')
+    .exec(function(error, user) {
+      if (user) {
+        document.role_of_creator = user.role.title;
+      }
+      next();
+    });
 });
 
 module.exports = mongoose.model('Documents', DocumentsSchema);
