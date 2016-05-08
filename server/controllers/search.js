@@ -21,14 +21,12 @@
 
       // If not admin return only specified role
       if (req.query.role && req.query.role !== 'admin') {
-        console.log('THE LIMIT IS ' + req.query.limit);
         query.where('role_of_creator').equals(req.query.role);
       }
 
       // If a limit is defined add it to the query
       if (req.query.limit) {
-        console.log('THE LIMIT IS ' + req.query.limit);
-        query.limit(req.query.limit);
+        query.limit(parseInt(req.query.limit, 10));
       }
 
       // Sort by date in descendig order (latest first)
