@@ -1,5 +1,7 @@
-// Set environment variable in .env file
-require('dotenv').config();
+// Set environment variableS in .env file when running locally
+if (!process.env.DATABASE_URI) {
+  require('dotenv').config();
+}
 
 // Set up express
 var express = require('express');
