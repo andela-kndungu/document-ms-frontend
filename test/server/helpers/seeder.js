@@ -46,25 +46,26 @@
         return Categories.seed(
           seeds.categories);
       })
-      .then(function() {
-        generateDocuments(function(error, documents) {
-          if (error) {
-            console.log(error);
-            throw error;
-          } else {
-            return Documents.seed(documents);
-          }
-        });
-      })
 
     // Finish up
     .then(function() {
-      console.log('Data successfully seeded');
-      callback(null);
+      generateDocuments(function(error, documents) {
+        if (error) {
+          throw error;
+        } else {
+          Documents.seed(documents).then(function() {
+            callback(null);
+          });
+
+        }
+      });
     }, function(error) {
       callback(error);
     });
+
   };
+
+
 
 
 })();
