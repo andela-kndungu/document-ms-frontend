@@ -33,7 +33,8 @@
           .set('Accept', 'application/json')
           .end(function(error, res) {
             should.not.exist(error);
-            res.body.should.be.an.Array;
+            (res.body).should.be.an.Array;
+            res.status.should.equal(200);
             should(res.body.length).be.exactly(200);
             done();
           });
@@ -45,7 +46,7 @@
           .set('Accept', 'application/json')
           .end(function(error, res) {
             should.not.exist(error);
-            res.body.should.be.an.Array;
+            (res.body).should.be.an.Array;
             should(res.body.length).be.lessThan(200);
             done();
           });
@@ -79,6 +80,59 @@
               // It was created after the next documcent in the array
               (currentDocument - nextDocument).should.not.be.lessThan(0);
             }
+            done();
+          });
+      });
+      it('number of returned doucments can be specified', function(done) {
+        request(app)
+          .get('/search?role=admin&&limit=10')
+          .set('x-access-token', adminToken)
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            should(res.body.length).be.exactly(10);
+            done();
+          });
+      });
+    });
+    describe('search by date', function() {
+      it('returns all documents created on a specific date', function(done) {
+        var today = new Date();
+        var year = today.getFullYear();
+        var month = parseInt(today.getMonth() + 1, 10) < 10 ?
+          '0' + (today.getMonth() + 1) :
+          today.getMonth() + 1;
+        var day = parseInt(today.getDate(), 10) < 10 ?
+          '0' + today.getDate() :
+          today.getDate();
+        // var day = today.getDate();
+        var dateString = year + '-' + month + '-' + day;
+        request(app)
+          .get('/search?date=' + dateString)
+          .set('x-access-token', adminToken)
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            res.status.should.equal(200);
+            should(res.body.length).be.exactly(200);
+            done();
+          });
+      });
+      it('no documents are returned for an invalid date', function(done) {
+        var today = new Date();
+        var year = today.getFullYear();
+        var month = parseInt(today.getMonth() + 2, 10) < 10 ?
+          '0' + (today.getMonth() + 2) :
+          today.getMonth() + 2;
+        var day = parseInt(today.getDate(), 10) < 10 ?
+          '0' + today.getDate() :
+          today.getDate();
+        var dateString = year + '-' + month + '-' + day;
+        request(app)
+          .get('/search?date=' + dateString)
+          .set('x-access-token', adminToken)
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            res.status.should.equal(200);
+            should(res.body.length).be.exactly(0);
             done();
           });
       });
