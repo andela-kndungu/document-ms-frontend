@@ -68,6 +68,21 @@
         }
       });
     },
+    getDocument: function(req, res) {
+      // Get all entries in the documents "table" based on provided id
+      Documents.find({
+        '_id': req.params.id
+      }, function(error, documents) {
+        //  Inform user if anything goes wrong
+        if (error) {
+          res.status(500);
+          res.send('There was an error reading from the database');
+        } else {
+          // Else all's good, send results
+          res.json(documents);
+        }
+      });
+    },
     updateDocument: function(req, res) {
       // Return all entry in Documents "table" with provided id
       Documents.find({

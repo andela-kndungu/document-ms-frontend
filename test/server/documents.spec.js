@@ -155,5 +155,20 @@
           });
       });
     });
+    describe('Returns documents based on ID (GET /documents/<id>)', function() {
+      it('returns expected document', function(done) {
+        request(app)
+          .get('/documents/' + documentId)
+          .set('x-access-token', adminToken)
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            should.not.exist(error);
+            res.status.should.equal(200);
+            should.exist(res.body[0].content);
+            should.exist(res.body[0].title);
+            done();
+          });
+      });
+    });
   });
 })();
