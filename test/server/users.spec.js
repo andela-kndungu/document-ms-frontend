@@ -19,7 +19,7 @@
               throw error;
             } else {
               adminToken = res.body.token;
-              adminId = res.body._id;
+              adminId = res.body.entry._id;
             }
             done();
           });
@@ -218,15 +218,17 @@
       });
     });
     describe('Returns all documents created by a user', function() {
-      xit('responds with an array of all user\'s documents', function(done) {
+      it('responds with an array of all the user\'s documents', function(done) {
         request(app)
-          .get('/users/adminId/documents')
+          .get('/users/' + adminId + '/documents')
           .set('x-access-token', adminToken)
           .set('Accept', 'application/json')
           .end(function(error, res) {
             should.not.exist(error);
-            (res.body).should.be.an.Array;
-            should(res.body.length).be.exactly(3);
+            res.status.should.equal(200);
+            res.body.should.be.an.Array;
+            should(res.body.length).be.greaterThan(0);
+            (res.body[0].owner_id).should.equal(adminId);
             done();
           });
       });

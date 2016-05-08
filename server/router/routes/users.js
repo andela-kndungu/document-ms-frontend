@@ -4,9 +4,9 @@ var UsersController = require('../../controllers/users');
 
 // e.g. GET localhost:8080/users
 router.get('/', UsersController.getAll);
-//
-// // e.g. GET localhost:8080/users/13
-// router.get('/:id', UsersController.getById);
+
+// e.g. GET localhost:8080/users/13/documeents
+router.get('/:id/documents', UsersController.getDocumentsById);
 //
 // // e.g. PUT localhost:8080/users/13
 // router.put('/:id', UsersController.updateUser);

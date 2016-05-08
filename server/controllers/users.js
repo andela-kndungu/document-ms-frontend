@@ -3,6 +3,7 @@
 
   var jwt = require('jsonwebtoken');
   var Users = require('../models/users');
+  var Documents = require('../models/documents');
   var parseError = require('./parseError');
 
   module.exports = {
@@ -89,6 +90,19 @@
               });
             }
           });
+        }
+      });
+    },
+    getDocumentsById: function(req, res) {
+      // Get all entries in the users "table" based on provided id
+      Documents.find({'owner_id':req.params.id}, function(error, users) {
+        //  Inform user if anything goes wrong
+        if (error) {
+          res.status(500);
+          res.send('There was an error reading from the database');
+        } else {
+          // Else all's good, send results
+          res.json(users);
         }
       });
     }
