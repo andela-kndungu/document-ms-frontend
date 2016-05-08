@@ -196,6 +196,26 @@
             done();
           });
       });
+      it('created user has a role defined', function(done) {
+        request(app)
+          .post('/users')
+          .send({
+            email: 'unique@email.com',
+            username: 'uniquename',
+            firstName: 'Unique',
+            lastName: 'Name',
+            password: 'uniquePass',
+            role: 'user'
+          })
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            should.not.exist(error);
+            res.status.should.equal(200);
+            (res.body.success).should.equal(true);
+            should.exist((res.body.entry.role));
+            done();
+          });
+      });
     });
     describe('Returns all documents created by a user', function() {
       xit('responds with an array of all user\'s documents', function(done) {

@@ -25,7 +25,8 @@
           // Return send success message
           res.json({
             success: true,
-            message: 'User created successfully'
+            message: 'User created successfully',
+            entry: user
           });
         }
       });
