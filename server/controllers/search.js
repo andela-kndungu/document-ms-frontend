@@ -2,30 +2,31 @@
   'use strict';
 
   var Documents = require('../models/documents');
-  var Users = require('../models/users');
   var parseError = require('./parseError');
 
   module.exports = {
     getAll: function(req, res) {
-      // Number of documents to be returned
-      var limit = req.query.limit ? parseInt(req.query.limit, 10) : undefined;
+      // Using query builder
+      var query = Documents.find({});
 
-      // Start page
-      var page = req.query.page ? parseInt(req.query.page, 10) : undefined;
+      // Return documents created on a specific day
+      if (req.query.date) {
+        var millisecondsInDay = 86400000;
+        var requestedDay = new Date(req.query.date);
+        var nextDay = new Date (requestedDay.getTime() + millisecondsInDay);
+        query.where('created')
+          .gte(requestedDay)
+          .lte(nextDay);
+      }
 
-      // Returns the values when executed
-      var query = Documents.find();
-
-      // If a specific page is requested
-      if (page && limit) {
-        // Move the cursor of the query result to skip
-        var skip = page > 0 ? ((page - 1) * limit) : 0;
-        query.skip(skip);
+      // If not admin return only specified role
+      if (req.query.role && req.query.role !== 'admin') {
+        query.where('role_of_creator').equals(req.query.role);
       }
 
       // If a limit is defined add it to the query
-      if (limit) {
-        query.limit(limit);
+      if (req.query.limit) {
+        query.limit(parseInt(req.query.limit, 10));
       }
 
       // Sort by date in descendig order (latest first)
@@ -39,8 +40,7 @@
         if (error) {
           res.status(500);
           res.send('There was an error reading from the database');
-        } else {
-          // Else all's good, send results
+        } else { // Else all's good, send results
           res.json(documents);
         }
       });
@@ -55,13 +55,6 @@
       document.content = req.body.content;
       document.category = req.body.category;
 
-      // Using query builder
-      Users.
-      findById(req.body.owner_id)
-        .populate('role')
-        .exec(function(error, user) {
-          document.accessed_by = user.role.type;
-        });
       document.save(function(error) {
         if (error) {
           parseError(res, error);

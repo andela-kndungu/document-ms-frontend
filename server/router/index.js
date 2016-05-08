@@ -7,6 +7,7 @@ var usersRoutes = require('./routes/users');
 var rolesRoutes = require('./routes/roles');
 var categoriesRoutes = require('./routes/categories');
 var documentsRoutes = require('./routes/documents');
+var searchRoutes = require('./routes/search');
 
 // Middleware to protect sensitive routes
 var authenticateUser = function(req, res, next) {
@@ -52,4 +53,5 @@ module.exports = function(app) {
   app.use('/roles', rolesRoutes);
   app.use('/categories', categoriesRoutes);
   app.use('/documents', documentsRoutes);
+  app.use('/search', searchRoutes);
 };
