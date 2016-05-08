@@ -13,4 +13,7 @@ router.get('/:id', DocumentsController.getDocument);
 // e.g. PUT localhost:8080/documents/13
 router.put('/:id', DocumentsController.updateDocument);
 
+// e.g. DELETE localhost:8080/documents/13
+router.delete('/:id', DocumentsController.deleteDocument);
+
 module.exports = router;

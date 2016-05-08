@@ -130,6 +130,29 @@
           }
         }
       });
+    },
+    deleteDocument: function(req, res) {
+      // Delete entry with provided id
+      Documents.remove({
+        '_id': req.params.id
+      }, function(delete_error, delete_status) {
+        if (delete_error) {
+          res.status(500);
+          res.send('Error deleting from database');
+        } else {
+          if (delete_status.result.n > 0) {
+            res.json({
+              success: true,
+              message: 'Document deleted successfully'
+            });
+          } else {
+            res.json({
+              success: false,
+              message: 'Document does not exist'
+            });
+          }
+        }
+      });
     }
   };
 })();

@@ -170,5 +170,20 @@
           });
       });
     });
+    describe('Deletes a document (DELETE /documents/:id)', function() {
+      it('deletes a document', function(done) {
+        request(app)
+          .delete('/documents/' + documentId)
+          .set('x-access-token', adminToken)
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            should.not.exist(error);
+            res.status.should.equal(200);
+            res.body.success.should.equal(true);
+            (res.body.message).should.containEql('Document deleted');
+            done();
+          });
+      });
+    });
   });
 })();

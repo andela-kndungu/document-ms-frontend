@@ -194,7 +194,6 @@
             });
           } else {
             res.json({
-              // 'status': status,
               success: false,
               message: 'User does not exist'
             });
