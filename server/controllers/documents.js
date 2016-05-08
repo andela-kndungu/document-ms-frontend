@@ -67,7 +67,54 @@
           });
         }
       });
+    },
+    updateDocument: function(req, res) {
+      // Return all entry in Documents "table" with provided id
+      Documents.find({
+        '_id': req.params.id
+      }, function(find_error, documents) {
+        // In case of error inform user
+        if (find_error) {
+          console.log(find_error);
+          res.status(500);
+          res.send('Error reading from database');
+        } else{
+          if (documents) {
+            // Update each entry found
+            documents.forEach(function(document) {
+              // For every object property in the body
+              // Update it's corresponding db property
+              Object.keys(req.body).forEach(function(property) {
+                document[property] = req.body[property];
 
+                // "Row" can now have an updated value
+                document.updated = new Date();
+              });
+
+              // Save the updated "row"
+              document.save(function(save_error) {
+                // If error occured inform user
+                if (save_error) {
+                  res.status(500);
+                  res.send('Error saving to database');
+                }
+              });
+            });
+            // Return successfully updated object
+            res.json({
+              success: true,
+              message: 'Document updated successfully',
+              entry: documents[0]
+            });
+          } else {
+            // Inform user of error
+            res.json({
+              success: false,
+              message: 'Document does not exist',
+            });
+          }
+        }
+      });
     }
   };
 })();

@@ -11,7 +11,7 @@ router.get('/:id/documents', UsersController.getDocumentsById);
 // e.g. GET localhost:8080/users/13
 router.get('/:id', UsersController.getUser);
 
-// e.g. GET localhost:8080/users/13
+// e.g. PUT localhost:8080/users/13
 router.put('/:id', UsersController.updateUser);
 
 // e.g. DELETE localhost:8080/users/13

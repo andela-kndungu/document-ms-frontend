@@ -34,22 +34,6 @@
         }
       });
     });
-    // describe('Returns a user based on ID (GET /users/<id>)', function(done) {
-    //   console.log('THE TOKEN IN THE REQUEST IS ' + adminToken);
-    //   request(app)
-    //     .get('/users/' + userId)
-    //     // .set('x-access-token', adminToken)
-    //     .set('Accept', 'application/json')
-    //     .end(function(error, res) {
-    //       console.log(res.body);
-    //       // console.log(res.body.token);
-    //       // should.not.exist(error);
-    //       // res.status.should.equal(200);
-    //       // should.exist(res.body.token);
-    //       // (res.body.entry.username).should.equal('newuser');
-    //       done();
-    //     });
-    // });
     describe('Returns all users (GET /users/)', function() {
       it('responds with an array of all users', function(done) {
         request(app)
@@ -313,10 +297,6 @@
           });
       });
     });
-    // describe('Updates user details (PUT /users/:id)', function() {
-    //   it('updates user details and returns updated values', function() {});
-    // });
-
     describe('Deletes a user (DELETE /users/:id)', function() {
       it('deletes a user', function(done) {
         request(app)
@@ -324,7 +304,6 @@
           .set('x-access-token', adminToken)
           .set('Accept', 'application/json')
           .end(function(error, res) {
-            // console.log(res.body.status.ok);
             should.not.exist(error);
             res.status.should.equal(200);
             res.body.success.should.equal(true);

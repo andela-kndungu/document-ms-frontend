@@ -157,10 +157,8 @@
               user.save(function(save_error) {
                 // If error occured inform user
                 if (save_error) {
-                  console.log(save_error);
-                  console.log('WHAT IS GOING ON?');
-                  // res.status(500);
-                  // res.send('Error saving to database');
+                  res.status(500);
+                  res.send('Error saving to database');
                 }
               });
             });
@@ -171,11 +169,10 @@
               entry: users[0]
             });
           } else {
-            // Return successfully updated object
+            // Inform user of error
             res.json({
               success: false,
               message: 'User does not exist',
-              entry: users[0]
             });
           }
         }
