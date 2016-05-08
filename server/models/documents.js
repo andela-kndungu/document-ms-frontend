@@ -28,7 +28,12 @@ var DocumentsSchema = new Schema({
   },
   role_of_creator: {
     type: String,
-  }
+  },
+  access_rights: {
+    type: String,
+    enum: ['private', 'public'],
+    required: [true, 'An access right must be provided']
+  },
 });
 
 // To enable searching of documents by role

@@ -7,7 +7,10 @@
   module.exports = {
     getAll: function(req, res) {
       // Using query builder
-      var query = Documents.find({});
+      var query = Documents.find();
+
+      // Only documents marked as public can be searched for
+      query.where('access_rights').equals('public');
 
       // Return documents created on a specific day
       if (req.query.date) {

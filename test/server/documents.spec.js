@@ -42,7 +42,8 @@
             title: 'Admin test document',
             content: 'I am an admin testing out the date field',
             owner_id: adminId,
-            category: 'business'
+            category: 'business',
+            access_rights: 'private'
           })
           .set('Accept', 'application/json')
           .end(function(error, res) {
@@ -65,7 +66,8 @@
             title: 'Admin test document',
             content: 'I am an admin testing out the date field',
             owner_id: adminId,
-            category: 'business'
+            category: 'business',
+            access_rights: 'public'
           })
           .set('Accept', 'application/json')
           .end(function(error, res) {

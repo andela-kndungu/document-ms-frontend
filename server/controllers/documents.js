@@ -2,7 +2,6 @@
   'use strict';
 
   var Documents = require('../models/documents');
-  var Users = require('../models/users');
   var parseError = require('./parseError');
 
   module.exports = {
@@ -54,14 +53,8 @@
       document.title = req.body.title;
       document.content = req.body.content;
       document.category = req.body.category;
+      document.access_rights = req.body.access_rights;
 
-      // Using query builder
-      Users.
-      findById(req.body.owner_id)
-        .populate('role')
-        .exec(function(error, user) {
-          document.accessed_by = user.role.type;
-        });
       document.save(function(error) {
         if (error) {
           parseError(res, error);
@@ -69,11 +62,12 @@
           // Return send success message
           res.json({
             success: true,
-            message: 'Category created successfully',
+            message: 'Document created successfully',
             entry: document
           });
         }
       });
+
     }
   };
 })();
