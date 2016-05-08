@@ -74,8 +74,10 @@ UserSchema.pre('save', function(next) {
     if (error) {
       next(error);
     } else {
-      // Replace the role string with its corresponding object id
-      user.role = role._id;
+      if (role) {
+        // Replace the role string with its corresponding object id
+        user.role = role._id;
+      }
 
       // Then hash the password
       hashPassword(user.password, function(error, hashedPassword) {
