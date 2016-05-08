@@ -56,7 +56,7 @@
           Documents.seed(documents).then(function() {
             callback(null);
           });
-
+          console.log('Successfully seeded data');
         }
       });
     }, function(error) {
