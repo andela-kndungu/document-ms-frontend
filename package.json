@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha ./test/server/*.spec.js"
+    "test": "./node_modules/mocha/bin/mocha ./test/server/*.spec.js",
+    "posttest": "babel-node ./node_modules/.bin/babel-istanbul cover --dir test/server/coverage ./node_modules/.bin/_mocha ./test/server/*.spec.js"
   },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
@@ -14,6 +15,9 @@
     "mongoose": "^4.4.14"
   },
   "devDependencies": {
+    "babel-cli": "^6.8.0",
+    "babel-core": "^6.8.0",
+    "babel-istanbul": "^0.8.0",
     "mocha": "^2.4.5",
     "should": "^8.3.1",
     "supertest": "^1.2.0"
