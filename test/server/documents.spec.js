@@ -6,10 +6,11 @@
   var request = require('supertest');
   var loginHelper = require('./helpers/login');
   var seeder = require('./helpers/seeder');
-  var adminToken, adminId, userToken, userId;
+  var adminToken, adminId, userToken, userId, documentId;
   describe('Documents', function() {
     before(function(done) {
-      seeder(function(error) {
+      seeder(function(error, document_id) {
+        documentId = document_id;
         if (error) {
           throw (error);
         } else {
@@ -42,7 +43,8 @@
             title: 'Admin test document',
             content: 'I am an admin testing out the date field',
             owner_id: adminId,
-            category: 'business'
+            category: 'business',
+            access_rights: 'private'
           })
           .set('Accept', 'application/json')
           .end(function(error, res) {
@@ -64,8 +66,9 @@
           .send({
             title: 'Admin test document',
             content: 'I am an admin testing out the date field',
-            owner_id: adminId,
-            category: 'business'
+            owner_id: userId,
+            category: 'business',
+            access_rights: 'public'
           })
           .set('Accept', 'application/json')
           .end(function(error, res) {
@@ -127,6 +130,57 @@
               // It was created after the next documcent in the array
               (documentCreated - nextDocumentCreated).should.not.be.lessThan(0);
             }
+            done();
+          });
+      });
+    });
+    describe('Updates a document (PUT /documents/:id)', function() {
+      it('updates a document and returns new details', function(done) {
+        request(app)
+          .put('/documents/' + documentId)
+          .send({
+            title: 'A real title',
+            content: 'Some real content',
+          })
+          .set('x-access-token', adminToken)
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            should.not.exist(error);
+            res.status.should.equal(200);
+            res.body.success.should.equal(true);
+            (res.body.message).should.containEql('Document updated');
+            (res.body.entry.title).should.containEql('A real title');
+            (res.body.entry.content).should.containEql('Some real content');
+            done();
+          });
+      });
+    });
+    describe('Returns documents based on ID (GET /documents/<id>)', function() {
+      it('returns expected document', function(done) {
+        request(app)
+          .get('/documents/' + documentId)
+          .set('x-access-token', adminToken)
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            should.not.exist(error);
+            res.status.should.equal(200);
+            should.exist(res.body[0].content);
+            should.exist(res.body[0].title);
+            done();
+          });
+      });
+    });
+    describe('Deletes a document (DELETE /documents/:id)', function() {
+      it('deletes a document', function(done) {
+        request(app)
+          .delete('/documents/' + documentId)
+          .set('x-access-token', adminToken)
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            should.not.exist(error);
+            res.status.should.equal(200);
+            res.body.success.should.equal(true);
+            (res.body.message).should.containEql('Document deleted');
             done();
           });
       });

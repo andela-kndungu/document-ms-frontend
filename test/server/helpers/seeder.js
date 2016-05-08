@@ -54,9 +54,19 @@
           throw error;
         } else {
           Documents.seed(documents).then(function() {
-            callback(null);
+            Documents.find({}, function(error, documents) {
+              if (error) {
+                throw error;
+              }
+              else {
+                if (documents){
+                  var randomDocument = documents[100];
+                  callback(null, randomDocument._id);
+                }
+              }
+            });
           });
-
+          console.log('Successfully seeded data');
         }
       });
     }, function(error) {

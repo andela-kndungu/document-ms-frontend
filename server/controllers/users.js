@@ -3,6 +3,7 @@
 
   var jwt = require('jsonwebtoken');
   var Users = require('../models/users');
+  var Documents = require('../models/documents');
   var parseError = require('./parseError');
 
   module.exports = {
@@ -25,7 +26,8 @@
           // Return send success message
           res.json({
             success: true,
-            message: 'User created successfully'
+            message: 'User created successfully',
+            entry: user
           });
         }
       });
@@ -88,6 +90,114 @@
               });
             }
           });
+        }
+      });
+    },
+    getDocumentsById: function(req, res) {
+      // Get all entries in the users "table" based on provided id
+      Documents.find({
+        'owner_id': req.params.id
+      }, function(error, users) {
+        //  Inform user if anything goes wrong
+        if (error) {
+          res.status(500);
+          res.send('There was an error reading from the database');
+        } else {
+          // Else all's good, send results
+          res.json(users);
+        }
+      });
+    },
+    getUser: function(req, res) {
+      // Get all entries in the users "table" based on provided id
+      Users.find({
+        '_id': req.params.id
+      }, function(error, users) {
+        //  Inform user if anything goes wrong
+        if (error) {
+          res.status(500);
+          res.send('There was an error reading from the database');
+        } else {
+          // Else all's good, send results
+          res.json(users);
+        }
+      });
+    },
+    updateUser: function(req, res) {
+      // Return all entry in Users "table" with provided id
+      Users.find({
+        '_id': req.params.id
+      }, function(find_error, users) {
+        // In case of error inform user
+        if (find_error) {
+          console.log(find_error);
+          res.status(500);
+          res.send('Error reading from database');
+        } else{
+          if (users) {
+            // Update each entry found
+            users.forEach(function(user) {
+              // For every object property in the body
+              // Update it's corresponding db property
+              Object.keys(req.body).forEach(function(property) {
+                // Special cases for first and last names
+                if (property === 'firstName') {
+                  user.name.first = req.body.firstName;
+                } else if (property === 'lastName') {
+                  user.name.last = req.body.lastName;
+                } else {
+                  user[property] = req.body[property];
+                }
+
+                // "Row" can now have an updated value
+                user.updated = new Date();
+              });
+
+              // Save the updated "row"
+              user.save(function(save_error) {
+                // If error occured inform user
+                if (save_error) {
+                  res.status(500);
+                  res.send('Error saving to database');
+                }
+              });
+            });
+            // Return successfully updated object
+            res.json({
+              success: true,
+              message: 'User updated successfully',
+              entry: users[0]
+            });
+          } else {
+            // Inform user of error
+            res.json({
+              success: false,
+              message: 'User does not exist',
+            });
+          }
+        }
+      });
+    },
+    deleteUser: function(req, res) {
+      // Delete entry with provided id
+      Users.remove({
+        '_id': req.params.id
+      }, function(delete_error, delete_status) {
+        if (delete_error) {
+          res.status(500);
+          res.send('Error deleting from database');
+        } else {
+          if (delete_status.result.n > 0) {
+            res.json({
+              success: true,
+              message: 'User deleted successfully'
+            });
+          } else {
+            res.json({
+              success: false,
+              message: 'User does not exist'
+            });
+          }
         }
       });
     }
