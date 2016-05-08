@@ -6,13 +6,13 @@
   var request = require('supertest');
   var loginHelper = require('./helpers/login');
   var seeder = require('./helpers/seeder');
-  var adminToken, adminId;
+  var adminToken, adminId, userToken, userId;
 
   describe('Users', function() {
     before(function(done) {
       seeder(function(error) {
         if (error) {
-          throw(error);
+          throw (error);
         } else {
           loginHelper.admin(function(error, res) {
             if (error) {
@@ -20,13 +20,37 @@
             } else {
               adminToken = res.body.token;
               adminId = res.body.entry._id;
+              loginHelper.user(function(error, res) {
+                if (error) {
+                  throw error;
+                } else {
+                  userToken = res.body.token;
+                  userId = res.body.entry._id;
+                }
+                done();
+              });
             }
-            done();
           });
         }
       });
     });
-    describe('Returns all users', function() {
+    // describe('Returns a user based on ID (GET /users/<id>)', function(done) {
+    //   console.log('THE TOKEN IN THE REQUEST IS ' + adminToken);
+    //   request(app)
+    //     .get('/users/' + userId)
+    //     // .set('x-access-token', adminToken)
+    //     .set('Accept', 'application/json')
+    //     .end(function(error, res) {
+    //       console.log(res.body);
+    //       // console.log(res.body.token);
+    //       // should.not.exist(error);
+    //       // res.status.should.equal(200);
+    //       // should.exist(res.body.token);
+    //       // (res.body.entry.username).should.equal('newuser');
+    //       done();
+    //     });
+    // });
+    describe('Returns all users (GET /users/)', function() {
       it('responds with an array of all users', function(done) {
         request(app)
           .get('/users')
@@ -40,7 +64,7 @@
           });
       });
     });
-    describe('Creates a new user', function() {
+    describe('Creates a new user (POST /users/)', function() {
       it('successfully creates a new user', function(done) {
         request(app)
           .post('/users')
@@ -217,7 +241,7 @@
           });
       });
     });
-    describe('Returns all documents created by a user', function() {
+    describe('All user\'s documents (GET /users/<id>/documents)', function() {
       it('responds with an array of all the user\'s documents', function(done) {
         request(app)
           .get('/users/' + adminId + '/documents')
@@ -233,5 +257,82 @@
           });
       });
     });
+    describe('Returns a user based on ID (GET /users/<id>)', function() {
+      it('returns expected user', function(done) {
+        request(app)
+          .get('/users/' + userId)
+          .set('x-access-token', adminToken)
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            should.not.exist(error);
+            res.status.should.equal(200);
+            (res.body[0].username).should.equal('user');
+            done();
+          });
+      });
+    });
+    describe('Logs in a user (POST /users/login)', function() {
+      it('logs in user and returns expected user details', function(done) {
+        request(app)
+          .post('/users/login/')
+          .send({
+            username: 'newuser',
+            password: 'newPass'
+          })
+          .set('x-access-token', adminToken)
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            should.not.exist(error);
+            res.status.should.equal(200);
+            should.exist(res.body.token);
+            (res.body.entry.username).should.equal('newuser');
+            done();
+          });
+      });
+    });
+    describe('Updates a user (PUT /users/:id)', function() {
+      it('updates user details and returns new details', function(done) {
+        request(app)
+          .put('/users/' + userId)
+          .send({
+            email: 'anew@email.com',
+            username: 'anewuser',
+            firstName: 'NewName',
+            lastName: 'User',
+          })
+          .set('x-access-token', adminToken)
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            should.not.exist(error);
+            res.status.should.equal(200);
+            res.body.success.should.equal(true);
+            (res.body.message).should.containEql('User updated successfully');
+            (res.body.entry.username).should.containEql('anewuser');
+            (res.body.entry.name.first).should.containEql('NewName');
+            done();
+          });
+      });
+    });
+    // describe('Updates user details (PUT /users/:id)', function() {
+    //   it('updates user details and returns updated values', function() {});
+    // });
+
+    describe('Deletes a user (DELETE /users/:id)', function() {
+      it('deletes a user', function(done) {
+        request(app)
+          .delete('/users/' + userId)
+          .set('x-access-token', adminToken)
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            // console.log(res.body.status.ok);
+            should.not.exist(error);
+            res.status.should.equal(200);
+            res.body.success.should.equal(true);
+            (res.body.message).should.containEql('User deleted successfully');
+            done();
+          });
+      });
+    });
+
   });
 })();
