@@ -49,15 +49,11 @@
 
     // Finish up
     .then(function() {
-      console.log('7');
       generateDocuments(function(error, documents) {
         if (error) {
           throw error;
         } else {
           Documents.seed(documents).then(function() {
-            Documents.find({}, function(a,b) {
-              console.log(b);
-            });
             callback(null);
           });
 

@@ -21,7 +21,6 @@
 
       // If not admin return only specified role
       if (req.query.role && req.query.role !== 'admin') {
-        console.log('THE LIMIT IS ' + req.query.limit);
         query.where('role_of_creator').equals(req.query.role);
       }
 
