@@ -75,8 +75,8 @@
           .end(function(error, res) {
             // For every document in the response
             for (var i = 0; i < (res.body.length) - 1; i++) {
-              var currentDocument = new Date(res.body[i].created);
-              var nextDocument = new Date(res.body[i + 1].created);
+              var currentDocument = new Date(res.body[i].created_at);
+              var nextDocument = new Date(res.body[i + 1].created_at);
               // It was created after the next documcent in the array
               (currentDocument - nextDocument).should.not.be.lessThan(0);
             }
@@ -97,12 +97,12 @@
     describe('search by date', function() {
       it('returns public documents created on a specific date', function(done) {
         var today = new Date();
-        var year = today.getFullYear();
-        var month = parseInt(today.getMonth() + 1, 10) < 10 ?
-          '0' + (today.getMonth() + 1) :
+        var year = today.getUTCFullYear();
+        var month = parseInt(today.getUTCMonth() + 1, 10) < 10 ?
+          '0' + (today.getUTCMonth() + 1) :
           today.getMonth() + 1;
-        var day = parseInt(today.getDate(), 10) < 10 ?
-          '0' + today.getDate() :
+        var day = parseInt(today.getUTCDate(), 10) < 10 ?
+          '0' + today.getUTCDate() :
           today.getDate();
         // var day = today.getDate();
         var dateString = year + '-' + month + '-' + day;

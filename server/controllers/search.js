@@ -17,9 +17,9 @@
         var millisecondsInDay = 86400000;
         var requestedDay = new Date(req.query.date);
         var nextDay = new Date (requestedDay.getTime() + millisecondsInDay);
-        query.where('created')
+        query.where('created_at')
           .gte(requestedDay)
-          .lte(nextDay);
+          .lt(nextDay);
       }
 
       // If not admin return only specified role
@@ -34,7 +34,7 @@
 
       // Sort by date in descendig order (latest first)
       query.sort({
-        created: -1
+        created_at: -1
       });
 
       // Execute the query and return the results
