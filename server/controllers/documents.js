@@ -105,6 +105,7 @@
             Object.keys(req.body).forEach(function(property) {
               document[property] = req.body[property];
             });
+            document.category = 'user';
             // Save the updated category
             document.save(function(error) {
               // If error occured inform user

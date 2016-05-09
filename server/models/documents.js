@@ -4,6 +4,7 @@
   var mongoose = require('mongoose');
   var Schema = mongoose.Schema;
   var Users = require('../models/users');
+  var Categories = require('../models/categories');
 
   // Define a "Table"
   var DocumentsSchema = new Schema({
@@ -48,7 +49,20 @@
         if (user) {
           document.role_of_creator = user.role.title;
         }
-        next();
+        Categories.find({
+            'title': document.category
+          },
+          function(error, category) {
+            if (error) {
+              throw error;
+            }
+            if (category[0]) {
+              document.category = category[0]._id;
+            }
+            next();
+          });
+
+
       });
   });
 
