@@ -3,12 +3,11 @@
 
   var router = require('express').Router();
   var UsersController = require('../../controllers/users');
-  // var DocumentsController = require('../../controllers/documents');
 
   // e.g. GET localhost:8080/users
   router.get('/', UsersController.getAll);
 
-  // e.g. GET localhost:8080/users/13/documeents
+  // e.g. GET localhost:8080/users/13/documents
   router.get('/:id/documents', UsersController.getDocumentsById);
 
   // e.g. GET localhost:8080/users/13
