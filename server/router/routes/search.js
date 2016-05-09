@@ -1,7 +1,11 @@
-var router = require('express').Router();
-var SearchController = require('../../controllers/search');
+(function() {
+  'use strict';
 
-// e.g. GET localhost:8080/search
-router.get('/', SearchController.getAll);
+  var router = require('express').Router();
+  var SearchController = require('../../controllers/search');
 
-module.exports = router;
+  // e.g. GET localhost:8080/search
+  router.get('/', SearchController.getAll);
+
+  module.exports = router;
+})();

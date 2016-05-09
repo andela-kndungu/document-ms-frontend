@@ -250,7 +250,7 @@
           .end(function(error, res) {
             should.not.exist(error);
             res.status.should.equal(200);
-            (res.body[0].username).should.equal('user');
+            (res.body.entry.username).should.equal('user');
             done();
           });
       });
