@@ -1,10 +1,14 @@
-var router = require('express').Router();
-var CategoriesController = require('../../controllers/categories');
+(function() {
+  'use strict';
 
-// e.g. GET localhost:8080/roles
-router.get('/', CategoriesController.getAll);
+  var router = require('express').Router();
+  var CategoriesController = require('../../controllers/categories');
 
-// e.g. POST localhost:8080/roles
-router.post('/', CategoriesController.addRole);
+  // e.g. GET localhost:8080/roles
+  router.get('/', CategoriesController.getAll);
 
-module.exports = router;
+  // e.g. POST localhost:8080/roles
+  router.post('/', CategoriesController.addRole);
+
+  module.exports = router;
+})();

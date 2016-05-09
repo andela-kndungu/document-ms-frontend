@@ -1,10 +1,14 @@
-var router = require('express').Router();
-var RolesController = require('../../controllers/roles');
+(function() {
+  'use strict';
 
-// e.g. GET localhost:8080/roles
-router.get('/', RolesController.getAll);
+  var router = require('express').Router();
+  var RolesController = require('../../controllers/roles');
 
-// e.g. POST localhost:8080/roles
-router.post('/', RolesController.addRole);
+  // e.g. GET localhost:8080/roles
+  router.get('/', RolesController.getAll);
 
-module.exports = router;
+  // e.g. POST localhost:8080/roles
+  router.post('/', RolesController.addRole);
+
+  module.exports = router;
+})();
