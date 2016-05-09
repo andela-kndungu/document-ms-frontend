@@ -1,43 +1,47 @@
-// Set environment variableS in .env file when running locally
-if (!process.env.DATABASE_URI) {
-  require('dotenv').config();
-}
+(function() {
+  'use strict';
 
-// Set up express
-var express = require('express');
-var app = express();
+  // Set environment variableS in .env file when running locally
+  if (!process.env.DATABASE_URI) {
+    require('dotenv').config();
+  }
 
-// Set up the database
-var mongoose = require('mongoose');
-var dataseUri = process.env.DATABASE_URI;
-var db = mongoose.connect(dataseUri);
+  // Set up express
+  var express = require('express');
+  var app = express();
 
-// Provide feedback
-var db = mongoose.connection;
-db.on('error', function(error) {
+  // Set up the database
+  var mongoose = require('mongoose');
+  var dataseUri = process.env.DATABASE_URI;
+  var db = mongoose.connect(dataseUri);
+
+  // Provide feedback
+  var db = mongoose.connection;
+  db.on('error', function(error) {
     console.log(error);
-});
-db.once('open', function() {
+  });
+  db.once('open', function() {
     console.log('Successfully connected to db');
-});
+  });
 
-// Port set to value in .env file or 3000 default
-app.set('port', process.env.PORT || 3000);
+  // Port set to value in .env file or 3000 default
+  app.set('port', process.env.PORT || 3000);
 
-// Set up bodyParser
-var bodyParser = require('body-parser');
-app.use(bodyParser.urlencoded({
+  // Set up bodyParser
+  var bodyParser = require('body-parser');
+  app.use(bodyParser.urlencoded({
     extended: true
-}));
-app.use(bodyParser.json());
+  }));
+  app.use(bodyParser.json());
 
-// Handle all routes
-var router = require('./server/router')(app);
+  // Handle all routes
+  var router = require('./server/router')(app);
 
-// Start receiving request
-app.listen(app.get('port'), function() {
+  // Start receiving request
+  app.listen(app.get('port'), function() {
     console.log('Listening on port ' + app.get('port'));
-});
+  });
 
-// To be able to use with supertest
-module.exports = app;
+  // To be able to use with supertest
+  module.exports = app;
+})();

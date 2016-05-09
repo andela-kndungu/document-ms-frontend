@@ -110,63 +110,62 @@
     },
     getUser: function(req, res) {
       // Get all entries in the users "table" based on provided id
-      Users.find({
-        '_id': req.params.id
-      }, function(error, users) {
-        //  Inform user if anything goes wrong
+      Users.findById(req.params.id, function(error, user) {
         if (error) {
-          res.status(500);
-          res.send('There was an error reading from the database');
+          res.status(500).json({
+            success: false,
+            message: 'There was an error reading from the database'
+          });
         } else {
-          // Else all's good, send results
-          res.json(users);
+          if (user) {
+            res.json({
+              success: true,
+              message: 'User retrieved',
+              entry: user
+            });
+          } else {
+            res.json({
+              success: false,
+              message: 'User does not exist',
+            });
+          }
         }
       });
     },
     updateUser: function(req, res) {
-      // Return all entry in Users "table" with provided id
-      Users.find({
-        '_id': req.params.id
-      }, function(find_error, users) {
-        // In case of error inform user
-        if (find_error) {
-          console.log(find_error);
-          res.status(500);
-          res.send('Error reading from database');
+      // Get all entries in the users "table" based on provided id
+      Users.findById(req.params.id, function(error, user) {
+        if (error) {
+          res.status(500).json({
+            success: false,
+            message: 'There was an error reading from the database'
+          });
         } else {
-          if (users) {
-            // Update each entry found
-            users.forEach(function(user) {
-              // For every object property in the body
-              // Update it's corresponding db property
-              Object.keys(req.body).forEach(function(property) {
-                // Special cases for first and last names
-                if (property === 'firstName') {
-                  user.name.first = req.body.firstName;
-                } else if (property === 'lastName') {
-                  user.name.last = req.body.lastName;
-                } else {
-                  user[property] = req.body[property];
-                }
-              });
-
-              // Save the updated "row"
-              user.save(function(save_error) {
-                // If error occured inform user
-                if (save_error) {
-                  res.status(500);
-                  res.send('Error saving to database');
-                }
-              });
+          if (user) {
+            Object.keys(req.body).forEach(function(property) {
+              // Special cases for first and last names
+              if (property === 'firstName') {
+                user.name.first = req.body.firstName;
+              } else if (property === 'lastName') {
+                user.name.last = req.body.lastName;
+              } else {
+                user[property] = req.body[property];
+              }
             });
-            // Return successfully updated object
-            res.json({
-              success: true,
-              message: 'User updated successfully',
-              entry: users[0]
+            // Save the updated "row"
+            user.save(function(error) {
+              // If error occured inform user
+              if (error) {
+                parseError(res, error);
+              } else {
+                res.json({
+                  success: true,
+                  message: 'User updated successfully',
+                  entry: user
+                });
+              }
             });
           } else {
-            // Inform user of error
             res.json({
               success: false,
               message: 'User does not exist',
@@ -177,14 +176,14 @@
     },
     deleteUser: function(req, res) {
       // Delete entry with provided id
-      Users.remove({
-        '_id': req.params.id
-      }, function(delete_error, delete_status) {
-        if (delete_error) {
-          res.status(500);
-          res.send('Error deleting from database');
+      Users.findByIdAndRemove(req.params.id, function(error, user) {
+        if (error) {
+          res.status(500).json({
+            success: false,
+            message: 'There was an error reading from the database'
+          });
         } else {
-          if (delete_status.result.n > 0) {
+          if (user) {
             res.json({
               success: true,
               message: 'User deleted successfully'

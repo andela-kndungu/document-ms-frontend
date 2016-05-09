@@ -1,57 +1,61 @@
-// To process token
-var jwt = require('jsonwebtoken');
+(function() {
+  'use strict';
 
-// Get the routes
-var publicRoutes = require('./routes/public');
-var usersRoutes = require('./routes/users');
-var rolesRoutes = require('./routes/roles');
-var categoriesRoutes = require('./routes/categories');
-var documentsRoutes = require('./routes/documents');
-var searchRoutes = require('./routes/search');
+  // To process token
+  var jwt = require('jsonwebtoken');
 
-// Middleware to protect sensitive routes
-var authenticateUser = function(req, res, next) {
-  // Get token in the request header
-  var token = req.headers['x-access-token'];
+  // Get the routes
+  var publicRoutes = require('./routes/public');
+  var usersRoutes = require('./routes/users');
+  var rolesRoutes = require('./routes/roles');
+  var categoriesRoutes = require('./routes/categories');
+  var documentsRoutes = require('./routes/documents');
+  var searchRoutes = require('./routes/search');
 
-  // If there is a token
-  if (token) {
-    // Decode token with the secret key
-    jwt.verify(token, process.env.SECRET_KEY, function(error, decoded) {
-      // Perhaps a forged token
-      if (error) {
-        return res.status(403).send({
-          success: false,
-          message: 'Failed to authenticate token'
-        });
-      } else {
-        // If it checks out save in request object for others to use
-        req.decoded = decoded;
+  // Middleware to protect sensitive routes
+  var authenticateUser = function(req, res, next) {
+    // Get token in the request header
+    var token = req.headers['x-access-token'];
 
-        // Pass it over to the next function
-        next();
-      }
-    });
+    // If there is a token
+    if (token) {
+      // Decode token with the secret key
+      jwt.verify(token, process.env.SECRET_KEY, function(error, decoded) {
+        // Perhaps a forged token
+        if (error) {
+          return res.status(403).send({
+            success: false,
+            message: 'Failed to authenticate token'
+          });
+        } else {
+          // If it checks out save in request object for others to use
+          req.decoded = decoded;
 
-  } else {
-    // No token provided
-    return res.status(403).send({
-      success: false,
-      message: 'No token provided.'
-    });
+          // Pass it over to the next function
+          next();
+        }
+      });
 
-  }
-};
+    } else {
+      // No token provided
+      return res.status(403).send({
+        success: false,
+        message: 'No token provided.'
+      });
 
-module.exports = function(app) {
-  // Use routes above based on route visited by user
-  app.use('/', publicRoutes);
+    }
+  };
 
-  // Protect sensitive routes
-  app.use(authenticateUser);
-  app.use('/users', usersRoutes);
-  app.use('/roles', rolesRoutes);
-  app.use('/categories', categoriesRoutes);
-  app.use('/documents', documentsRoutes);
-  app.use('/search', searchRoutes);
-};
+  module.exports = function(app) {
+    // Use routes above based on route visited by user
+    app.use('/', publicRoutes);
+
+    // Protect sensitive routes
+    app.use(authenticateUser);
+    app.use('/users', usersRoutes);
+    app.use('/roles', rolesRoutes);
+    app.use('/categories', categoriesRoutes);
+    app.use('/documents', documentsRoutes);
+    app.use('/search', searchRoutes);
+  };
+})();

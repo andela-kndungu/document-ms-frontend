@@ -69,55 +69,57 @@
       });
     },
     getDocument: function(req, res) {
-      // Get all entries in the documents "table" based on provided id
-      Documents.find({
-        '_id': req.params.id
-      }, function(error, documents) {
-        //  Inform user if anything goes wrong
+      // Get entry in the documents "table" based on provided id
+      Documents.findById(req.params.id, function(error, document) {
         if (error) {
-          res.status(500);
-          res.send('There was an error reading from the database');
+          res.status(500).json({
+            success: false,
+            message: 'There was an error reading from the database'
+          });
         } else {
-          // Else all's good, send results
-          res.json(documents);
+          if (document) {
+            res.json({
+              success: true,
+              message: 'Document retrieved',
+              entry: document
+            });
+          } else {
+            res.json({
+              success: false,
+              message: 'Document does not exist',
+            });
+          }
         }
       });
     },
     updateDocument: function(req, res) {
-      // Return all entry in Documents "table" with provided id
-      Documents.find({
-        '_id': req.params.id
-      }, function(find_error, documents) {
-        // In case of error inform user
-        if (find_error) {
-          console.log(find_error);
-          res.status(500);
-          res.send('Error reading from database');
-        } else{
-          if (documents) {
-            // Update each entry found
-            documents.forEach(function(document) {
-              // For every object property in the body
-              // Update it's corresponding db property
-              Object.keys(req.body).forEach(function(property) {
-                document[property] = req.body[property];
-              });
+      // Update document with provided id
+      Documents.findById(req.params.id, function(error, document) {
+        if (error) {
+          res.status(500).json({
+            success: false,
+            message: 'There was an error reading from the database'
+          });
+        } else {
+          if (document) {
+            Object.keys(req.body).forEach(function(property) {
+              document[property] = req.body[property];
+            });
+            // Save the updated category
+            document.save(function(error) {
+              // If error occured inform user
+              if (error) {
+                parseError(res, error);
+              } else {
+                // Return successfully updated category
+                res.json({
+                  success: true,
+                  message: 'Document updated successfully',
+                  entry: document
+                });
+              }
+            });
 
-              // Save the updated "row"
-              document.save(function(save_error) {
-                // If error occured inform user
-                if (save_error) {
-                  res.status(500);
-                  res.send('Error saving to database');
-                }
-              });
-            });
-            // Return successfully updated object
-            res.json({
-              success: true,
-              message: 'Document updated successfully',
-              entry: documents[0]
-            });
           } else {
             // Inform user of error
             res.json({
@@ -130,14 +132,14 @@
     },
     deleteDocument: function(req, res) {
       // Delete entry with provided id
-      Documents.remove({
-        '_id': req.params.id
-      }, function(delete_error, delete_status) {
-        if (delete_error) {
-          res.status(500);
-          res.send('Error deleting from database');
+      Documents.findByIdAndRemove(req.params.id, function(error, document) {
+        if (error) {
+          res.status(500).json({
+            success: false,
+            message: 'There was an error reading from the database'
+          });
         } else {
-          if (delete_status.result.n > 0) {
+          if (document) {
             res.json({
               success: true,
               message: 'Document deleted successfully'

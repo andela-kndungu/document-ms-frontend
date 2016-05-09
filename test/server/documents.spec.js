@@ -164,8 +164,8 @@
           .end(function(error, res) {
             should.not.exist(error);
             res.status.should.equal(200);
-            should.exist(res.body[0].content);
-            should.exist(res.body[0].title);
+            should.exist(res.body.entry.content);
+            should.exist(res.body.entry.title);
             done();
           });
       });
