@@ -8,7 +8,7 @@
 Andela's Javascript curiculum third checkpoint.
 
 ## Accessing the API the easy way
-Naviage to `ennovat.xyz` on your browser
+Naviage to `http://ennovate.xyz` on your browser
 
 ## Accessing the API the hard way
 
