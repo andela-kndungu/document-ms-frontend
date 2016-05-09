@@ -2,6 +2,7 @@
   'use strict';
 
   var Documents = require('../models/documents');
+  var Categories = require('../models/categories');
   var parseError = require('./parseError');
 
   module.exports = {
@@ -16,14 +17,34 @@
       if (req.query.date) {
         var millisecondsInDay = 86400000;
         var requestedDay = new Date(req.query.date);
-        var nextDay = new Date (requestedDay.getTime() + millisecondsInDay);
+        var nextDay = new Date(requestedDay.getTime() + millisecondsInDay);
         query.where('created_at')
           .gte(requestedDay)
           .lt(nextDay);
       }
 
       // If not admin return only specified role
-      if (req.query.role && req.query.role !== 'admin') {
+      if (req.query.category) {
+        Categories.find()
+          .where('title').equals(req.query.category)
+          .exec(function(error, documents) {
+            if (error) {
+              throw error;
+            } else {
+              if (documents[0]) {
+                query.where('category').equals(documents[0]._id);
+              } else {
+                res.status(400).json({
+                  success: false,
+                  message: 'Category does not exist'
+                });
+              }
+            }
+          });
+      }
+
+      // If not admin return only specified role
+      if (req.query.role) {
         query.where('role_of_creator').equals(req.query.role);
       }
 
