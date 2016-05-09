@@ -3,8 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha ./test/server/*.spec.js",
-    "posttest": "babel-node ./node_modules/.bin/babel-istanbul cover --dir test/server/coverage ./node_modules/.bin/_mocha ./test/server/*.spec.js && cat ./test/server/coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
+    "test": "babel-node ./node_modules/.bin/babel-istanbul cover --dir test/server/coverage ./node_modules/.bin/_mocha ./test/server/*.spec.js",
+    "posttest": "npm run coverage",
+    "coverage": "cat ./test/server/coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
