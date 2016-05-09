@@ -29,7 +29,7 @@
 
       // Sort by date in descendig order (latest first)
       query.sort({
-        created: -1
+        created_at: -1
       });
 
       // Execute the query and return the results
@@ -101,9 +101,6 @@
               // Update it's corresponding db property
               Object.keys(req.body).forEach(function(property) {
                 document[property] = req.body[property];
-
-                // "Row" can now have an updated value
-                document.updated = new Date();
               });
 
               // Save the updated "row"

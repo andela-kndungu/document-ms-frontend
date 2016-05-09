@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha ./test/server/*.spec.js",
-    "posttest": "babel-node ./node_modules/.bin/babel-istanbul cover --dir test/server/coverage ./node_modules/.bin/_mocha ./test/server/*.spec.js"
+    "posttest": "babel-node ./node_modules/.bin/babel-istanbul cover --dir test/server/coverage ./node_modules/.bin/_mocha ./test/server/*.spec.js && cat ./test/server/coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
@@ -18,6 +18,7 @@
     "babel-cli": "^6.8.0",
     "babel-core": "^6.8.0",
     "babel-istanbul": "^0.8.0",
+    "coveralls": "^2.11.9",
     "mocha": "^2.4.5",
     "should": "^8.3.1",
     "supertest": "^1.2.0"

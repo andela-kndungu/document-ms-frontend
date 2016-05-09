@@ -50,7 +50,7 @@
           .end(function(error, res) {
             // Date arithmetic
             var now = new Date().getTime();
-            var created = new Date(res.body.entry.created);
+            var created = new Date(res.body.entry.created_at);
             should.not.exist(error);
             res.status.should.equal(200);
             (res.body.success).should.equal(true);
@@ -74,7 +74,7 @@
           .end(function(error, res) {
             // Date arithmetic
             var now = new Date().getTime();
-            var created = new Date(res.body.entry.created);
+            var created = new Date(res.body.entry.created_at);
             should.not.exist(error);
             res.status.should.equal(200);
             (res.body.success).should.equal(true);
@@ -93,8 +93,8 @@
           .end(function(error, res) {
             // For every document in the response
             for (var i = 0; i < (res.body.length) - 1; i++) {
-              var documentCreated = new Date(res.body[i].created);
-              var nextDocumentCreated = new Date(res.body[i + 1].created);
+              var documentCreated = new Date(res.body[i].created_at);
+              var nextDocumentCreated = new Date(res.body[i + 1].created_at);
               // It was created after the next documcent in the array
               (documentCreated - nextDocumentCreated).should.not.be.lessThan(0);
             }
@@ -109,8 +109,8 @@
           .end(function(error, res) {
             // For every document in the response
             for (var i = 0; i < (res.body.length) - 1; i++) {
-              var documentCreated = new Date(res.body[i].created);
-              var nextDocumentCreated = new Date(res.body[i + 1].created);
+              var documentCreated = new Date(res.body[i].created_at);
+              var nextDocumentCreated = new Date(res.body[i + 1].created_at);
               // It was created after the next documcent in the array
               (documentCreated - nextDocumentCreated).should.not.be.lessThan(0);
             }
@@ -125,8 +125,8 @@
           .end(function(error, res) {
             // For every document in the response
             for (var i = 0; i < (res.body.length) - 1; i++) {
-              var documentCreated = new Date(res.body[i].created);
-              var nextDocumentCreated = new Date(res.body[i + 1].created);
+              var documentCreated = new Date(res.body[i].created_at);
+              var nextDocumentCreated = new Date(res.body[i + 1].created_at);
               // It was created after the next documcent in the array
               (documentCreated - nextDocumentCreated).should.not.be.lessThan(0);
             }

@@ -133,7 +133,7 @@
           console.log(find_error);
           res.status(500);
           res.send('Error reading from database');
-        } else{
+        } else {
           if (users) {
             // Update each entry found
             users.forEach(function(user) {
@@ -148,9 +148,6 @@
                 } else {
                   user[property] = req.body[property];
                 }
-
-                // "Row" can now have an updated value
-                user.updated = new Date();
               });
 
               // Save the updated "row"
