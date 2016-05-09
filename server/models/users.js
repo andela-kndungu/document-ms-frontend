@@ -30,15 +30,15 @@ var UserSchema = new Schema({
     type: String,
     required: [true, 'A password must be provided']
   },
-  created: {
-    type: Date,
-    default: Date.now
-  },
-  updated: Date,
   role: {
     type: String,
     required: [true, 'A role must be provided'],
     ref: 'Roles'
+  }
+}, {
+  timestamps: {
+    createdAt: 'created_at',
+    updatedAt: 'updated_at'
   }
 });
 
@@ -56,7 +56,9 @@ var hashPassword = function(plainPassword, callback) {
 
 // Helper function to get role's object id
 var stringToObjectId = function(roleString, callback) {
-  Roles.findOne({'title': roleString}, function(error, role) {
+  Roles.findOne({
+    'title': roleString
+  }, function(error, role) {
     if (error) {
       callback(error);
     } else {

@@ -44,7 +44,7 @@
         email: 'new@user.com',
         username: 'newuser',
         _id: '572a7a4153c50f810dc37d8b',
-        created: '2016-05-04T22:40:01.657Z',
+        created_at: '2016-05-04T22:40:01.657Z',
         name: [Object],
         __v: 0
       }

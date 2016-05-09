@@ -16,11 +16,6 @@ var DocumentsSchema = new Schema({
     type: String,
     required: [true, 'Some content must be provided']
   },
-  created: {
-    type: Date,
-    default: Date.now
-  },
-  updated: Date,
   category: {
     type: String,
     required: [true, 'A category must be provided'],
@@ -34,6 +29,11 @@ var DocumentsSchema = new Schema({
     enum: ['private', 'public'],
     required: [true, 'An access right must be provided']
   },
+}, {
+  timestamps: {
+    createdAt: 'created_at',
+    updatedAt: 'updated_at'
+  }
 });
 
 // To enable searching of documents by role
