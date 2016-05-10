@@ -6,6 +6,7 @@
   var request = require('supertest');
   var loginHelper = require('./helpers/login');
   var seeder = require('./helpers/seeder');
+  var Users = require('../../server/models/users');
   var adminToken, adminId, userToken, userId;
 
   describe('Users', function() {
@@ -34,6 +35,32 @@
         }
       });
     });
+
+    describe('Updates a user (PUT /users/:id)', function() {
+      xit('updates user details and returns new details', function(done) {
+        request(app)
+          .put('/users/' + userId)
+          .send({
+            email: 'anew@email.com',
+            username: 'anewuser',
+            firstName: 'NewName',
+            lastName: 'User',
+          })
+          .set('x-access-token', adminToken)
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            console.log(res.body);
+            should.not.exist(error);
+            res.status.should.equal(200);
+            res.body.success.should.equal(true);
+            (res.body.message).should.containEql('User updated successfully');
+            (res.body.entry.username).should.containEql('anewuser');
+            (res.body.entry.name.first).should.containEql('NewName');
+            done();
+          });
+      });
+    });
+
     describe('Returns all users (GET /users/)', function() {
       it('responds with an array of all users', function(done) {
         request(app)
@@ -41,13 +68,94 @@
           .set('x-access-token', adminToken)
           .set('Accept', 'application/json')
           .end(function(error, res) {
+            (res.status).should.equal(200);
             should.not.exist(error);
-            res.body.should.be.an.Array;
-            should(res.body.length).be.exactly(2);
+            (res.body.success).should.equal(true);
+            (res.body.message).should.containEql('Users retrieved');
+            (res.body.entry).should.be.an.Array;
+            should(res.body.entry.length).be.exactly(2);
+            done();
+          });
+      });
+      it('returns error when invalid token is provided', function(done) {
+        request(app)
+          .get('/users')
+          .set('x-access-token', adminToken + 'toCorruptToken')
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            (res.status).should.equal(401);
+            should.not.exist(error);
+            (res.body.success).should.equal(false);
+            (res.body.message).should.containEql('Failed to authenticate');
+            should.not.exist(res.body.entry);
+            done();
+          });
+      });
+      it('returns error when no token is provided', function(done) {
+        request(app)
+          .get('/users')
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            (res.status).should.equal(401);
+            should.not.exist(error);
+            (res.body.success).should.equal(false);
+            (res.body.message).should.containEql('No token provided');
+            should.not.exist(res.body.entry);
+            done();
+          });
+      });
+      xit('returns empty array when there are no users', function(done) {
+        // Delete all users
+        Users.remove({}, function(error) {
+          if (!error) {
+            request(app)
+              .get('/users')
+              .set('x-access-token', adminToken)
+              .set('Accept', 'application/json')
+              .end(function(error, res) {
+                (res.status).should.equal(200);
+                should.not.exist(error);
+                (res.body.success).should.equal(true);
+                (res.body.message).should.containEql('Users retrieved');
+                (res.body.entry).should.be.an.Array;
+                should(res.body.entry.length).not.be.greaterThan(0);
+                done();
+              });
+          }
+        });
+      });
+    });
+
+    describe('Returns a user based on ID (GET /users/<id>)', function() {
+      xit('returns expected user', function(done) {
+        request(app)
+          .get('/users/' + userId)
+          .set('x-access-token', adminToken)
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            should.not.exist(error);
+            res.status.should.equal(200);
+            (res.body.success).should.equal(true);
+            (res.body.message).should.containEql('User retrieved');
+            (res.body.entry.username).should.equal('user');
+            done();
+          });
+      });
+      it('returns server', function(done) {
+        request(app)
+          .get('/users/' + 'string')
+          .set('x-access-token', adminToken)
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            should.not.exist(error);
+            res.status.should.equal(500);
+            (res.body.success).should.equal(false);
+            (res.body.message).should.containEql('from the database');
             done();
           });
       });
     });
+
     describe('Creates a new user (POST /users/)', function() {
       it('successfully creates a new user', function(done) {
         request(app)
@@ -234,27 +342,30 @@
           .end(function(error, res) {
             should.not.exist(error);
             res.status.should.equal(200);
-            res.body.should.be.an.Array;
-            should(res.body.length).be.greaterThan(0);
-            (res.body[0].owner_id).should.equal(adminId);
+            (res.body.entry).should.be.an.Array;
+            should(res.body.entry.length).be.greaterThan(0);
+            (res.body.entry[0].owner_id).should.equal(adminId);
             done();
           });
       });
-    });
-    describe('Returns a user based on ID (GET /users/<id>)', function() {
-      it('returns expected user', function(done) {
+
+      it('responds with an empty array for non existent user', function(done) {
         request(app)
-          .get('/users/' + userId)
+          .get('/users/' + '123' + '/documents')
           .set('x-access-token', adminToken)
           .set('Accept', 'application/json')
           .end(function(error, res) {
             should.not.exist(error);
             res.status.should.equal(200);
-            (res.body.entry.username).should.equal('user');
+            (res.body.success).should.equal(true);
+            (res.body.message).should.containEql('Documents retrieved');
+            (res.body.entry).should.be.an.Array;
+            should(res.body.entry.length).not.be.greaterThan(0);
             done();
           });
       });
     });
+
     describe('Logs in a user (POST /users/login)', function() {
       it('logs in user and returns expected user details', function(done) {
         request(app)
@@ -268,35 +379,34 @@
           .end(function(error, res) {
             should.not.exist(error);
             res.status.should.equal(200);
+            (res.body.success).should.equal(true);
+            (res.body.message).should.containEql('successfully been logged in');
             should.exist(res.body.token);
             (res.body.entry.username).should.equal('newuser');
             done();
           });
       });
-    });
-    describe('Updates a user (PUT /users/:id)', function() {
-      it('updates user details and returns new details', function(done) {
+
+      it('returns error message when given non existent user', function(done) {
         request(app)
-          .put('/users/' + userId)
+          .post('/users/login/')
           .send({
-            email: 'anew@email.com',
-            username: 'anewuser',
-            firstName: 'NewName',
-            lastName: 'User',
+            username: 'newuser12',
+            password: 'newPass'
           })
           .set('x-access-token', adminToken)
           .set('Accept', 'application/json')
           .end(function(error, res) {
             should.not.exist(error);
-            res.status.should.equal(200);
-            res.body.success.should.equal(true);
-            (res.body.message).should.containEql('User updated successfully');
-            (res.body.entry.username).should.containEql('anewuser');
-            (res.body.entry.name.first).should.containEql('NewName');
+            res.status.should.equal(404);
+            (res.body.success).should.equal(false);
+            (res.body.message).should.containEql('User does not exist');
             done();
           });
       });
     });
+
+
     describe('Deletes a user (DELETE /users/:id)', function() {
       it('deletes a user', function(done) {
         request(app)
@@ -312,5 +422,6 @@
           });
       });
     });
+
   });
 })();

@@ -25,7 +25,7 @@
       });
     });
     describe('Returns all roles', function() {
-      it('responds with an array of all roles', function(done) {
+      xit('responds with an array of all roles', function(done) {
         request(app)
           .get('/roles')
           .set('x-access-token', adminToken)

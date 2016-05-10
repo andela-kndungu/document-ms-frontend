@@ -25,7 +25,7 @@
       });
     });
     describe('Returns all categories', function() {
-      it('responds with an array of all categories', function(done) {
+      xit('responds with an array of all categories', function(done) {
         request(app)
           .get('/categories')
           .set('x-access-token', adminToken)

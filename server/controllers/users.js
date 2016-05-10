@@ -52,7 +52,7 @@
           if (user) {
             return res.json({
               success: true,
-              message: 'Category retrieved',
+              message: 'User retrieved',
               entry: user
             });
           }
@@ -60,7 +60,7 @@
           // Failed, no user with specified ID
           return res.status(404).json({
             success: false,
-            message: 'Category does not exist',
+            message: 'User does not exist',
           });
         });
       },
@@ -80,7 +80,7 @@
           // Success, return retrieved categories with success message
           return res.json({
             success: true,
-            message: 'Categories retrieved',
+            message: 'Users retrieved',
             entry: users
           });
         });
@@ -102,7 +102,7 @@
           // Success, return retrieved documents with success message
           return res.json({
             success: true,
-            message: 'Categories retrieved',
+            message: 'Documents retrieved',
             entry: documents
           });
 
@@ -144,7 +144,7 @@
             // Category updated, return success message
             return res.json({
               success: true,
-              message: 'Category created successfully',
+              message: 'User updated successfully',
               entry: user
             });
 
@@ -154,7 +154,7 @@
         // Failed, no document with specified ID
         return res.status(404).json({
           success: false,
-          message: 'Category does not exist',
+          message: 'User does not exist',
         });
       });
     },
@@ -203,7 +203,7 @@
         if (!user) {
           return res.status(404).json({
             success: false,
-            message: 'Category does not exist',
+            message: 'User does not exist',
           });
         }
 
