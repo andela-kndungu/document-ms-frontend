@@ -25,15 +25,15 @@
       });
     });
     describe('Returns all roles', function() {
-      xit('responds with an array of all roles', function(done) {
+      it('responds with an array of all roles', function(done) {
         request(app)
           .get('/roles')
           .set('x-access-token', adminToken)
           .set('Accept', 'application/json')
           .end(function(error, res) {
             should.not.exist(error);
-            res.body.should.be.an.Array;
-            should(res.body.length).be.exactly(2);
+            (res.body.entry).should.be.an.Array;
+            should(res.body.entry.length).be.exactly(2);
             done();
           });
       });

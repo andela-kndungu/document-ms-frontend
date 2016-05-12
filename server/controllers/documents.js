@@ -65,14 +65,55 @@
 
       // Retrieve all documents
       all: function(req, res) {
+        // Using query builder
+        var query = Documents.find();
+
+        // Only return documents marked as public
+        query.where('access_rights').equals('public');
+
+        // Return documents created on a specific day
+        if (req.query.date) {
+          var millisecondsInDay = 86400000;
+          var requestedDay = new Date(req.query.date);
+          var nextDay = new Date(requestedDay.getTime() + millisecondsInDay);
+          query.where('created_at')
+            .gte(requestedDay)
+            .lt(nextDay);
+        }
+
+        // Returns all documents in requested category
+        if (req.query.category) {
+          // Find requested category in the Categories model
+          Categories.find()
+            .where('title').equals(req.query.category)
+            .exec(function(error, categories) {
+              if (error) {
+                throw error;
+              }
+              // If the category is found
+              if (categories[0]) {
+                // Look for documents with the category's id
+                query.where('category').equals(categories[0]._id);
+              } else {
+                res.status(400).json({
+                  success: false,
+                  message: 'Category does not exist'
+                });
+              }
+
+            });
+        }
+
+        // Returns all documents in requested role
+        if (req.query.role) {
+          query.where('role_of_creator').equals(req.query.role);
+        }
+
         // Number of documents to be returned
         var limit = req.query.limit ? parseInt(req.query.limit, 10) : undefined;
 
         // Start page
         var page = req.query.page ? parseInt(req.query.page, 10) : undefined;
-
-        // Returns the values when executed
-        var query = Documents.find();
 
         // If a specific page is requested with a limit
         if (page) {
@@ -95,6 +136,7 @@
         query.exec(function(error, documents) {
           // Inform user of errors with the database
           if (error) {
+            console.log(error);
             return res.status(500).json({
               success: false,
               message: 'There was a databse error'
@@ -140,17 +182,17 @@
             // Document updated, return success message
             return res.json({
               success: true,
-              message: 'Category created successfully',
+              message: 'Document updated',
               entry: document
             });
           });
+        } else {
+          // Failed, no document with specified ID
+          return res.status(404).json({
+            success: false,
+            message: 'Document does not exist',
+          });
         }
-
-        // Failed, no document with specified ID
-        return res.status(404).json({
-          success: false,
-          message: 'Document does not exist',
-        });
       });
     },
 
@@ -181,7 +223,7 @@
         });
       });
     },
-    search: function(req, res) {
+    abc: function(req, res) {
       console.log('THE PARAMETER PASSED IS ');
       // Using query builder
       var query = Documents.find();
@@ -241,7 +283,9 @@
       query.exec(function(error, documents) {
         // Inform user of errors with the database
         if (error) {
-          return res.status(500).json({
+          console.log('ALALALALALALALALALAL');
+          console.log(error);
+          return res.status(507).json({
             success: false,
             message: 'There was a databse error'
           });

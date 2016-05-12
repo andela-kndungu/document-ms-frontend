@@ -135,7 +135,7 @@
       });
     });
     describe('Updates a document (PUT /documents/:id)', function() {
-      xit('updates a document and returns new details', function(done) {
+      it('updates a document and returns new details', function(done) {
         request(app)
           .put('/documents/' + documentId)
           .send({
@@ -156,7 +156,7 @@
       });
     });
     describe('Returns documents based on ID (GET /documents/<id>)', function() {
-      xit('returns expected document', function(done) {
+      it('returns expected document', function(done) {
         request(app)
           .get('/documents/' + documentId)
           .set('x-access-token', adminToken)

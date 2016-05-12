@@ -26,66 +26,66 @@
       });
     });
     describe('Search by role', function() {
-      xit('returns all doucments accessible by the admin', function(done) {
+      it('returns all doucments accessible by the admin', function(done) {
         request(app)
-          .get('/documents/search?role=admin')
+          .get('/documents?role=admin')
           .set('x-access-token', adminToken)
           .set('Accept', 'application/json')
           .end(function(error, res) {
             should.not.exist(error);
-            (res.body).should.be.an.Array;
+            (res.body.entry).should.be.an.Array;
             res.status.should.equal(200);
-            should(res.body.length).be.greaterThan(0);
+            should(res.body.entry.length).be.greaterThan(0);
             done();
           });
       });
-      xit('returns all doucments accessible by the user', function(done) {
+      it('returns all doucments accessible by the user', function(done) {
         request(app)
-          .get('/documents/search?role=user')
+          .get('/documents?role=user')
           .set('x-access-token', adminToken)
           .set('Accept', 'application/json')
           .end(function(error, res) {
             should.not.exist(error);
-            (res.body).should.be.an.Array;
-            should(res.body.length).be.greaterThan(0);
+            (res.body.entry).should.be.an.Array;
+            should(res.body.entry.length).be.greaterThan(0);
             done();
           });
       });
-      xit('admin\'s returned doucments are sorted by date', function(done) {
+      it('admin\'s returned doucments are sorted by date', function(done) {
         request(app)
-          .get('/documents/search?role=admin')
+          .get('/documents?role=admin')
           .set('x-access-token', adminToken)
           .set('Accept', 'application/json')
           .end(function(error, res) {
             // For every document in the response
             for (var i = 0; i < (res.body.length) - 1; i++) {
-              var currentDocument = new Date(res.body[i].created);
-              var nextDocument = new Date(res.body[i + 1].created);
+              var currentDocument = new Date(res.body.entry[i].created);
+              var nextDocument = new Date(res.body.entry[i + 1].created);
               // It was created after the next documcent in the array
               (currentDocument - nextDocument).should.not.be.lessThan(0);
             }
             done();
           });
       });
-      xit('user\'s returned doucments are sorted by date', function(done) {
+      it('user\'s returned doucments are sorted by date', function(done) {
         request(app)
-          .get('/documents/search?role=user')
+          .get('/documents?role=user')
           .set('x-access-token', adminToken)
           .set('Accept', 'application/json')
           .end(function(error, res) {
             // For every document in the response
             for (var i = 0; i < (res.body.length) - 1; i++) {
-              var currentDocument = new Date(res.body[i].created_at);
-              var nextDocument = new Date(res.body[i + 1].created_at);
+              var currentDocument = new Date(res.body.entry[i].created_at);
+              var nextDocument = new Date(res.body.entry[i + 1].created_at);
               // It was created after the next documcent in the array
               (currentDocument - nextDocument).should.not.be.lessThan(0);
             }
             done();
           });
       });
-      xit('number of returned doucments can be specified', function(done) {
+      it('number of returned doucments can be specified', function(done) {
         request(app)
-          .get('/documents/search?role=admin&&limit=10')
+          .get('/documents?role=admin&limit=10')
           .set('x-access-token', adminToken)
           .set('Accept', 'application/json')
           .end(function(error, res) {
@@ -95,7 +95,7 @@
       });
     });
     describe('search by date', function() {
-      xit('returns public documents created on a specific date', function(done) {
+      it('returns public documents created on a specific date', function(done) {
         var today = new Date();
         var year = today.getUTCFullYear();
         var month = parseInt(today.getUTCMonth() + 1, 10) < 10 ?
@@ -107,16 +107,16 @@
         // var day = today.getDate();
         var dateString = year + '-' + month + '-' + day;
         request(app)
-          .get('/documents/search?date=' + dateString)
+          .get('/documents?date=' + dateString)
           .set('x-access-token', adminToken)
           .set('Accept', 'application/json')
           .end(function(error, res) {
             res.status.should.equal(200);
-            should(res.body.length).be.greaterThan(0);
+            should(res.body.entry.length).be.greaterThan(0);
             done();
           });
       });
-      xit('no documents are returned for an invalid date', function(done) {
+      it('no documents are returned for an invalid date', function(done) {
         var today = new Date();
         var year = today.getFullYear();
         var month = parseInt(today.getMonth() + 2, 10) < 10 ?
@@ -127,12 +127,12 @@
           today.getDate();
         var dateString = year + '-' + month + '-' + day;
         request(app)
-          .get('/documents/search?date=' + dateString)
+          .get('/documents?date=' + dateString)
           .set('x-access-token', adminToken)
           .set('Accept', 'application/json')
           .end(function(error, res) {
             res.status.should.equal(200);
-            should(res.body.length).be.exactly(0);
+            should(res.body.entry.length).be.exactly(0);
             done();
           });
       });

@@ -25,15 +25,15 @@
       });
     });
     describe('Returns all categories', function() {
-      xit('responds with an array of all categories', function(done) {
+      it('responds with an array of all categories', function(done) {
         request(app)
           .get('/categories')
           .set('x-access-token', adminToken)
           .set('Accept', 'application/json')
           .end(function(error, res) {
             should.not.exist(error);
-            res.body.should.be.an.Array;
-            should(res.body.length).be.exactly(2);
+            (res.body.entry).should.be.an.Array;
+            should(res.body.entry.length).be.exactly(2);
             done();
           });
       });

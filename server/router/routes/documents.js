@@ -19,8 +19,5 @@
   // Delete document by id (DELETE localhost:8080/documents/id)
   router.delete('/:id', DocumentsController.destroy);
 
-  // Search documents (DELETE localhost:8080/documents/search)
-  router.get('/search', DocumentsController.search);
-
   module.exports = router;
 })();

@@ -149,13 +149,13 @@
             });
 
           });
+        }else {
+          // Failed, no document with specified ID
+          return res.status(404).json({
+            success: false,
+            message: 'User does not exist',
+          });
         }
-
-        // Failed, no document with specified ID
-        return res.status(404).json({
-          success: false,
-          message: 'User does not exist',
-        });
       });
     },
 
