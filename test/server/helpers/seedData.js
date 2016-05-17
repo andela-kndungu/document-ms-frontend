@@ -9,7 +9,7 @@
       },
       'email': 'first@user.com',
       'password': 'adminPassword',
-      'role': 'admin'
+      'roles': ['admin']
     }, {
       'username': 'user',
       'name': {
@@ -18,14 +18,14 @@
       },
       'email': 'second@user.com',
       'password': 'userPassword',
-      'role': 'user'
+      'roles': ['user']
     }],
     roles: [{
       'title': 'admin',
     }, {
       'title': 'user',
     }],
-    categories: [{
+    tags: [{
       'title': 'education',
     }, {
       'title': 'business',

@@ -4,7 +4,7 @@
   var publicRoutes = require('./routes/public'),
    usersRoutes = require('./routes/users'),
    rolesRoutes = require('./routes/roles'),
-   categoriesRoutes = require('./routes/categories'),
+   tagsRoutes = require('./routes/tags'),
    documentsRoutes = require('./routes/documents');
 
   // Authentication Middleware
@@ -18,7 +18,7 @@
     app.use(authenticate.token);
     app.use('/users', usersRoutes);
     app.use('/roles', rolesRoutes);
-    app.use('/categories', categoriesRoutes);
+    app.use('/tags', tagsRoutes);
     app.use('/documents', documentsRoutes);
   };
 })();

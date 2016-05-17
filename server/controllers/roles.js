@@ -125,7 +125,7 @@
       });
     },
 
-    // Delete specified category
+    // Delete specified tag
     destroy: function(req, res) {
       // Find role to delete
       Roles.findByIdAndRemove(req.params.id, function(error, role) {

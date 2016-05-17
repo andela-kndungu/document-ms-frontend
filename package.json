@@ -8,6 +8,7 @@
     "coverage": "cat ./test/server/coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "dependencies": {
+    "async": "^2.0.0-rc.5",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "~1.13.2",
     "dotenv": "^2.0.0",
