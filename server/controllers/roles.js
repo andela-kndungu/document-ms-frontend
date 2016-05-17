@@ -43,11 +43,7 @@
 
           // Success, return retrieved role with success message
           if (role) {
-            return res.json({
-              success: true,
-              message: 'Role retrieved',
-              entry: role
-            });
+            return res.json(role);
           }
 
           // Failed, no role with specified ID
@@ -71,11 +67,7 @@
           }
 
           // Success, return retrieved roles with success message
-          return res.json({
-            success: true,
-            message: 'Roles retrieved',
-            entry: roles
-          });
+          return res.json(roles);
         });
       }
     },
@@ -109,48 +101,52 @@
             }
 
             // Role updated, return success message
-            return res.json({
-              success: true,
-              message: 'Role created successfully',
-              entry: role
-            });
+            return res.json(role);
+          });
+        } else {
+          // Failed, no role with specified ID
+          return res.status(404).json({
+            success: false,
+            message: 'Role does not exist',
           });
         }
-
-        // Failed, no role with specified ID
-        return res.status(404).json({
-          success: false,
-          message: 'Role does not exist',
-        });
       });
     },
 
     // Delete specified tag
     destroy: function(req, res) {
-      // Find role to delete
-      Roles.findByIdAndRemove(req.params.id, function(error, role) {
-        // Inform user of errors with the database
-        if (error) {
-          return res.status(500).json({
+      // Get user's role from the decoded token
+      var usersRoles = req.decoded._doc.roles;
+      if (usersRoles.indexOf('admin') > -1){
+        // Find role to delete
+        Roles.findByIdAndRemove(req.params.id, function(error, role) {
+          // Inform user of errors with the database
+          if (error) {
+            return res.status(500).json({
+              success: false,
+              message: 'There was an error reading from the database'
+            });
+          }
+
+          // Role deleted, return deleted role
+          if (role) {
+            return res.json(role);
+          }
+
+          // Failed, no role with specified ID
+          return res.status(404).json({
             success: false,
-            message: 'There was an error reading from the database'
+            message: 'Role does not exist',
           });
-        }
-
-        // Role deleted, return success message
-        if (role) {
-          return res.json({
-            success: true,
-            message: 'Role deleted successfully'
-          });
-        }
-
-        // Failed, no role with specified ID
-        return res.json({
-          success: false,
-          message: 'Role does not exist',
         });
-      });
+      } else {
+        // User is not authorised to carry out operaion
+        return res.status(403).json({
+          success: false,
+          message: 'Not authorised to delete a role'
+        });
+      }
+
     }
   };
 })();

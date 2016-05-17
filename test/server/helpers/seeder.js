@@ -37,7 +37,10 @@
           throw error;
         } else {
           Documents.seed(documents)
-          .then(function() {console.log('Successfully seeded data');});
+          .then(function() {
+            callback(null, documents);
+            console.log('Successfully seeded data');
+          });
         }
       });
     }, function(error) {

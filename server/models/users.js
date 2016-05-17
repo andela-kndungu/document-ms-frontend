@@ -52,7 +52,7 @@
     var user = this;
 
     // Replace provided plain text password with hashed one
-    bcrypt.hash(user.role, null, null, function(error, hashedPassword) {
+    bcrypt.hash(user.password, null, null, function(error, hashedPassword) {
       if (error) {
         var err = new Error('something went wrong');
         next(err);
