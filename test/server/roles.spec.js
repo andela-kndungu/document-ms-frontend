@@ -70,7 +70,7 @@
           });
       });
 
-      it('responds with a server error on invalid role ID', function(done) {
+      it('responds with a server error on invalid object ID', function(done) {
         request(app)
           .get('/roles/' + 'nonValidId')
           .set('x-access-token', adminToken)
@@ -204,6 +204,20 @@
             (res.status).should.equal(404);
             (res.body.success).should.equal(false);
             (res.body.message).should.containEql('Role does not exist')
+            done();
+          });
+      });
+
+      it('responds with a server error on invalid role ID', function(done) {
+        request(app)
+          .delete('/roles/' + 'nonValidId')
+          .set('x-access-token', adminToken)
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            should.not.exist(error);
+            res.status.should.equal(500);
+            (res.body.success).should.equal(false);
+            (res.body.message).should.containEql('reading from the database');
             done();
           });
       });
