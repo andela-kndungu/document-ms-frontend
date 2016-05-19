@@ -146,7 +146,6 @@
           message: 'Not authorised to delete a role'
         });
       }
-
     }
   };
 })();

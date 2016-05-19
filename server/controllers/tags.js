@@ -19,12 +19,8 @@
           return parseError(res, error);
         }
 
-        // Tag created, return success message
-        return res.json({
-          success: true,
-          message: 'Tag created successfully',
-          entry: tag
-        });
+        // Tag created, return created tag
+        return res.json(tag);
       });
     },
 
@@ -43,11 +39,7 @@
 
           // Success, return retrieved tag with success message
           if (tag) {
-            return res.json({
-              success: true,
-              message: 'Tag retrieved',
-              entry: tag
-            });
+            return res.json(tag);
           }
 
           // Failed, no tag with specified ID
@@ -69,13 +61,9 @@
               message: 'There was an error reading from the database'
             });
           }
-          
+
           // Success, return retrieved tags with success message
-          return res.json({
-            success: true,
-            message: 'Tags retrieved',
-            entry: tags
-          });
+          return res.json(tags);
         });
       }
     },
@@ -109,48 +97,50 @@
             }
 
             // Tag updated, return success message
-            return res.json({
-              success: true,
-              message: 'Tag created successfully',
-              entry: tag
-            });
+            return res.json(tag);
           });
-        }
-
-        // Failed, no document with specified ID
-        return res.status(404).json({
-          success: false,
-          message: 'Tag does not exist',
-        });
-      });
+        } else {
+          // Failed, no document with specified ID
+          return res.status(404).json({
+            success: false,
+            message: 'Tag does not exist',
+          });
+        }});
     },
 
     // Delete specified tag
     destroy: function(req, res) {
-      // Find tag to delete
-      Tags.findByIdAndRemove(req.params.id, function(error, tag) {
-        // Inform user of errors with the database
-        if (error) {
-          return res.status(500).json({
+      // Get user's role from the decoded token
+      var usersRoles = req.decoded._doc.roles;
+      if (usersRoles.indexOf('admin') > -1){
+        // Find tag to delete
+        Tags.findByIdAndRemove(req.params.id, function(error, tag) {
+          // Inform user of errors with the database
+          if (error) {
+            return res.status(500).json({
+              success: false,
+              message: 'There was an error reading from the database'
+            });
+          }
+
+          // Tag deleted, return deleted tag
+          if (tag) {
+            return res.json(tag);
+          }
+
+          // Failed, no tag with specified ID
+          return res.status(404).json({
             success: false,
-            message: 'There was an error reading from the database'
+            message: 'Tag does not exist',
           });
-        }
-
-        // Tag deleted, return success message
-        if (tag) {
-          return res.json({
-            success: true,
-            message: 'Tag deleted successfully'
-          });
-        }
-
-        // Failed, no document with specified ID
-        return res.json({
-          success: false,
-          message: 'Tag does not exist',
         });
-      });
+      } else {
+        // User is not authorised to carry out operaion
+        return res.status(403).json({
+          success: false,
+          message: 'Not authorised to delete a tag'
+        });
+      }
     }
   };
 })();
