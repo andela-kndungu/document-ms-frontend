@@ -18,7 +18,6 @@
       user.name.last = req.body.lastName;
       user.email = req.body.email;
       user.password = req.body.password;
-      user.role = req.body.role;
 
       // Save the new user parsing the error if request is invalid
       user.save(function(error) {
@@ -26,12 +25,8 @@
           return parseError(res, error);
         }
 
-        // Tag created, return success message
-        return res.json({
-          success: true,
-          message: 'User created successfully',
-          entry: user
-        });
+        // Tag created, return created user
+        return res.json(user);
       });
     },
 
@@ -48,13 +43,9 @@
             });
           }
 
-          // Success, return retrieved user with success message
+          // Success, return retrieved user
           if (user) {
-            return res.json({
-              success: true,
-              message: 'User retrieved',
-              entry: user
-            });
+            return res.json(user);
           }
 
           // Failed, no user with specified ID
@@ -78,11 +69,7 @@
           }
 
           // Success, return retrieved tags with success message
-          return res.json({
-            success: true,
-            message: 'Users retrieved',
-            entry: users
-          });
+          return res.json(users);
         });
       },
 
@@ -100,12 +87,7 @@
             });
           }
           // Success, return retrieved documents with success message
-          return res.json({
-            success: true,
-            message: 'Documents retrieved',
-            entry: documents
-          });
-
+          return res.json(documents);
         });
       }
     },
@@ -134,7 +116,7 @@
             }
           });
 
-          // Save the updated tag
+          // Save the updated user
           user.save(function(error) {
             // Parse any error and pass on to user
             if (error) {
@@ -142,12 +124,7 @@
             }
 
             // Tag updated, return success message
-            return res.json({
-              success: true,
-              message: 'User updated successfully',
-              entry: user
-            });
-
+            return res.json(user);
           });
         }else {
           // Failed, no document with specified ID
@@ -162,7 +139,7 @@
     // Delete specified tag
     destroy: function(req, res) {
       // Find user to delete
-      Users.findByIdAndRemove(req.params.id, function(error, tag) {
+      Users.findByIdAndRemove(req.params.id, function(error, user) {
         // Inform user of errors with the database
         if (error) {
           return res.status(500).json({
@@ -172,17 +149,14 @@
         }
 
         // User deleted, return success message
-        if (tag) {
-          return res.json({
-            success: true,
-            message: 'User deleted successfully'
-          });
+        if (user) {
+          return res.json(user);
         }
 
         // Failed, no user with specified ID
         return res.status(404).json({
           success: false,
-          message: 'Tag does not exist',
+          message: 'User does not exist',
         });
       });
     },
