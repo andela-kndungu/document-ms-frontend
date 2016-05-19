@@ -218,14 +218,10 @@
             var token = jwt.sign(user, process.env.SECRET_KEY, {
               expiresIn: '90 days'
             });
+            user._doc.token = token;
 
             // Return token and success message in JSON
-            return res.json({
-              success: true,
-              message: 'You\'ve successfully been logged in.',
-              token: token,
-              entry: user
-            });
+            return res.json(user);
           }
 
           // Passwords do not match
