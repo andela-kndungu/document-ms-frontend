@@ -25,7 +25,7 @@
           return parseError(res, error);
         }
 
-        // Tag created, return created user
+        // User created, return created user
         return res.json(user);
       });
     },
@@ -68,7 +68,7 @@
             });
           }
 
-          // Success, return retrieved tags with success message
+          // Success, return retrieved users with success message
           return res.json(users);
         });
       },
@@ -92,7 +92,7 @@
       }
     },
 
-    // Update tag by ID
+    // Update user by ID
     update: function(req, res) {
       // Get the user to update
       Users.findById(req.params.id, function(error, user) {
@@ -123,7 +123,7 @@
               return parseError(res, error);
             }
 
-            // Tag updated, return success message
+            // User updated, return updated user
             return res.json(user);
           });
         }else {
@@ -136,7 +136,7 @@
       });
     },
 
-    // Delete specified tag
+    // Delete specified user
     destroy: function(req, res) {
       // Find user to delete
       Users.findByIdAndRemove(req.params.id, function(error, user) {
