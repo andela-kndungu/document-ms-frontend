@@ -26,7 +26,7 @@
           return parseError(res, error);
         }
 
-        // Category created, return success message
+        // Tag created, return success message
         return res.json({
           success: true,
           message: 'User created successfully',
@@ -77,7 +77,7 @@
             });
           }
 
-          // Success, return retrieved categories with success message
+          // Success, return retrieved tags with success message
           return res.json({
             success: true,
             message: 'Users retrieved',
@@ -110,7 +110,7 @@
       }
     },
 
-    // Update category by ID
+    // Update tag by ID
     update: function(req, res) {
       // Get the user to update
       Users.findById(req.params.id, function(error, user) {
@@ -134,14 +134,14 @@
             }
           });
 
-          // Save the updated category
+          // Save the updated tag
           user.save(function(error) {
             // Parse any error and pass on to user
             if (error) {
               return parseError(res, error);
             }
 
-            // Category updated, return success message
+            // Tag updated, return success message
             return res.json({
               success: true,
               message: 'User updated successfully',
@@ -159,10 +159,10 @@
       });
     },
 
-    // Delete specified category
+    // Delete specified tag
     destroy: function(req, res) {
       // Find user to delete
-      Users.findByIdAndRemove(req.params.id, function(error, category) {
+      Users.findByIdAndRemove(req.params.id, function(error, tag) {
         // Inform user of errors with the database
         if (error) {
           return res.status(500).json({
@@ -172,7 +172,7 @@
         }
 
         // User deleted, return success message
-        if (category) {
+        if (tag) {
           return res.json({
             success: true,
             message: 'User deleted successfully'
@@ -182,7 +182,7 @@
         // Failed, no user with specified ID
         return res.status(404).json({
           success: false,
-          message: 'Category does not exist',
+          message: 'Tag does not exist',
         });
       });
     },
@@ -218,14 +218,10 @@
             var token = jwt.sign(user, process.env.SECRET_KEY, {
               expiresIn: '90 days'
             });
+            user._doc.token = token;
 
             // Return token and success message in JSON
-            return res.json({
-              success: true,
-              message: 'You\'ve successfully been logged in.',
-              token: token,
-              entry: user
-            });
+            return res.json(user);
           }
 
           // Passwords do not match

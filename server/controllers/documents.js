@@ -2,11 +2,11 @@
   'use strict';
 
   var Documents = require('../models/documents');
-  var Categories = require('../models/categories');
+  var Tags = require('../models/tags');
   var parseError = require('./parseError');
 
   module.exports = {
-    // Add a new category
+    // Add a new tag
     create: function(req, res) {
       // Declare new instance of the Documents model
       var document = new Documents();
@@ -15,16 +15,16 @@
       document.owner_id = req.body.owner_id;
       document.title = req.body.title;
       document.content = req.body.content;
-      document.category = req.body.category;
+      document.tag = req.body.tag;
       document.access_rights = req.body.access_rights;
 
-      // Save the new category parsing the error if request is invalid
+      // Save the new tag parsing the error if request is invalid
       document.save(function(error) {
         if (error) {
           return parseError(res, error);
         }
 
-        // Category created, return success message
+        // Tag created, return success message
         return res.json({
           success: true,
           message: 'Document created successfully',
@@ -81,23 +81,23 @@
             .lt(nextDay);
         }
 
-        // Returns all documents in requested category
-        if (req.query.category) {
-          // Find requested category in the Categories model
-          Categories.find()
-            .where('title').equals(req.query.category)
-            .exec(function(error, categories) {
+        // Returns all documents in requested tag
+        if (req.query.tag) {
+          // Find requested tag in the Tags model
+          Tags.find()
+            .where('title').equals(req.query.tag)
+            .exec(function(error, tags) {
               if (error) {
                 throw error;
               }
-              // If the category is found
-              if (categories[0]) {
-                // Look for documents with the category's id
-                query.where('category').equals(categories[0]._id);
+              // If the tag is found
+              if (tags[0]) {
+                // Look for documents with the tag's id
+                query.where('tag').equals(tags[0]._id);
               } else {
                 res.status(400).json({
                   success: false,
-                  message: 'Category does not exist'
+                  message: 'Tag does not exist'
                 });
               }
 
@@ -241,30 +241,30 @@
           .lt(nextDay);
       }
 
-      // Returns all documents in requested category
-      if (req.query.category) {
-        // Find requested category in the Categories model
-        Categories.find()
-          .where('title').equals(req.query.category)
-          .exec(function(error, categories) {
+      // Returns all documents in requested tag
+      if (req.query.tag) {
+        // Find requested tag in the Tags model
+        Tags.find()
+          .where('title').equals(req.query.tag)
+          .exec(function(error, tags) {
             if (error) {
               throw error;
             }
-            // If the category is found
-            if (categories[0]) {
-              // Look for documents with the category's id
-              query.where('category').equals(categories[0]._id);
+            // If the tag is found
+            if (tags[0]) {
+              // Look for documents with the tag's id
+              query.where('tag').equals(tags[0]._id);
             } else {
               res.status(400).json({
                 success: false,
-                message: 'Category does not exist'
+                message: 'Tag does not exist'
               });
             }
 
           });
       }
 
-      // Returns all documents in requested category
+      // Returns all documents in requested tag
       if (req.query.role) {
         query.where('role_of_creator').equals(req.query.role);
       }

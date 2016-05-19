@@ -1,38 +1,38 @@
 (function() {
   'use strict';
 
-  var Categories = require('../models/categories');
+  var Tags = require('../models/tags');
   var parseError = require('./parseError');
 
   module.exports = {
-    // Add a new category
+    // Add a new tag
     create: function(req, res) {
-      // Declare new instance of the Categories model
-      var category = new Categories();
+      // Declare new instance of the Tags model
+      var tag = new Tags();
 
       // Define values of the new object to add
-      category.title = req.body.title;
+      tag.title = req.body.title;
 
-      // Save the new category parsing the error if request is invalid
-      category.save(function(error) {
+      // Save the new tag parsing the error if request is invalid
+      tag.save(function(error) {
         if (error) {
           return parseError(res, error);
         }
 
-        // Category created, return success message
+        // Tag created, return success message
         return res.json({
           success: true,
-          message: 'Category created successfully',
-          entry: category
+          message: 'Tag created successfully',
+          entry: tag
         });
       });
     },
 
-    // Handle all get requests for categories
+    // Handle all get requests for tags
     find: {
       // Retrieve by ID
       id: function(req, res) {
-        Categories.findById(req.params.id, function(error, category) {
+        Tags.findById(req.params.id, function(error, tag) {
           // Inform user of errors with the database
           if (error) {
             return res.status(500).json({
@@ -41,27 +41,27 @@
             });
           }
 
-          // Success, return retrieved category with success message
-          if (category) {
+          // Success, return retrieved tag with success message
+          if (tag) {
             return res.json({
               success: true,
-              message: 'Category retrieved',
-              entry: category
+              message: 'Tag retrieved',
+              entry: tag
             });
           }
 
-          // Failed, no category with specified ID
+          // Failed, no tag with specified ID
           return res.status(404).json({
             success: false,
-            message: 'Category does not exist',
+            message: 'Tag does not exist',
           });
         });
       },
 
-      // Retrieve all categories
+      // Retrieve all tags
       all: function(req, res) {
-        // Get all entries in the categories model
-        Categories.find({}, function(error, categories) {
+        // Get all entries in the tags model
+        Tags.find({}, function(error, tags) {
           // Inform user of errors with the database
           if (error) {
             return res.status(500).json({
@@ -70,20 +70,20 @@
             });
           }
           
-          // Success, return retrieved categories with success message
+          // Success, return retrieved tags with success message
           return res.json({
             success: true,
-            message: 'Categories retrieved',
-            entry: categories
+            message: 'Tags retrieved',
+            entry: tags
           });
         });
       }
     },
 
-    // Update category by ID
+    // Update tag by ID
     update: function(req, res) {
-      // Get the category to update
-      Categories.findById(req.params.id, function(error, category) {
+      // Get the tag to update
+      Tags.findById(req.params.id, function(error, tag) {
         // Inform user of errors with the database
         if (error) {
           return res.status(500).json({
@@ -92,27 +92,27 @@
           });
         }
 
-        // Category found, update it
-        if (category) {
+        // Tag found, update it
+        if (tag) {
           // For each property sent in the body
           Object.keys(req.body).forEach(function(property) {
-            // Update the category
-            category[property] = req.body[property];
+            // Update the tag
+            tag[property] = req.body[property];
 
           });
 
-          // Save the updated category
-          category.save(function(error) {
+          // Save the updated tag
+          tag.save(function(error) {
             // Parse any error and pass on to user
             if (error) {
               return parseError(res, error);
             }
 
-            // Category updated, return success message
+            // Tag updated, return success message
             return res.json({
               success: true,
-              message: 'Category created successfully',
-              entry: category
+              message: 'Tag created successfully',
+              entry: tag
             });
           });
         }
@@ -120,15 +120,15 @@
         // Failed, no document with specified ID
         return res.status(404).json({
           success: false,
-          message: 'Category does not exist',
+          message: 'Tag does not exist',
         });
       });
     },
 
-    // Delete specified category
+    // Delete specified tag
     destroy: function(req, res) {
-      // Find category to delete
-      Categories.findByIdAndRemove(req.params.id, function(error, category) {
+      // Find tag to delete
+      Tags.findByIdAndRemove(req.params.id, function(error, tag) {
         // Inform user of errors with the database
         if (error) {
           return res.status(500).json({
@@ -137,18 +137,18 @@
           });
         }
 
-        // Category deleted, return success message
-        if (category) {
+        // Tag deleted, return success message
+        if (tag) {
           return res.json({
             success: true,
-            message: 'Category deleted successfully'
+            message: 'Tag deleted successfully'
           });
         }
 
         // Failed, no document with specified ID
         return res.json({
           success: false,
-          message: 'Category does not exist',
+          message: 'Tag does not exist',
         });
       });
     }
