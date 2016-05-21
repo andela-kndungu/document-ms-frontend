@@ -77,7 +77,7 @@
       documents: function(req, res) {
         // Get all documents with specified owner_id
         Documents.find({
-          'owner_id': req.params.id
+          'ownerId': req.params.id
         }, function(error, documents) {
           // Inform user of errors with the database
           if (error) {

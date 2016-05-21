@@ -5,9 +5,8 @@
   var Schema = mongoose.Schema;
 
   var DocumentsSchema = new Schema({
-    owner_id: {
+    ownerId: {
       type: String,
-      required: [true, 'An owner id must be provided'],
     },
 
     title: {
@@ -22,10 +21,9 @@
 
     tags: {
       type: Array,
-      default: []
     },
 
-    accessRoles: {
+    accessibleBy: {
       type: Array,
       default: []
     }

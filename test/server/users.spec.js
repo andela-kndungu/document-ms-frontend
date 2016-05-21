@@ -310,7 +310,7 @@
             res.status.should.equal(200);
             (res.body).should.be.an.Array;
             should(res.body.length).be.greaterThan(0);
-            (res.body[0].owner_id).should.equal(adminId);
+            (res.body[0].ownerId).should.equal(adminId);
             done();
           });
       });
