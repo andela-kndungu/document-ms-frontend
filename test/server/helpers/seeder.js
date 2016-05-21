@@ -38,8 +38,10 @@
         } else {
           Documents.seed(documents)
           .then(function() {
-            callback(null, documents);
-            console.log('Successfully seeded data');
+            Documents.find({}, function(error, documents) {
+              callback(null, documents);
+              console.log('Successfully seeded data');
+            });
           });
         }
       });
