@@ -7,7 +7,10 @@
   var loginHelper = require('./helpers/login');
   var seeder = require('./helpers/seeder');
   var Tags = require('../../server/models/tags');
-  var adminToken, adminId, userToken, userId, documentId;
+  var adminToken, adminId;
+  var userToken, userId;
+  var unauthorizedId, unauthorizedToken;
+  var documentId;
   describe('Documents', function() {
     before(function(done) {
       seeder(function(error, documents) {
@@ -27,13 +30,21 @@
                   userToken = res.body.token;
                   userId = res.body._id;
                   for (var i = 0; i < documents.length; i++) {
-                    if (documents[i].ownerId == adminId) {
+                    if (documents[i].accessibleBy.indexOf('user') > -1) {
                       documentId = documents[i]._id;
                       break;
                     }
                   }
+                  loginHelper.unauthorized(function(error, res) {
+                    if (error) {
+                      throw error;
+                    } else {
+                      unauthorizedToken = res.body.token;
+                      unauthorizedId = res.body._id;
+                    }
+                    done();
+                  });
                 }
-                done();
               });
             }
           });
@@ -142,7 +153,7 @@
             done();
           });
       });
-      
+
       it('sorts limited in descending order by date', function(done) {
         request(app)
           .get('/documents?limit=10')
@@ -169,7 +180,7 @@
             title: 'A real title',
             content: 'Some real content',
           })
-          .set('x-access-token', adminToken)
+          .set('x-access-token', userToken)
           .set('Accept', 'application/json')
           .end(function(error, res) {
             should.not.exist(error);
@@ -185,15 +196,29 @@
         request(app)
           .put('/documents/' + documentId)
           .send({
-            accessibleBy: ['admin', 'users']
+            accessibleBy: ['admin', 'user']
           })
-          .set('x-access-token', adminToken)
+          .set('x-access-token', userToken)
           .set('Accept', 'application/json')
           .end(function(error, res) {
             should.not.exist(error);
             res.status.should.equal(200);
             (res.body).should.be.an.Object;
-            (res.body.accessibleBy).should.containEql('users');
+            (res.body.accessibleBy).should.containEql('admin');
+            done();
+          });
+      });
+
+      it('returns error message for unauthorized user', function(done) {
+        request(app)
+          .put('/documents/' + documentId)
+          .set('x-access-token', unauthorizedToken)
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            should.not.exist(error);
+            (res.status).should.equal(401);
+            (res.body.success).should.equal(false);
+            (res.body.message).should.containEql('Not authorized to access');
             done();
           });
       });
@@ -242,6 +267,20 @@
           });
       });
 
+      it('returns with error message for unauthorized user', function(done) {
+        request(app)
+          .get('/documents/' + documentId)
+          .set('x-access-token', unauthorizedToken)
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            should.not.exist(error);
+            (res.status).should.equal(401);
+            (res.body.success).should.equal(false);
+            (res.body.message).should.containEql('Not authorized to access');
+            done();
+          });
+      });
+
       it('responds with a server error on invalid object ID', function(done) {
         request(app)
           .get('/documents/' + 'nonValidId')
@@ -274,10 +313,24 @@
   });
 
   describe('Deletes a document (DELETE /documents/:id)', function() {
+    it('returns error message for unauthorized user', function(done) {
+      request(app)
+        .put('/documents/' + documentId)
+        .set('x-access-token', unauthorizedToken)
+        .set('Accept', 'application/json')
+        .end(function(error, res) {
+          should.not.exist(error);
+          (res.status).should.equal(401);
+          (res.body.success).should.equal(false);
+          (res.body.message).should.containEql('Not authorized to access');
+          done();
+        });
+    });
+
     it('deletes a document', function(done) {
       request(app)
         .delete('/documents/' + documentId)
-        .set('x-access-token', adminToken)
+        .set('x-access-token', userToken)
         .set('Accept', 'application/json')
         .end(function(error, res) {
           should.not.exist(error);

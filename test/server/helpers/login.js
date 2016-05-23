@@ -37,5 +37,21 @@
           }
         });
     },
+    unauthorized: function(callback) {
+      request(app)
+        .post('/users/login')
+        .send({
+          username: 'unauthorized',
+          password: 'unauthorizedPassword'
+        })
+        .set('Accept', 'application/json')
+        .end(function(error, res) {
+          if (error) {
+            callback(error);
+          } else {
+            callback(null, res);
+          }
+        });
+    }
   };
 })();

@@ -4,7 +4,6 @@
   var Users = require('../../../server/models/users');
   var ownerIds = [];
   var accessBy = [
-    ['public'],
     ['user'],
     ['admin']
   ];
