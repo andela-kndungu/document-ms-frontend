@@ -90,7 +90,7 @@
           var millisecondsInDay = 86400000;
           var requestedDay = new Date(req.query.date);
           var nextDay = new Date(requestedDay.getTime() + millisecondsInDay);
-          query.where('created_at')
+          query.where('createdAt')
             .gte(requestedDay)
             .lt(nextDay);
         }
@@ -107,9 +107,9 @@
               // If the tag is found
               if (tags[0]) {
                 // Look for documents with the tag's id
-                query.where('tag').equals(tags[0]._id);
+                query.where('tags').in(['req.query.tag']);
               } else {
-                res.status(400).json({
+                return res.status(404).json({
                   success: false,
                   message: 'Tag does not exist'
                 });
@@ -119,7 +119,7 @@
 
         // Returns all documents in requested role
         if (req.query.role) {
-          query.where('likes').in([req.query.role]);
+          query.where('accessibleBy').equals(req.query.role);
           // query.where('role_of_creator').equals(req.query.role);
         }
 
@@ -155,6 +155,7 @@
               message: 'There was a databse error'
             });
           } else {
+            // console.log(documents);
             // Success, return retrieved documents with success message
             return res.json(documents);
           }

@@ -8,6 +8,11 @@
     ['user'],
     ['admin']
   ];
+  var tags = [
+    [],
+    ['education'],
+    ['business']
+  ];
 
   var generate = function() {
     var generatedDocuments = [];
@@ -17,6 +22,8 @@
         .floor(Math.random() * ownerIds.length);
       var accessibleByIndex = Math
         .floor(Math.random() * accessBy.length);
+      var tagsIndex = Math
+        .floor(Math.random() * tags.length);
       generatedDocuments.push({
         // Random five character string
         title: Math.random().toString().substring(2, 7),
@@ -26,6 +33,7 @@
         // Random owner_id chosen from array of available owner_ids
         ownerId: ownerIds[ownersRandomIndex],
         accessibleBy: accessBy[accessibleByIndex],
+        tags: tags[tagsIndex]
       });
     }
     return generatedDocuments;
