@@ -19,6 +19,15 @@
       'email': 'second@user.com',
       'password': 'userPassword',
       'roles': ['user']
+    }, {
+      'username': 'unauthorized',
+      'name': {
+        'first': 'Unauthorized',
+        'last': 'User'
+      },
+      'email': 'unauthorized@user.com',
+      'password': 'unauthorizedPassword',
+      'roles': ['unauthorized']
     }],
     roles: [{
       'title': 'admin',

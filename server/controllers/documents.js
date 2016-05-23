@@ -4,6 +4,7 @@
   var Documents = require('../models/documents');
   var Tags = require('../models/tags');
   var parseError = require('./parseError');
+  var authorised = require('./helpers/authorise');
 
   module.exports = {
     // Add a new tag
@@ -16,7 +17,7 @@
       document.title = req.body.title;
       document.content = req.body.content;
       document.tags = req.body.tags || [];
-      document.accessibleBy = req.body.accessibleBy || ['public'];
+      document.accessibleBy = req.body.accessibleBy || ['user'];
 
       // Create new tags if necessary
       document.tags.forEach(function(tag) {
@@ -46,6 +47,7 @@
     find: {
       // Retrieve by ID
       id: function(req, res) {
+
         Documents.findById(req.params.id, function(error, document) {
           // Inform user of errors with the database
           if (error) {
@@ -55,16 +57,24 @@
             });
           }
 
-          // Success, return retrieved document with success message
+          // Document returieved, authorise before sending to user
           if (document) {
-            return res.json(document);
+            if (authorised(req, document)) {
+              return res.json(document);
+            } else {
+              // User not authorized
+              return res.status(401).json({
+                success: false,
+                message: 'Not authorized to access document'
+              });
+            }
+          } else {
+            // Failed, no document with specified ID
+            return res.status(404).json({
+              success: false,
+              message: 'Document does not exist',
+            });
           }
-
-          // Failed, no document with specified ID
-          return res.status(404).json({
-            success: false,
-            message: 'Document does not exist',
-          });
         });
       },
 
@@ -77,7 +87,7 @@
         // belonging to a role they are assigned
         var query = Documents.find({
           '$or': [{
-            'accessibleBy': 'public'
+            'accessibleBy': 'user'
           }, {
             'accessibleBy': {
               $in: rolesOfUser
@@ -175,23 +185,32 @@
           });
         }
 
-        // Document found, update it
+        // Document found, update it if user is authorised
         if (document) {
-          // For each property sent in the body
-          Object.keys(req.body).forEach(function(property) {
-            // Update the document
-            document[property] = req.body[property];
-          });
+          if (authorised(req, document)) {
+            // For each property sent in the body
+            Object.keys(req.body).forEach(function(property) {
+              // Update the document
+              document[property] = req.body[property];
+            });
 
-          // Save the updated document
-          document.save(function(error) {
-            // Parse any error and pass on to user
-            if (error) {
-              return parseError(res, error);
-            }
-            // Document updated, return updated document
-            return res.json(document);
-          });
+            // Save the updated document
+            document.save(function(error) {
+              // Parse any error and pass on to user
+              if (error) {
+                return parseError(res, error);
+              }
+              // Document updated, return updated document
+              return res.json(document);
+            });
+          } else {
+            // User not authorized
+            return res.status(401).json({
+              success: false,
+              message: 'Not authorized to access document'
+            });
+          }
+
         } else {
           // Failed, no document with specified ID
           return res.status(404).json({
@@ -205,7 +224,7 @@
     // Delete specified document
     destroy: function(req, res) {
       // Find document to delete
-      Documents.findByIdAndRemove(req.params.id, function(error, document) {
+      Documents.findById(req.params.id, function(error, document) {
         // Inform user of errors with the database
         if (error) {
           return res.status(500).json({
@@ -214,16 +233,37 @@
           });
         }
 
-        // Document deleted, return success message
+        // Document found, confirm user has access to it
         if (document) {
-          return res.json(document);
-        }
+          if (authorised(req, document)) {
+            Documents.findByIdAndRemove(req.params.id, function(e, d) {
+              if(!e) {
+                return res.json(d);
+              }
+            });
+          } else {
+            // User not authorized
+            return res.status(401).json({
+              success: false,
+              message: 'Not authorized to access document'
+            });
+          }
 
-        // Failed, no document with specified ID
-        return res.status(404).json({
-          success: false,
-          message: 'Document does not exist',
-        });
+        } else {
+          // Failed, no document with specified ID
+          return res.status(404).json({
+            success: false,
+            message: 'Document does not exist',
+          });
+        }
+          // return res.json(document);
+
+
+        // // Failed, no document with specified ID
+        // return res.status(404).json({
+        //   success: false,
+        //   message: 'Document does not exist',
+        // });
       });
     }
   };
