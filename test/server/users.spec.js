@@ -20,13 +20,13 @@
               throw error;
             } else {
               adminToken = res.body.token;
-              adminId = res.body.entry._id;
+              adminId = res.body._id;
               loginHelper.user(function(error, res) {
                 if (error) {
                   throw error;
                 } else {
                   userToken = res.body.token;
-                  userId = res.body.entry._id;
+                  userId = res.body._id;
                 }
                 done();
               });
@@ -45,22 +45,35 @@
           .end(function(error, res) {
             should.not.exist(error);
             res.status.should.equal(200);
-            (res.body.success).should.equal(true);
-            (res.body.message).should.containEql('User retrieved');
-            (res.body.entry.username).should.equal('user');
+            (res.body.username).should.equal('user');
             done();
           });
       });
-      it('returns server error', function(done) {
+
+      it('responds with a server error on invalid object ID', function(done) {
         request(app)
-          .get('/users/' + 'string')
+          .get('/users/' + 'nonValidId')
           .set('x-access-token', adminToken)
           .set('Accept', 'application/json')
           .end(function(error, res) {
             should.not.exist(error);
             res.status.should.equal(500);
             (res.body.success).should.equal(false);
-            (res.body.message).should.containEql('from the database');
+            (res.body.message).should.containEql('reading from the database');
+            done();
+          });
+      });
+
+      it('responds with a fail message on non existent user', function(done) {
+        request(app)
+          .get('/users/' + '573b7edafe90559c354b81fd')
+          .set('x-access-token', adminToken)
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            should.not.exist(error);
+            res.status.should.equal(404);
+            (res.body.success).should.equal(false);
+            (res.body.message).should.containEql('User does not exist');
             done();
           });
       });
@@ -80,11 +93,43 @@
           .set('Accept', 'application/json')
           .end(function(error, res) {
             should.not.exist(error);
-            res.status.should.equal(200);
-            res.body.success.should.equal(true);
-            (res.body.message).should.containEql('User updated successfully');
-            (res.body.entry.username).should.containEql('anewuser');
-            (res.body.entry.name.first).should.containEql('NewName');
+            (res.status).should.equal(200);
+            (res.body.username).should.containEql('anewuser');
+            (res.body.name.first).should.containEql('NewName');
+            done();
+          });
+      });
+
+      it('does not update non existent user', function(done) {
+        request(app)
+          .put('/users/' + '573b7edafe90559c354b81fd')
+          .send({
+            email: 'anew@email.com',
+            username: 'anewuser',
+            firstName: 'NewName',
+            lastName: 'User',
+          })
+          .set('x-access-token', adminToken)
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            should.not.exist(error);
+            (res.status).should.equal(404);
+            (res.body.success).should.equal(false);
+            (res.body.message).should.containEql('User does not exist');
+            done();
+          });
+      });
+
+      it('responds with a server error on invalid object ID', function(done) {
+        request(app)
+          .put('/users/' + 'nonValidId')
+          .set('x-access-token', adminToken)
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            should.not.exist(error);
+            res.status.should.equal(500);
+            (res.body.success).should.equal(false);
+            (res.body.message).should.containEql('reading from the database');
             done();
           });
       });
@@ -106,11 +151,11 @@
           .end(function(error, res) {
             should.not.exist(error);
             res.status.should.equal(200);
-            res.body.success.should.equal(true);
-            (res.body.message).should.containEql('User created successfully');
+            (res.body.email).should.containEql('new@user.com');
             done();
           });
       });
+
       it('requires an email to be provided', function(done) {
         request(app)
           .post('/users')
@@ -130,6 +175,7 @@
             done();
           });
       });
+
       it('requires a username to be provided', function(done) {
         request(app)
           .post('/users')
@@ -149,6 +195,7 @@
             done();
           });
       });
+
       it('requires a unique email', function(done) {
         request(app)
           .post('/users')
@@ -169,6 +216,7 @@
             done();
           });
       });
+
       it('requires a unique username', function(done) {
         request(app)
           .post('/users')
@@ -189,6 +237,7 @@
             done();
           });
       });
+
       it('requires first name to be provided', function(done) {
         request(app)
           .post('/users')
@@ -208,6 +257,7 @@
             done();
           });
       });
+
       it('requires last name to be provided', function(done) {
         request(app)
           .post('/users')
@@ -227,25 +277,7 @@
             done();
           });
       });
-      it('requires a role to be provided', function(done) {
-        request(app)
-          .post('/users')
-          .send({
-            email: 'unique@email.com',
-            username: 'uniquename',
-            firstName: 'Unique',
-            lastName: 'Name',
-            password: 'uniquePass'
-          })
-          .set('Accept', 'application/json')
-          .end(function(error, res) {
-            should.not.exist(error);
-            res.status.should.equal(400);
-            (res.body.success).should.equal(false);
-            (res.body.message).should.containEql('role must be provided');
-            done();
-          });
-      });
+
       it('created user has a role defined', function(done) {
         request(app)
           .post('/users')
@@ -261,12 +293,12 @@
           .end(function(error, res) {
             should.not.exist(error);
             res.status.should.equal(200);
-            (res.body.success).should.equal(true);
-            should.exist((res.body.entry.role));
+            should.exist((res.body.roles[0]));
             done();
           });
       });
     });
+
     describe('All user\'s documents (GET /users/<id>/documents)', function() {
       it('responds with an array of all the user\'s documents', function(done) {
         request(app)
@@ -276,9 +308,9 @@
           .end(function(error, res) {
             should.not.exist(error);
             res.status.should.equal(200);
-            (res.body.entry).should.be.an.Array;
-            should(res.body.entry.length).be.greaterThan(0);
-            (res.body.entry[0].owner_id).should.equal(adminId);
+            (res.body).should.be.an.Array;
+            should(res.body.length).be.greaterThan(0);
+            (res.body[0].ownerId).should.equal(adminId);
             done();
           });
       });
@@ -290,11 +322,9 @@
           .set('Accept', 'application/json')
           .end(function(error, res) {
             should.not.exist(error);
-            res.status.should.equal(200);
-            (res.body.success).should.equal(true);
-            (res.body.message).should.containEql('Documents retrieved');
-            (res.body.entry).should.be.an.Array;
-            should(res.body.entry.length).not.be.greaterThan(0);
+            (res.status).should.equal(200);
+            (res.body).should.be.an.Array;
+            (res.body.length).should.equal(0);
             done();
           });
       });
@@ -308,15 +338,12 @@
             username: 'newuser',
             password: 'newPass'
           })
-          .set('x-access-token', adminToken)
           .set('Accept', 'application/json')
           .end(function(error, res) {
             should.not.exist(error);
             res.status.should.equal(200);
-            (res.body.success).should.equal(true);
-            (res.body.message).should.containEql('successfully been logged in');
             should.exist(res.body.token);
-            (res.body.entry.username).should.equal('newuser');
+            (res.body.username).should.equal('newuser');
             done();
           });
       });
@@ -328,7 +355,6 @@
             username: 'newuser12',
             password: 'newPass'
           })
-          .set('x-access-token', adminToken)
           .set('Accept', 'application/json')
           .end(function(error, res) {
             should.not.exist(error);
@@ -338,8 +364,24 @@
             done();
           });
       });
-    });
 
+      it('returns error message when given wrong password', function(done) {
+        request(app)
+          .post('/users/login/')
+          .send({
+            username: 'newuser',
+            password: 'wrongPass'
+          })
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            should.not.exist(error);
+            (res.status).should.equal(401);
+            (res.body.success).should.equal(false);
+            (res.body.message).should.containEql('failed. Wrong password.');
+            done();
+          });
+      });
+    });
 
     describe('Deletes a user (DELETE /users/:id)', function() {
       it('deletes a user', function(done) {
@@ -349,9 +391,37 @@
           .set('Accept', 'application/json')
           .end(function(error, res) {
             should.not.exist(error);
-            res.status.should.equal(200);
-            res.body.success.should.equal(true);
-            (res.body.message).should.containEql('User deleted successfully');
+            (res.status).should.equal(200);
+            (res.body).should.be.an.Object;
+            (res.body._id).should.containEql(userId);
+            done();
+          });
+      });
+
+      it('responds with a server error on invalid object ID', function(done) {
+        request(app)
+          .delete('/users/' + 'nonValidId')
+          .set('x-access-token', adminToken)
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            should.not.exist(error);
+            res.status.should.equal(500);
+            (res.body.success).should.equal(false);
+            (res.body.message).should.containEql('reading from the database');
+            done();
+          });
+      });
+
+      it('responds with a fail message on non existent user', function(done) {
+        request(app)
+          .delete('/users/' + '573b7edafe90559c354b81fd')
+          .set('x-access-token', adminToken)
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            should.not.exist(error);
+            res.status.should.equal(404);
+            (res.body.success).should.equal(false);
+            (res.body.message).should.containEql('User does not exist');
             done();
           });
       });
@@ -366,13 +436,12 @@
           .end(function(error, res) {
             (res.status).should.equal(200);
             should.not.exist(error);
-            (res.body.success).should.equal(true);
-            (res.body.message).should.containEql('Users retrieved');
-            (res.body.entry).should.be.an.Array;
-            should(res.body.entry.length).be.exactly(3);
+            (res.body).should.be.an.Array;
+            should(res.body.length).be.exactly(3);
             done();
           });
       });
+
       it('returns error when invalid token is provided', function(done) {
         request(app)
           .get('/users')
@@ -387,6 +456,7 @@
             done();
           });
       });
+
       it('returns error when no token is provided', function(done) {
         request(app)
           .get('/users')
@@ -396,10 +466,10 @@
             should.not.exist(error);
             (res.body.success).should.equal(false);
             (res.body.message).should.containEql('No token provided');
-            should.not.exist(res.body.entry);
             done();
           });
       });
+
       it('returns empty array when there are no users', function(done) {
         // Delete all users
         Users.remove({}, function(error) {
@@ -411,16 +481,13 @@
               .end(function(error, res) {
                 (res.status).should.equal(200);
                 should.not.exist(error);
-                (res.body.success).should.equal(true);
-                (res.body.message).should.containEql('Users retrieved');
-                (res.body.entry).should.be.an.Array;
-                should(res.body.entry.length).not.be.greaterThan(0);
+                (res.body).should.be.an.Array;
+                (res.body.length).should.equal(0);
                 done();
               });
           }
         });
       });
     });
-
   });
 })();

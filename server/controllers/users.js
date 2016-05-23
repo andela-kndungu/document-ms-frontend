@@ -18,7 +18,6 @@
       user.name.last = req.body.lastName;
       user.email = req.body.email;
       user.password = req.body.password;
-      user.role = req.body.role;
 
       // Save the new user parsing the error if request is invalid
       user.save(function(error) {
@@ -26,12 +25,8 @@
           return parseError(res, error);
         }
 
-        // Category created, return success message
-        return res.json({
-          success: true,
-          message: 'User created successfully',
-          entry: user
-        });
+        // User created, return created user
+        return res.json(user);
       });
     },
 
@@ -48,13 +43,9 @@
             });
           }
 
-          // Success, return retrieved user with success message
+          // Success, return retrieved user
           if (user) {
-            return res.json({
-              success: true,
-              message: 'User retrieved',
-              entry: user
-            });
+            return res.json(user);
           }
 
           // Failed, no user with specified ID
@@ -77,12 +68,8 @@
             });
           }
 
-          // Success, return retrieved categories with success message
-          return res.json({
-            success: true,
-            message: 'Users retrieved',
-            entry: users
-          });
+          // Success, return retrieved users with success message
+          return res.json(users);
         });
       },
 
@@ -90,7 +77,7 @@
       documents: function(req, res) {
         // Get all documents with specified owner_id
         Documents.find({
-          'owner_id': req.params.id
+          'ownerId': req.params.id
         }, function(error, documents) {
           // Inform user of errors with the database
           if (error) {
@@ -100,17 +87,12 @@
             });
           }
           // Success, return retrieved documents with success message
-          return res.json({
-            success: true,
-            message: 'Documents retrieved',
-            entry: documents
-          });
-
+          return res.json(documents);
         });
       }
     },
 
-    // Update category by ID
+    // Update user by ID
     update: function(req, res) {
       // Get the user to update
       Users.findById(req.params.id, function(error, user) {
@@ -134,20 +116,15 @@
             }
           });
 
-          // Save the updated category
+          // Save the updated user
           user.save(function(error) {
             // Parse any error and pass on to user
             if (error) {
               return parseError(res, error);
             }
 
-            // Category updated, return success message
-            return res.json({
-              success: true,
-              message: 'User updated successfully',
-              entry: user
-            });
-
+            // User updated, return updated user
+            return res.json(user);
           });
         }else {
           // Failed, no document with specified ID
@@ -159,10 +136,10 @@
       });
     },
 
-    // Delete specified category
+    // Delete specified user
     destroy: function(req, res) {
       // Find user to delete
-      Users.findByIdAndRemove(req.params.id, function(error, category) {
+      Users.findByIdAndRemove(req.params.id, function(error, user) {
         // Inform user of errors with the database
         if (error) {
           return res.status(500).json({
@@ -172,17 +149,14 @@
         }
 
         // User deleted, return success message
-        if (category) {
-          return res.json({
-            success: true,
-            message: 'User deleted successfully'
-          });
+        if (user) {
+          return res.json(user);
         }
 
         // Failed, no user with specified ID
         return res.status(404).json({
           success: false,
-          message: 'Category does not exist',
+          message: 'User does not exist',
         });
       });
     },
@@ -218,14 +192,10 @@
             var token = jwt.sign(user, process.env.SECRET_KEY, {
               expiresIn: '90 days'
             });
+            user._doc.token = token;
 
             // Return token and success message in JSON
-            return res.json({
-              success: true,
-              message: 'You\'ve successfully been logged in.',
-              token: token,
-              entry: user
-            });
+            return res.json(user);
           }
 
           // Passwords do not match

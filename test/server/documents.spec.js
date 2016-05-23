@@ -6,11 +6,11 @@
   var request = require('supertest');
   var loginHelper = require('./helpers/login');
   var seeder = require('./helpers/seeder');
+  var Tags = require('../../server/models/tags');
   var adminToken, adminId, userToken, userId, documentId;
   describe('Documents', function() {
     before(function(done) {
-      seeder(function(error, document_id) {
-        documentId = document_id;
+      seeder(function(error, documents) {
         if (error) {
           throw (error);
         } else {
@@ -19,13 +19,19 @@
               throw error;
             } else {
               adminToken = res.body.token;
-              adminId = res.body.entry._id;
+              adminId = res.body._id;
               loginHelper.user(function(error, res) {
                 if (error) {
                   throw error;
                 } else {
                   userToken = res.body.token;
-                  userId = res.body.entry._id;
+                  userId = res.body._id;
+                  for (var i = 0; i < documents.length; i++) {
+                    if (documents[i].ownerId == adminId) {
+                      documentId = documents[i]._id;
+                      break;
+                    }
+                  }
                 }
                 done();
               });
@@ -34,80 +40,99 @@
         }
       });
     });
-    describe('Created document has a date', function() {
-      it('document created by admin has a date defined', function(done) {
+
+    describe('Creates a new document', function() {
+      it('document created has the correct date', function(done) {
         request(app)
           .post('/documents')
           .set('x-access-token', adminToken)
           .send({
             title: 'Admin test document',
             content: 'I am an admin testing out the date field',
-            owner_id: adminId,
-            category: 'business',
-            access_rights: 'private'
+            tags: ['business']
           })
           .set('Accept', 'application/json')
           .end(function(error, res) {
-            // Date arithmetic
             var now = new Date().getTime();
-            var created = new Date(res.body.entry.created_at);
+            var created = new Date(res.body.createdAt);
             should.not.exist(error);
-            res.status.should.equal(200);
-            (res.body.success).should.equal(true);
+            (res.status).should.equal(200);
             should.exist(created);
             (now - created).should.be.greaterThan(0);
             done();
           });
       });
-      it('document created by user has a date defined', function(done) {
+
+      it('document created defines access roles', function(done) {
         request(app)
           .post('/documents')
           .set('x-access-token', userToken)
           .send({
-            title: 'Admin test document',
-            content: 'I am an admin testing out the date field',
-            owner_id: userId,
-            category: 'business',
-            access_rights: 'public'
+            title: 'User test document',
+            content: 'I am a user testing out the date field',
+            accessibleBy: ['user']
           })
           .set('Accept', 'application/json')
           .end(function(error, res) {
-            // Date arithmetic
-            var now = new Date().getTime();
-            var created = new Date(res.body.entry.created_at);
             should.not.exist(error);
-            res.status.should.equal(200);
-            (res.body.success).should.equal(true);
-            should.exist(created);
-            (now - created).should.be.greaterThan(0);
+            (res.status).should.equal(200);
+            (res.body).should.be.an.Object;
+            (res.body.accessibleBy).should.be.an.Array;
+            (res.body.accessibleBy[0]).should.containEql('user');
             done();
+          });
+      });
+
+      it('inserts newly defined tag', function(done) {
+        request(app)
+          .post('/documents')
+          .set('x-access-token', userToken)
+          .send({
+            title: 'User test tags',
+            content: 'I am a user testing out tag creation',
+            tags: ['newTag'],
+          })
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            should.not.exist(error);
+            (res.body).should.be.an.Object;
+            Tags.find({}, function(error, tags) {
+              (tags).should.be.an.Array;
+              (tags.length).should.equal(3);
+              (tags[2].title).should.containEql('newTag');
+              done();
+            });
           });
       });
     });
-    describe('Returned documents are sorted by date', function() {
+
+    describe('Returns all documents', function() {
       it('sorts all the documents in descending order by date', function(done) {
         request(app)
-          .get('/documents')
+          .get('/documents?page=0')
           .set('x-access-token', adminToken)
           .set('Accept', 'application/json')
           .end(function(error, res) {
             // For every document in the response
             for (var i = 0; i < (res.body.length) - 1; i++) {
-              var documentCreated = new Date(res.body[i].created_at);
-              var nextDocumentCreated = new Date(res.body[i + 1].created_at);
-              // It was created after the next documcent in the array
+              var documentCreated = new Date(res.body[i].createdAt);
+              var nextDocumentCreated = new Date(res.body[i + 1].createdAt);
+              // It was created after the next document in the array
               (documentCreated - nextDocumentCreated).should.not.be.lessThan(0);
             }
             done();
           });
       });
+
       it('sorts paginated in descending order by date', function(done) {
         request(app)
           .get('/documents?limit=10&page=5')
-          .set('x-access-token', adminToken)
+          .set('x-access-token', userToken)
           .set('Accept', 'application/json')
           .end(function(error, res) {
-            // For every document in the response
+            (res.body).should.be.an.Array;
+            (res.body.length).should.equal(10)
+              // For every document in the response
             for (var i = 0; i < (res.body.length) - 1; i++) {
               var documentCreated = new Date(res.body[i].created_at);
               var nextDocumentCreated = new Date(res.body[i + 1].created_at);
@@ -117,6 +142,7 @@
             done();
           });
       });
+      
       it('sorts limited in descending order by date', function(done) {
         request(app)
           .get('/documents?limit=10')
@@ -134,6 +160,7 @@
           });
       });
     });
+
     describe('Updates a document (PUT /documents/:id)', function() {
       it('updates a document and returns new details', function(done) {
         request(app)
@@ -147,14 +174,59 @@
           .end(function(error, res) {
             should.not.exist(error);
             res.status.should.equal(200);
-            res.body.success.should.equal(true);
-            (res.body.message).should.containEql('Document updated');
-            (res.body.entry.title).should.containEql('A real title');
-            (res.body.entry.content).should.containEql('Some real content');
+            (res.body).should.be.an.Object;
+            (res.body.title).should.containEql('A real title');
+            (res.body.content).should.containEql('Some real content');
+            done();
+          });
+      });
+
+      it('adds roles which can access it', function(done) {
+        request(app)
+          .put('/documents/' + documentId)
+          .send({
+            accessibleBy: ['admin', 'users']
+          })
+          .set('x-access-token', adminToken)
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            should.not.exist(error);
+            res.status.should.equal(200);
+            (res.body).should.be.an.Object;
+            (res.body.accessibleBy).should.containEql('users');
+            done();
+          });
+      });
+
+      it('returns fail message on non existent document', function(done) {
+        request(app)
+          .put('/documents/' + '573b7edafe90559c354b81fd')
+          .set('x-access-token', adminToken)
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            should.not.exist(error);
+            res.status.should.equal(404);
+            (res.body.success).should.equal(false);
+            (res.body.message).should.containEql('Document does not exist');
+            done();
+          });
+      });
+
+      it('responds with a server error on invalid object ID', function(done) {
+        request(app)
+          .put('/documents/' + 'nonValidId')
+          .set('x-access-token', adminToken)
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            should.not.exist(error);
+            res.status.should.equal(500);
+            (res.body.success).should.equal(false);
+            (res.body.message).should.containEql('reading from the database');
             done();
           });
       });
     });
+
     describe('Returns documents based on ID (GET /documents/<id>)', function() {
       it('returns expected document', function(done) {
         request(app)
@@ -163,27 +235,84 @@
           .set('Accept', 'application/json')
           .end(function(error, res) {
             should.not.exist(error);
-            res.status.should.equal(200);
-            should.exist(res.body.entry.content);
-            should.exist(res.body.entry.title);
+            (res.status).should.equal(200);
+            should.exist(res.body.content);
+            should.exist(res.body.title);
             done();
           });
       });
-    });
-    describe('Deletes a document (DELETE /documents/:id)', function() {
-      it('deletes a document', function(done) {
+
+      it('responds with a server error on invalid object ID', function(done) {
         request(app)
-          .delete('/documents/' + documentId)
+          .get('/documents/' + 'nonValidId')
           .set('x-access-token', adminToken)
           .set('Accept', 'application/json')
           .end(function(error, res) {
             should.not.exist(error);
-            res.status.should.equal(200);
-            res.body.success.should.equal(true);
-            (res.body.message).should.containEql('Document deleted');
+            res.status.should.equal(500);
+            (res.body.success).should.equal(false);
+            (res.body.message).should.containEql('reading from the database');
             done();
           });
       });
+
+      it('returns fail message on non existent document', function(done) {
+        request(app)
+          .get('/documents/' + '573b7edafe90559c354b81fd')
+          .set('x-access-token', adminToken)
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            should.not.exist(error);
+            res.status.should.equal(404);
+            (res.body.success).should.equal(false);
+            (res.body.message).should.containEql('Document does not exist');
+            done();
+
+          });
+      });
+    });
+  });
+
+  describe('Deletes a document (DELETE /documents/:id)', function() {
+    it('deletes a document', function(done) {
+      request(app)
+        .delete('/documents/' + documentId)
+        .set('x-access-token', adminToken)
+        .set('Accept', 'application/json')
+        .end(function(error, res) {
+          should.not.exist(error);
+          res.status.should.equal(200);
+          (res.body._id).should.containEql(documentId);
+          done();
+        });
+    });
+
+    it('responds with a server error on invalid object ID', function(done) {
+      request(app)
+        .delete('/documents/' + 'nonValidId')
+        .set('x-access-token', adminToken)
+        .set('Accept', 'application/json')
+        .end(function(error, res) {
+          should.not.exist(error);
+          res.status.should.equal(500);
+          (res.body.success).should.equal(false);
+          (res.body.message).should.containEql('reading from the database');
+          done();
+        });
+    });
+
+    it('returns fail message on non existent document', function(done) {
+      request(app)
+        .delete('/documents/' + '573b7edafe90559c354b81fd')
+        .set('x-access-token', adminToken)
+        .set('Accept', 'application/json')
+        .end(function(error, res) {
+          should.not.exist(error);
+          res.status.should.equal(404);
+          (res.body.success).should.equal(false);
+          (res.body.message).should.containEql('Document does not exist');
+          done();
+        });
     });
   });
 })();

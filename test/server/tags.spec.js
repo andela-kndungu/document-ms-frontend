@@ -6,9 +6,10 @@
     request = require('supertest'),
     loginHelper = require('./helpers/login'),
     seeder = require('./helpers/seeder'),
-    Roles = require('../../server/models/roles'),
-    adminToken, roleId, userToken;
-  describe('Roles', function() {
+    Tags = require('../../server/models/tags'),
+    adminToken, tagId, userToken;
+
+  describe('Tags', function() {
     before(function(done) {
       seeder(function(error) {
         if (error) {
@@ -27,12 +28,12 @@
             }
 
             userToken = res.body.token;
-            Roles.find({}, function(error, roles) {
+            Tags.find({}, function(error, tags) {
               if (error) {
                 throw error;
               }
 
-              roleId = roles[0]._id;
+              tagId = tags[0]._id;
               done();
             });
           });
@@ -40,10 +41,10 @@
       });
     });
 
-    describe('Returns all roles', function() {
-      it('responds with an array of all roles', function(done) {
+    describe('Returns all tags', function() {
+      it('responds with an array of all tags', function(done) {
         request(app)
-          .get('/roles/')
+          .get('/tags/')
           .set('x-access-token', adminToken)
           .set('Accept', 'application/json')
           .end(function(error, res) {
@@ -56,10 +57,10 @@
       });
     });
 
-    describe('Returns role by ID', function() {
+    describe('Returns tag by ID', function() {
       it('responds with requested object', function(done) {
         request(app)
-          .get('/roles/' + roleId)
+          .get('/tags/' + tagId)
           .set('x-access-token', adminToken)
           .set('Accept', 'application/json')
           .end(function(error, res) {
@@ -72,7 +73,7 @@
 
       it('responds with a server error on invalid object ID', function(done) {
         request(app)
-          .get('/roles/' + 'nonValidId')
+          .get('/tags/' + 'nonValidId')
           .set('x-access-token', adminToken)
           .set('Accept', 'application/json')
           .end(function(error, res) {
@@ -86,23 +87,23 @@
 
       it('responds with a fail message on non existent ID', function(done) {
         request(app)
-          .get('/roles/' + '573b7edafe90559c354b81fd')
+          .get('/tags/' + '573b7edafe90559c354b81fd')
           .set('x-access-token', adminToken)
           .set('Accept', 'application/json')
           .end(function(error, res) {
             should.not.exist(error);
             res.status.should.equal(404);
             (res.body.success).should.equal(false);
-            (res.body.message).should.containEql('Role does not exist');
+            (res.body.message).should.containEql('Tag does not exist');
             done();
           });
       });
     });
 
-    describe('Updates a role', function() {
+    describe('Updates a tag', function() {
       it('updates specified object', function(done) {
         request(app)
-          .put('/roles/' + roleId)
+          .put('/tags/' + tagId)
           .send({
             title: 'updated'
           })
@@ -119,7 +120,7 @@
 
       it('responds with a server error on invalid role ID', function(done) {
         request(app)
-          .put('/roles/' + 'nonValidId')
+          .put('/tags/' + 'nonValidId')
           .set('x-access-token', adminToken)
           .set('Accept', 'application/json')
           .end(function(error, res) {
@@ -133,84 +134,84 @@
 
       it('responds with a fail message on non existent ID', function(done) {
         request(app)
-          .put('/roles/' + '573b7edafe90559c354b81fd')
+          .put('/tags/' + '573b7edafe90559c354b81fd')
           .set('x-access-token', adminToken)
           .set('Accept', 'application/json')
           .end(function(error, res) {
             should.not.exist(error);
             res.status.should.equal(404);
             (res.body.success).should.equal(false);
-            (res.body.message).should.containEql('Role does not exist');
+            (res.body.message).should.containEql('Tag does not exist');
             done();
           });
       });
     });
 
-    describe('Creates a new role', function() {
-      it('successfully creates a new role', function(done) {
+    describe('Creates a new tag', function() {
+      it('successfully creates a new tag', function(done) {
         request(app)
-          .post('/roles')
+          .post('/tags')
           .set('x-access-token', adminToken)
           .send({
-            title: 'viewer'
+            title: 'entertainment'
           })
           .set('Accept', 'application/json')
           .end(function(error, res) {
             should.not.exist(error);
-            res.status.should.equal(200);
-            res.body.success.should.equal(true);
-            (res.body.message).should.containEql('Role created successfully');
+            (res.status).should.equal(200);
+            (res.body).should.be.an.Object;
+            (res.body.title).should.containEql('entertainment');
             done();
           });
       });
 
       it('returns an error when title is not provided', function(done) {
         request(app)
-          .post('/roles')
+          .post('/tags')
           .set('x-access-token', adminToken)
           .set('Accept', 'application/json')
           .end(function(error, res) {
             should.not.exist(error);
             res.status.should.equal(400);
             res.body.success.should.equal(false);
-            (res.body.message).should.containEql('role title must be provided');
+            (res.body.message).should.containEql('tag title must be provided');
             done();
           });
       });
     });
 
-    describe('Deletes a role', function() {
-      it('successfully deletes a role', function(done) {
+    describe('Deletes a tag', function() {
+      it('successfully deletes a tag', function(done) {
         request(app)
-          .delete('/roles/' + roleId)
+          .delete('/tags/' + tagId)
           .set('x-access-token', adminToken)
           .set('Accept', 'application/json')
           .end(function(error, res) {
             should.not.exist(error);
-            res.status.should.equal(200);
+            (res.status).should.equal(200);
             (res.body).should.be.an.Object;
-            (res.body._id).should.containEql(roleId);
+            (res.body._id).should.containEql(tagId);
             done();
           });
       });
 
-      it('returns fail message for non existent role', function(done) {
+      it('returns fail message for non existent tag', function(done) {
         request(app)
-          .delete('/roles/' + '573b7edafe90559c354b81fd')
+          .delete('/tags/' + '573b7edafe90559c354b81fd')
           .set('x-access-token', adminToken)
           .set('Accept', 'application/json')
           .end(function(error, res) {
             should.not.exist(error);
             (res.status).should.equal(404);
             (res.body.success).should.equal(false);
-            (res.body.message).should.containEql('Role does not exist')
+            (res.body.message).should.containEql('Tag does not exist')
             done();
           });
       });
 
       it('responds with a server error on invalid role ID', function(done) {
         request(app)
-          .delete('/roles/' + 'nonValidId')
+          .delete('/tags/' + 'nonValidId')
           .set('x-access-token', adminToken)
           .set('Accept', 'application/json')
           .end(function(error, res) {
@@ -224,7 +225,7 @@
 
       it('only an admin can delete a role', function(done) {
         request(app)
-          .delete('/roles/' + roleId)
+          .delete('/tags/' + tagId)
           .set('x-access-token', userToken)
           .set('Accept', 'application/json')
           .end(function(error, res) {

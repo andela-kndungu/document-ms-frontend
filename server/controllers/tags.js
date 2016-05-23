@@ -1,38 +1,34 @@
 (function() {
   'use strict';
 
-  var Roles = require('../models/roles');
+  var Tags = require('../models/tags');
   var parseError = require('./parseError');
 
   module.exports = {
-    // Add a new role
+    // Add a new tag
     create: function(req, res) {
-      // Declare new instance of the Roles model
-      var role = new Roles();
+      // Declare new instance of the Tags model
+      var tag = new Tags();
 
       // Define values of the new object to add
-      role.title = req.body.title;
+      tag.title = req.body.title;
 
-      // Save the new role parsing the error if request is invalid
-      role.save(function(error) {
+      // Save the new tag parsing the error if request is invalid
+      tag.save(function(error) {
         if (error) {
           return parseError(res, error);
         }
 
-        // Role created, return success message
-        return res.json({
-          success: true,
-          message: 'Role created successfully',
-          entry: role
-        });
+        // Tag created, return created tag
+        return res.json(tag);
       });
     },
 
-    // Handle all get requests for roles
+    // Handle all get requests for tags
     find: {
       // Retrieve by ID
       id: function(req, res) {
-        Roles.findById(req.params.id, function(error, role) {
+        Tags.findById(req.params.id, function(error, tag) {
           // Inform user of errors with the database
           if (error) {
             return res.status(500).json({
@@ -41,23 +37,23 @@
             });
           }
 
-          // Success, return retrieved role with success message
-          if (role) {
-            return res.json(role);
+          // Success, return retrieved tag with success message
+          if (tag) {
+            return res.json(tag);
           }
 
-          // Failed, no role with specified ID
+          // Failed, no tag with specified ID
           return res.status(404).json({
             success: false,
-            message: 'Role does not exist',
+            message: 'Tag does not exist',
           });
         });
       },
 
-      // Retrieve all roles
+      // Retrieve all tags
       all: function(req, res) {
-        // Get all entries in the roles model
-        Roles.find({}, function(error, roles) {
+        // Get all entries in the tags model
+        Tags.find({}, function(error, tags) {
           // Inform user of errors with the database
           if (error) {
             return res.status(500).json({
@@ -66,16 +62,16 @@
             });
           }
 
-          // Success, return retrieved roles with success message
-          return res.json(roles);
+          // Success, return retrieved tags with success message
+          return res.json(tags);
         });
       }
     },
 
-    // Update role by ID
+    // Update tag by ID
     update: function(req, res) {
-      // Get the role to update
-      Roles.findById(req.params.id, function(error, role) {
+      // Get the tag to update
+      Tags.findById(req.params.id, function(error, tag) {
         // Inform user of errors with the database
         if (error) {
           return res.status(500).json({
@@ -84,33 +80,32 @@
           });
         }
 
-        // Role found, update it
-        if (role) {
+        // Tag found, update it
+        if (tag) {
           // For each property sent in the body
           Object.keys(req.body).forEach(function(property) {
-            // Update the role
-            role[property] = req.body[property];
+            // Update the tag
+            tag[property] = req.body[property];
 
           });
 
-          // Save the updated role
-          role.save(function(error) {
+          // Save the updated tag
+          tag.save(function(error) {
             // Parse any error and pass on to user
             if (error) {
               return parseError(res, error);
             }
 
-            // Role updated, return success message
-            return res.json(role);
+            // Tag updated, return success message
+            return res.json(tag);
           });
         } else {
-          // Failed, no role with specified ID
+          // Failed, no document with specified ID
           return res.status(404).json({
             success: false,
-            message: 'Role does not exist',
+            message: 'Tag does not exist',
           });
-        }
-      });
+        }});
     },
 
     // Delete specified tag
@@ -118,8 +113,8 @@
       // Get user's role from the decoded token
       var usersRoles = req.decoded._doc.roles;
       if (usersRoles.indexOf('admin') > -1){
-        // Find role to delete
-        Roles.findByIdAndRemove(req.params.id, function(error, role) {
+        // Find tag to delete
+        Tags.findByIdAndRemove(req.params.id, function(error, tag) {
           // Inform user of errors with the database
           if (error) {
             return res.status(500).json({
@@ -128,22 +123,22 @@
             });
           }
 
-          // Role deleted, return deleted role
-          if (role) {
-            return res.json(role);
+          // Tag deleted, return deleted tag
+          if (tag) {
+            return res.json(tag);
           }
 
-          // Failed, no role with specified ID
+          // Failed, no tag with specified ID
           return res.status(404).json({
             success: false,
-            message: 'Role does not exist',
+            message: 'Tag does not exist',
           });
         });
       } else {
         // User is not authorised to carry out operaion
         return res.status(403).json({
           success: false,
-          message: 'Not authorised to delete a role'
+          message: 'Not authorised to delete a tag'
         });
       }
     }
