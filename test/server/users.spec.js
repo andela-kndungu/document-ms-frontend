@@ -437,7 +437,7 @@
             (res.status).should.equal(200);
             should.not.exist(error);
             (res.body).should.be.an.Array;
-            should(res.body.length).be.exactly(3);
+            should(res.body.length).be.exactly(4);
             done();
           });
       });
