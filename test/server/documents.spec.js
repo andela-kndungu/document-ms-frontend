@@ -35,15 +35,16 @@
                       break;
                     }
                   }
-                  loginHelper.unauthorized(function(error, res) {
-                    if (error) {
-                      throw error;
-                    } else {
-                      unauthorizedToken = res.body.token;
-                      unauthorizedId = res.body._id;
-                    }
-                    done();
-                  });
+                  // loginHelper.unauthorized(function(error, res) {
+                  //   if (error) {
+                  //     throw error;
+                  //   } else {
+                  //     unauthorizedToken = res.body.token;
+                  //     unauthorizedId = res.body._id;
+                  //   }
+                  //   done();
+                  // });
+                  done();
                 }
               });
             }
@@ -210,17 +211,36 @@
       });
 
       it('returns error message for unauthorized user', function(done) {
-        request(app)
-          .put('/documents/' + documentId)
-          .set('x-access-token', unauthorizedToken)
-          .set('Accept', 'application/json')
-          .end(function(error, res) {
-            should.not.exist(error);
-            (res.status).should.equal(401);
-            (res.body.success).should.equal(false);
-            (res.body.message).should.containEql('Not authorized to access');
-            done();
-          });
+        loginHelper.unauthorized(function(error, res) {
+          if (error) {
+            throw error;
+          } else {
+            unauthorizedToken = res.body.token;
+            unauthorizedId = res.body._id;
+            request(app)
+              .put('/documents/' + documentId)
+              .set('x-access-token', unauthorizedToken)
+              .set('Accept', 'application/json')
+              .end(function(error, res) {
+                should.not.exist(error);
+                (res.status).should.equal(401);
+                (res.body.success).should.equal(false);
+                (res.body.message).should.containEql('Not authorized to access');
+                done();
+              });
+          }
+        });
+        // request(app)
+        //   .put('/documents/' + documentId)
+        //   .set('x-access-token', unauthorizedToken)
+        //   .set('Accept', 'application/json')
+        //   .end(function(error, res) {
+        //     should.not.exist(error);
+        //     (res.status).should.equal(401);
+        //     (res.body.success).should.equal(false);
+        //     (res.body.message).should.containEql('Not authorized to access');
+        //     done();
+        //   });
       });
 
       it('returns fail message on non existent document', function(done) {
@@ -268,17 +288,36 @@
       });
 
       it('returns with error message for unauthorized user', function(done) {
-        request(app)
-          .get('/documents/' + documentId)
-          .set('x-access-token', unauthorizedToken)
-          .set('Accept', 'application/json')
-          .end(function(error, res) {
-            should.not.exist(error);
-            (res.status).should.equal(401);
-            (res.body.success).should.equal(false);
-            (res.body.message).should.containEql('Not authorized to access');
-            done();
-          });
+        loginHelper.unauthorized(function(error, res) {
+          if (error) {
+            throw error;
+          } else {
+            unauthorizedToken = res.body.token;
+            unauthorizedId = res.body._id;
+            request(app)
+              .get('/documents/' + documentId)
+              .set('x-access-token', unauthorizedToken)
+              .set('Accept', 'application/json')
+              .end(function(error, res) {
+                should.not.exist(error);
+                (res.status).should.equal(401);
+                (res.body.success).should.equal(false);
+                (res.body.message).should.containEql('Not authorized to access');
+                done();
+              });
+          }
+        });
+        // request(app)
+        //   .get('/documents/' + documentId)
+        //   .set('x-access-token', unauthorizedToken)
+        //   .set('Accept', 'application/json')
+        //   .end(function(error, res) {
+        //     should.not.exist(error);
+        //     (res.status).should.equal(401);
+        //     (res.body.success).should.equal(false);
+        //     (res.body.message).should.containEql('Not authorized to access');
+        //     done();
+        //   });
       });
 
       it('responds with a server error on invalid object ID', function(done) {
@@ -314,17 +353,36 @@
 
   describe('Deletes a document (DELETE /documents/:id)', function() {
     it('returns error message for unauthorized user', function(done) {
-      request(app)
-        .put('/documents/' + documentId)
-        .set('x-access-token', unauthorizedToken)
-        .set('Accept', 'application/json')
-        .end(function(error, res) {
-          should.not.exist(error);
-          (res.status).should.equal(401);
-          (res.body.success).should.equal(false);
-          (res.body.message).should.containEql('Not authorized to access');
-          done();
-        });
+      loginHelper.unauthorized(function(error, res) {
+        if (error) {
+          throw error;
+        } else {
+          unauthorizedToken = res.body.token;
+          unauthorizedId = res.body._id;
+          request(app)
+            .put('/documents/' + documentId)
+            .set('x-access-token', unauthorizedToken)
+            .set('Accept', 'application/json')
+            .end(function(error, res) {
+              should.not.exist(error);
+              (res.status).should.equal(401);
+              (res.body.success).should.equal(false);
+              (res.body.message).should.containEql('Not authorized to access');
+              done();
+            });
+        }
+      });
+      // request(app)
+      //   .put('/documents/' + documentId)
+      //   .set('x-access-token', unauthorizedToken)
+      //   .set('Accept', 'application/json')
+      //   .end(function(error, res) {
+      //     should.not.exist(error);
+      //     (res.status).should.equal(401);
+      //     (res.body.success).should.equal(false);
+      //     (res.body.message).should.containEql('Not authorized to access');
+      //     done();
+      //   });
     });
 
     it('deletes a document', function(done) {
