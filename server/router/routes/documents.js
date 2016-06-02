@@ -1,8 +1,8 @@
 (function() {
   'use strict';
 
-  var router = require('express').Router();
-  var DocumentsController = require('../../controllers/documents');
+  var router = require('express').Router(),
+    DocumentsController = require('../../controllers/documents');
 
   // Create a document (POST localhost:8080/documents)
   router.post('/', DocumentsController.create);

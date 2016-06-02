@@ -1,8 +1,8 @@
 (function() {
   'use strict';
 
-  var router = require('express').Router();
-  var UsersController = require('../../controllers/users');
+  var router = require('express').Router(),
+    UsersController = require('../../controllers/users');
 
   // Create a user (POST localhost:8080/users)
   router.post('/', UsersController.create);

@@ -1,10 +1,10 @@
 (function() {
   'use strict';
 
-  var bcrypt = require('bcrypt-nodejs');
-  var mongoose = require('mongoose');
-  var Schema = mongoose.Schema;
-  var Roles = require('../models/roles');
+  var bcrypt = require('bcrypt-nodejs'),
+    mongoose = require('mongoose'),
+    Schema = mongoose.Schema,
+    Roles = require('../models/roles');
 
 
   var UserSchema = new Schema({

@@ -1,5 +1,6 @@
 (function() {
   'use strict';
+  
   // Get the routes
   var publicRoutes = require('./routes/public'),
    usersRoutes = require('./routes/users'),

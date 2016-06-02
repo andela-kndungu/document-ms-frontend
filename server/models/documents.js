@@ -1,8 +1,8 @@
 (function() {
   'use strict';
 
-  var mongoose = require('mongoose');
-  var Schema = mongoose.Schema;
+  var mongoose = require('mongoose'),
+    Schema = mongoose.Schema;
 
   var DocumentsSchema = new Schema({
     ownerId: {

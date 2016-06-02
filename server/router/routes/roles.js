@@ -1,8 +1,8 @@
 (function() {
   'use strict';
 
-  var router = require('express').Router();
-  var RolesController = require('../../controllers/roles');
+  var router = require('express').Router(),
+    RolesController = require('../../controllers/roles');
 
   // Create a role (POST localhost:8080/roles)
   router.post('/', RolesController.create);

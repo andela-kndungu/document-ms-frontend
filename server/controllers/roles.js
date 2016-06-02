@@ -1,8 +1,8 @@
 (function() {
   'use strict';
 
-  var Roles = require('../models/roles');
-  var parseError = require('./parseError');
+  var Roles = require('../models/roles'),
+    parseError = require('./parseError');
 
   module.exports = {
     // Add a new role
@@ -117,7 +117,7 @@
     destroy: function(req, res) {
       // Get user's role from the decoded token
       var usersRoles = req.decoded._doc.roles;
-      if (usersRoles.indexOf('admin') > -1){
+      if (usersRoles.indexOf('admin') > -1) {
         // Find role to delete
         Roles.findByIdAndRemove(req.params.id, function(error, role) {
           // Inform user of errors with the database

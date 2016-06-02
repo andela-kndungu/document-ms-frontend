@@ -1,10 +1,10 @@
 (function() {
   'use strict';
 
-  var jwt = require('jsonwebtoken');
-  var Users = require('../models/users');
-  var Documents = require('../models/documents');
-  var parseError = require('./parseError');
+  var jwt = require('jsonwebtoken'),
+  Users = require('../models/users'),
+  Documents = require('../models/documents'),
+  parseError = require('./parseError');
 
   module.exports = {
     // Add a new user
@@ -86,6 +86,7 @@
               message: 'There was an error reading from the database'
             });
           }
+          
           // Success, return retrieved documents with success message
           return res.json(documents);
         });
