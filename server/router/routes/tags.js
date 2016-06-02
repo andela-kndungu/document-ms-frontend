@@ -1,8 +1,8 @@
 (function() {
   'use strict';
 
-  var router = require('express').Router();
-  var TagsController = require('../../controllers/tags');
+  var router = require('express').Router(),
+    TagsController = require('../../controllers/tags');
 
   // Create a tag (POST localhost:8080/tags)
   router.post('/', TagsController.create);

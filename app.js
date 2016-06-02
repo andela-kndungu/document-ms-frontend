@@ -22,6 +22,7 @@
   dbConnection.on('error', function(error) {
     console.log(error);
   });
+
   dbConnection.once('open', function() {
     console.log('Successfully connected to db');
   });
@@ -30,6 +31,7 @@
   app.use(bodyParser.urlencoded({
     extended: true
   }));
+  
   app.use(bodyParser.json());
 
   // Handle all routes

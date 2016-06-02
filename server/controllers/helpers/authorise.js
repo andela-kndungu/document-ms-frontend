@@ -14,7 +14,6 @@
         return true;
       }
     }
-
     return false;
   };
 })();

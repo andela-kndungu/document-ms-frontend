@@ -1,8 +1,8 @@
 (function() {
   'use strict';
 
-  var app = require('../../../app');
-  var request = require('supertest');
+  var app = require('../../../app'),
+    request = require('supertest');
 
   module.exports = {
     admin: function(callback) {
@@ -21,6 +21,7 @@
           }
         });
     },
+
     user: function(callback) {
       request(app)
         .post('/users/login')
@@ -37,6 +38,7 @@
           }
         });
     },
+
     unauthorized: function(callback) {
       request(app)
         .post('/users/login')

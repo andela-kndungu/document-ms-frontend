@@ -1,16 +1,17 @@
 (function() {
   'use strict';
 
-  var app = require('../../app');
-  var should = require('should');
-  var request = require('supertest');
-  var loginHelper = require('./helpers/login');
-  var seeder = require('./helpers/seeder');
-  var Tags = require('../../server/models/tags');
-  var adminToken, adminId;
-  var userToken, userId;
-  var unauthorizedId, unauthorizedToken;
-  var documentId;
+  var app = require('../../app'),
+    should = require('should'),
+    request = require('supertest'),
+    loginHelper = require('./helpers/login'),
+    seeder = require('./helpers/seeder'),
+    Tags = require('../../server/models/tags'),
+    adminToken, adminId,
+    userToken, userId,
+    unauthorizedId, unauthorizedToken,
+    documentId;
+
   describe('Documents', function() {
     before(function(done) {
       seeder(function(error, documents) {
@@ -35,15 +36,6 @@
                       break;
                     }
                   }
-                  // loginHelper.unauthorized(function(error, res) {
-                  //   if (error) {
-                  //     throw error;
-                  //   } else {
-                  //     unauthorizedToken = res.body.token;
-                  //     unauthorizedId = res.body._id;
-                  //   }
-                  //   done();
-                  // });
                   done();
                 }
               });
@@ -230,17 +222,6 @@
               });
           }
         });
-        // request(app)
-        //   .put('/documents/' + documentId)
-        //   .set('x-access-token', unauthorizedToken)
-        //   .set('Accept', 'application/json')
-        //   .end(function(error, res) {
-        //     should.not.exist(error);
-        //     (res.status).should.equal(401);
-        //     (res.body.success).should.equal(false);
-        //     (res.body.message).should.containEql('Not authorized to access');
-        //     done();
-        //   });
       });
 
       it('returns fail message on non existent document', function(done) {
@@ -307,17 +288,6 @@
               });
           }
         });
-        // request(app)
-        //   .get('/documents/' + documentId)
-        //   .set('x-access-token', unauthorizedToken)
-        //   .set('Accept', 'application/json')
-        //   .end(function(error, res) {
-        //     should.not.exist(error);
-        //     (res.status).should.equal(401);
-        //     (res.body.success).should.equal(false);
-        //     (res.body.message).should.containEql('Not authorized to access');
-        //     done();
-        //   });
       });
 
       it('responds with a server error on invalid object ID', function(done) {
@@ -372,17 +342,6 @@
             });
         }
       });
-      // request(app)
-      //   .put('/documents/' + documentId)
-      //   .set('x-access-token', unauthorizedToken)
-      //   .set('Accept', 'application/json')
-      //   .end(function(error, res) {
-      //     should.not.exist(error);
-      //     (res.status).should.equal(401);
-      //     (res.body.success).should.equal(false);
-      //     (res.body.message).should.containEql('Not authorized to access');
-      //     done();
-      //   });
     });
 
     it('deletes a document', function(done) {

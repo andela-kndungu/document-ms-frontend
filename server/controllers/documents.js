@@ -1,10 +1,10 @@
 (function() {
   'use strict';
 
-  var Documents = require('../models/documents');
-  var Tags = require('../models/tags');
-  var parseError = require('./parseError');
-  var authorised = require('./helpers/authorise');
+  var Documents = require('../models/documents'),
+  Tags = require('../models/tags'),
+  parseError = require('./parseError'),
+  authorised = require('./helpers/authorise');
 
   module.exports = {
     // Add a new tag
@@ -13,7 +13,6 @@
       var document = new Documents();
 
       // Define values of the new objet to add
-      // document.ownerId = req.decoded._doc._id;
       document.title = req.body.title;
       document.content = req.body.content;
       document.tags = req.body.tags || [];
@@ -47,7 +46,6 @@
     find: {
       // Retrieve by ID
       id: function(req, res) {
-
         Documents.findById(req.params.id, function(error, document) {
           // Inform user of errors with the database
           if (error) {
@@ -114,6 +112,7 @@
               if (error) {
                 throw error;
               }
+
               // If the tag is found
               if (tags[0]) {
                 // Look for documents with the tag's id
@@ -130,7 +129,6 @@
         // Returns all documents in requested role
         if (req.query.role) {
           query.where('accessibleBy').equals(req.query.role);
-          // query.where('role_of_creator').equals(req.query.role);
         }
 
         // Number of documents to be returned
@@ -165,7 +163,6 @@
               message: 'There was a databse error'
             });
           } else {
-            // console.log(documents);
             // Success, return retrieved documents with success message
             return res.json(documents);
           }
@@ -256,14 +253,6 @@
             message: 'Document does not exist',
           });
         }
-          // return res.json(document);
-
-
-        // // Failed, no document with specified ID
-        // return res.status(404).json({
-        //   success: false,
-        //   message: 'Document does not exist',
-        // });
       });
     }
   };

@@ -1,8 +1,8 @@
 (function() {
   'use strict';
 
-  var router = require('express').Router();
-  var UsersController = require('../../controllers/users');
+  var router = require('express').Router(),
+    UsersController = require('../../controllers/users');
 
   // Return the home page (GET localhost:8080/)
   router.get('/', function(req, res) {

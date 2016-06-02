@@ -28,14 +28,12 @@
           // Pass control over to the next function
           next();
         });
-
       } else {
         // No token provided, set status to unauthorized and return fail json
         return res.status(401).json({
           success: false,
           message: 'No token provided'
         });
-
       }
     }
   };
