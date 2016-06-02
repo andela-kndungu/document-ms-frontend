@@ -2,9 +2,9 @@
   'use strict';
 
   var Documents = require('../models/documents'),
-  Tags = require('../models/tags'),
-  parseError = require('./parseError'),
-  authorised = require('./helpers/authorise');
+    Tags = require('../models/tags'),
+    parseError = require('./parseError'),
+    authorised = require('./helpers/authorise');
 
   module.exports = {
     // Add a new tag
@@ -78,6 +78,7 @@
 
       // Retrieve all documents
       all: function(req, res) {
+        var status, body;
         // Roles of user trying to access document
         var rolesOfUser = req.decoded._doc.roles;
 
@@ -118,10 +119,11 @@
                 // Look for documents with the tag's id
                 query.where('tags').in(['req.query.tag']);
               } else {
-                return res.status(404).json({
+                status = 404;
+                body = {
                   success: false,
                   message: 'Tag does not exist'
-                });
+                };
               }
             });
         }
@@ -158,14 +160,16 @@
         query.exec(function(error, documents) {
           // Inform user of errors with the database
           if (error) {
-            return res.status(500).json({
+            status = 500;
+            body = {
               success: false,
               message: 'There was a databse error'
-            });
-          } else {
-            // Success, return retrieved documents with success message
-            return res.json(documents);
+            };
           }
+          // Return result
+          status = status || 200;
+          body = body || documents;
+          res.status(status).json(body);
         });
       }
     },
@@ -234,7 +238,7 @@
         if (document) {
           if (authorised(req, document)) {
             Documents.findByIdAndRemove(req.params.id, function(e, d) {
-              if(!e) {
+              if (!e) {
                 return res.json(d);
               }
             });

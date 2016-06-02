@@ -160,6 +160,20 @@
             done();
           });
       });
+
+      it('does not return non existent tag', function(done) {
+        request(app)
+          .get('/documents?tag=educations')
+          .set('x-access-token', adminToken)
+          .set('Accept', 'application/json')
+          .end(function(error, res) {
+            should.not.exist(error);
+            (res.status).should.equal(404);
+            (res.body.success).should.equal(false);
+            (res.body.message).should.containEql('Tag does not exist');
+            done();
+          });
+      });
     });
   });
 })();
