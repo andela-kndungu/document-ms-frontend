@@ -4,19 +4,19 @@
   var router = require('express').Router(),
     DocumentsController = require('../../controllers/documents');
 
-  // Create a document (POST localhost:8080/documents)
+  // Create a document (POST /documents)
   router.post('/', DocumentsController.create);
 
-  // Fetch document by ID (GET localhost:8080/documents/id)
+  // Fetch document by ID (GET /documents/id)
   router.get('/:id', DocumentsController.find.id);
 
-  // Fetch all documents (GET localhost:8080/documents)
+  // Fetch all documents (GET /documents)
   router.get('/', DocumentsController.find.all);
 
-  // Update document by ID (PUT localhost:8080/documents/id)
+  // Update document by ID (PUT /documents/id)
   router.put('/:id', DocumentsController.update);
 
-  // Delete document by id (DELETE localhost:8080/documents/id)
+  // Delete document by id (DELETE /documents/id)
   router.delete('/:id', DocumentsController.destroy);
 
   module.exports = router;
