@@ -109,16 +109,7 @@
         var month = today.getMonth();
         var day = today.getDate();
         var month = today.getMonth();
-        // var date = today.getDate();
-        // var month = parseInt(today.getUTCMonth(), 10) < 10 ?
-          // '0' + (today.getUTCMonth() + 1) :
-          // today.getMonth() + 1;
-        // var day = parseInt(today.getUTCDate(), 10) < 10 ?
-          // '0' + today.getUTCDate() :
-          // today.getDate();
-        // var day = today.getDate();
         var dateString = year + ', ' + month + ', ' + day;
-        console.log(dateString);
         request(app)
           .get('/documents?date=' + dateString)
           .set('x-access-token', adminToken)
