@@ -96,9 +96,9 @@
 
         // Return documents created on a specific day
         if (req.query.date) {
-          var millisecondsInDay = 86400000;
+          var nextDay = new Date();
           var requestedDay = new Date(req.query.date);
-          var nextDay = new Date(requestedDay.getTime() + millisecondsInDay);
+          nextDay.setDate(requestedDay.getDate()+1);
           query.where('createdAt')
             .gte(requestedDay)
             .lt(nextDay);
