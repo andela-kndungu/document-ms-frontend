@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-  var app = require('../../../app'),
+  var app = require('../../../server'),
     request = require('supertest');
 
   module.exports = {
