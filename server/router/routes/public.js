@@ -1,22 +1,20 @@
-(function() {
-  'use strict';
+import { Router } from 'express';
+import path from 'path';
 
-  var router = require('express').Router(),
-    UsersController = require('../../controllers/users');
+import UsersController from '../../controllers/users';
 
-  // Return the home page (GET /)
-  router.get('/', function(req, res) {
-    res.json({
-      success: true,
-      message: 'Api active'
-    });
-  });
+const router = Router();
 
-  // Create a user (POST /users)
-  router.post('/users', UsersController.create);
+// Return the home page (GET /)
+router.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../../public/index.html'));
+});
 
-  // Log in a user (POST /users/login)
-  router.post('/users/login', UsersController.login);
+// Create a user (POST /users)
+router.post('/users', UsersController.create);
 
-  module.exports = router;
-})();
+// Log in a user (POST /users/login)
+router.post('/users/login', UsersController.login);
+
+export default router;
+

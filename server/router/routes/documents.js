@@ -1,23 +1,23 @@
-(function() {
-  'use strict';
+import { Router } from 'express';
 
-  var router = require('express').Router(),
-    DocumentsController = require('../../controllers/documents');
+import DocumentsController from '../../controllers/documents.js';
 
-  // Create a document (POST /documents)
-  router.post('/', DocumentsController.create);
+const router = Router();
 
-  // Fetch document by ID (GET /documents/id)
-  router.get('/:id', DocumentsController.find.id);
+// Create a document (POST /documents)
+router.post('/', DocumentsController.create);
 
-  // Fetch all documents (GET /documents)
-  router.get('/', DocumentsController.find.all);
+// Fetch document by ID (GET /documents/id)
+router.get('/:id', DocumentsController.find.id);
 
-  // Update document by ID (PUT /documents/id)
-  router.put('/:id', DocumentsController.update);
+// Fetch all documents (GET /documents)
+router.get('/', DocumentsController.find.all);
 
-  // Delete document by id (DELETE /documents/id)
-  router.delete('/:id', DocumentsController.destroy);
+// Update document by ID (PUT /documents/id)
+router.put('/:id', DocumentsController.update);
 
-  module.exports = router;
-})();
+// Delete document by id (DELETE /documents/id)
+router.delete('/:id', DocumentsController.destroy);
+
+export default router;
+

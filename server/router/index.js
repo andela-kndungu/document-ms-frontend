@@ -1,25 +1,24 @@
-(function() {
-  'use strict';
-  
-  // Get the routes
-  var publicRoutes = require('./routes/public'),
-   usersRoutes = require('./routes/users'),
-   rolesRoutes = require('./routes/roles'),
-   tagsRoutes = require('./routes/tags'),
-   documentsRoutes = require('./routes/documents');
+// All the various routes
+import publicRoutes from './routes/public';
+import usersRoutes from './routes/users';
+import rolesRoutes from './routes/roles';
+import tagsRoutes from './routes/tags';
+import documentsRoutes from './routes/documents';
 
-  // Authentication Middleware
-  var authenticate = require('../controllers/authenticate');
+// Authentication Middleware
+import authenticate from '../controllers/authenticate';
 
-  module.exports = function(app) {
-    // Accessible without being logged in
-    app.use('/', publicRoutes);
+const router = (app) => {
+  // Accessible without being logged in
+  app.use('/', publicRoutes);
 
-    // Protect sensitive routes
-    app.use(authenticate.token);
-    app.use('/users', usersRoutes);
-    app.use('/roles', rolesRoutes);
-    app.use('/tags', tagsRoutes);
-    app.use('/documents', documentsRoutes);
-  };
-})();
+  // Protect sensitive routes
+  app.use(authenticate.token);
+  app.use('/users', usersRoutes);
+  app.use('/roles', rolesRoutes);
+  app.use('/tags', tagsRoutes);
+  app.use('/documents', documentsRoutes);
+};
+
+export default router;
+

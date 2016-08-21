@@ -1,8 +1,7 @@
-(function() {
-  'use strict';
 
-  var app = require('../../app'),
-    should = require('should'),
+  import app from '../../server/index.js';
+
+  var should = require('should'),
     request = require('supertest'),
     loginHelper = require('./helpers/login'),
     seeder = require('./helpers/seeder'),
@@ -385,4 +384,3 @@
         });
     });
   });
-})();

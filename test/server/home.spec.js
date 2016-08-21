@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-  var app = require('../../app'),
+  var app = require('../../server/index.js'),
     should = require('should'),
     request = require('supertest');
 
@@ -15,8 +15,6 @@
           .end(function(error, res) {
             should.not.exist(error);
             res.status.should.equal(200);
-            (res.body.success).should.equal(true);
-            (res.body.message).should.containEql('Api active');
             done();
           });
       });

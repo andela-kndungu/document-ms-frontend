@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-  var app = require('../../app');
+  var app = require('../../server');
   var should = require('should');
   var request = require('supertest');
   var loginHelper = require('./helpers/login');
