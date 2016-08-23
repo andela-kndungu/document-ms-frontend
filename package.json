@@ -10,12 +10,13 @@
     "build:node": "NODE_ENV=production npm run babel -- ./server -d ./compiled",
     "build:prod": "NODE_ENV=production webpack --progress --colors --config ./webpack/webpack.config.prod.js",
     "clean": "rimraf compiled",
-    "coverage": "cat ./test/server/coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+    "coverage": "cat ./test/coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
     "dev": "NODE_ENV=development nodemon",
     "postinstall": "npm run build",
     "posttest": "npm run coverage",
     "start": "NODE_ENV=production node compiled/index.js",
-    "test": "istanbul cover --dir test/server/coverage ./node_modules/.bin/_mocha -- -u exports --compilers js:babel-core/register --require ./test/setup.js './test/**/*.spec.js'"
+    "test": "istanbul cover --dir ./test/coverage ./node_modules/.bin/_mocha -- -u exports --compilers js:babel-core/register --require ./test/setup.js \"test/**/*.spec@(.js|.jsx)\" ",
+    "test:watch": "npm test -- --watch"
   },
   "dependencies": {
     "babel-cli": "^6.11.4",
@@ -42,8 +43,10 @@
     "babel-core": "^6.8.0",
     "babel-istanbul": "^0.8.0",
     "chai": "^3.5.0",
+    "chai-enzyme": "^0.5.0",
     "chai-immutable": "^1.6.0",
     "coveralls": "^2.11.9",
+    "enzyme": "^2.4.1",
     "eslint": "^3.3.1",
     "eslint-config-airbnb": "^10.0.1",
     "eslint-plugin-import": "^1.13.0",
