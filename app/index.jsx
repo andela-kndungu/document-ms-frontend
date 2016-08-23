@@ -4,7 +4,7 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
-import AppBar from './components/AppBar.jsx';
+import AppBar from './components/GuestHome/AppBar.jsx';
 
 // Needed for onTouchTap
 injectTapEventPlugin();
