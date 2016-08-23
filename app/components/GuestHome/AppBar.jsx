@@ -3,6 +3,10 @@ import AppBar from 'material-ui/AppBar';
 import FlatButton from 'material-ui/FlatButton';
 import LogInIcon from 'material-ui/svg-icons/action/input';
 
+const openLogIn = () => {
+  console.log('afc');
+};
+
 const MyAppBar = () => {
   return (
     <AppBar
@@ -13,6 +17,7 @@ const MyAppBar = () => {
         <FlatButton
           label="LOGIN"
           icon={<LogInIcon />}
+          onTouchTap={openLogIn}
         />
         }
     />);
