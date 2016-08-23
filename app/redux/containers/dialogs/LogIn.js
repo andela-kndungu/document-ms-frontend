@@ -4,7 +4,7 @@ import LogInDialog from '../../../components/GuestHome/Dialog/Index.jsx';
 
 const mapStateToProps = (state) => {
   return ({
-    logInOpen: state.getIn(['dialogs', 'logInOpen'])
+    logInOpen: state.dialogs.getIn(['dialogs', 'logInOpen'])
   });
 };
 
