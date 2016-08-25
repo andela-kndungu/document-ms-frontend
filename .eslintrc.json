@@ -8,7 +8,8 @@
     "comma-dangle": 0,
     "no-shadow": 0,
     "import/no-extraneous-dependencies": 0,
-    "no-lone-blocks": 0
+    "no-lone-blocks": 0,
+    "consistent-return": 0
   },
   "env": {
     "browser": true,

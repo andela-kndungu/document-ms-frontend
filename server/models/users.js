@@ -1,79 +1,97 @@
-(function() {
-  'use strict';
+import mongoose from 'mongoose';
+import bcrypt from 'bcrypt-nodejs';
 
-  var bcrypt = require('bcrypt-nodejs'),
-    mongoose = require('mongoose'),
-    Schema = mongoose.Schema,
-    Roles = require('../models/roles');
+const Schema = mongoose.Schema;
 
+const UserSchema = new Schema({
+  username: {
+    type: String,
+    unique: true
+  },
 
-  var UserSchema = new Schema({
-    username: {
+  name: {
+    first: {
       type: String,
-      required: [true, 'A username must be provided'],
-      unique: true
+      required: [true, 'A first name must be provided'],
     },
-
-    name: {
-      first: {
-        type: String,
-        required: [true, 'A first name must be provided']
-      },
-      last: {
-        type: String,
-        required: [true, 'A last name must be provided']
-      }
-    },
-
-    email: {
+    last: {
       type: String,
-      required: [true, 'An email must be provided'],
-      unique: true
+      required: [true, 'A last name must be provided'],
     },
+  },
 
-    password: {
+  email: {
+    type: String,
+    required: [true, 'An email must be provided'],
+    unique: true,
+  },
+
+  password: {
+    type: String,
+  },
+
+  roles: {
+    type: Array,
+    default: ['user'],
+  },
+
+  google: {
+    id: {
       type: String,
-      required: [true, 'A password must be provided']
     },
+    token: {
+      type: String,
+    },
+  },
 
-    roles: {
-      type: Array,
-      default: ['user']
-    }
-  }, {
-    timestamps: {
-      createdAt: 'createdAt',
-      updatedAt: 'updatedAt'
-    }
-  });
+  github: {
+    id: {
+      type: String,
+    },
+    token: {
+      type: String,
+    },
+  },
 
-  UserSchema.pre('save', function(next) {
-    // To be able to access the user object from within the bcrypt function
-    var user = this;
+  photo: {
+    type: String
+  }
+}, {
+  timestamps: {
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+  },
+});
 
+UserSchema.pre('save', function hash(next) {
+  // To be able to access the user object from within the bcrypt function
+  const user = this;
+  if (user.password) {
     // Replace provided plain text password with hashed one
-    bcrypt.hash(user.password, null, null, function(error, hashedPassword) {
+    bcrypt.hash(user.password, null, null, (error, hashedPassword) => {
       if (error) {
-        var err = new Error('something went wrong');
+        const err = new Error('Something went wrong hashing password');
         next(err);
       } else {
         user.password = hashedPassword;
         next();
       }
     });
+  } else {
+    next();
+  }
+});
+
+// Validate hashed password
+UserSchema.methods.validatePassword = function valid(password, callback) {
+  // To be able to access the object from within the bcrypt function
+  const user = this;
+  bcrypt.compare(password, user.password, (error, isMatch) => {
+    if (error) {
+      return callback(error);
+    }
+    return callback(null, isMatch);
   });
+};
 
-  // Validate hashed password
-  UserSchema.methods.validatePassword = function(providedPassword, callback) {
-    // To be able to access the object from within the bcrypt function
-    var user = this;
-    bcrypt.compare(providedPassword, user.password, function(error, isMatch) {
-      if (error) {
-        return callback(error);
-      }
-      callback(null, isMatch);
-    });
-  };
-
-  module.exports = mongoose.model('Users', UserSchema);
-})();
+module.exports = mongoose.model('Users', UserSchema);
