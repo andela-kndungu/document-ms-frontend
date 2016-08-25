@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import DocumentsController from '../../controllers/documents.js';
+import DocumentsController from '../../controllers/documents/index.js';
 
 const router = Router();
 

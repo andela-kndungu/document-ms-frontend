@@ -7,7 +7,7 @@
   module.exports = {
     admin: function(callback) {
       request(app)
-        .post('/users/login')
+        .post('/api/users/login')
         .send({
           username: 'admin',
           password: 'adminPassword'
@@ -24,7 +24,7 @@
 
     user: function(callback) {
       request(app)
-        .post('/users/login')
+        .post('/api/users/login')
         .send({
           username: 'user',
           password: 'userPassword'
@@ -41,7 +41,7 @@
 
     unauthorized: function(callback) {
       request(app)
-        .post('/users/login')
+        .post('/api/users/login')
         .send({
           username: 'unauthorized',
           password: 'unauthorizedPassword'
