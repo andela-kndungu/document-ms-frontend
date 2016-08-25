@@ -3,7 +3,7 @@
 
   module.exports = function(req, document) {
     // User's roles
-    var userRoles = req.decoded._doc.roles;
+    var userRoles = req.user.roles;
 
     // Roles which can access the document
     var documentRoles = document.accessibleBy;

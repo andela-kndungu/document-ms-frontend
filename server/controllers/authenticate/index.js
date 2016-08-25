@@ -23,7 +23,7 @@
             });
           }
           // Valid, save decoded object for possibly other routes to use
-          req.decoded = decoded;
+          req.user = decoded;
 
           // Pass control over to the next function
           next();

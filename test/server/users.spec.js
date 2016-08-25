@@ -8,6 +8,7 @@
   var seeder = require('./helpers/seeder');
   var Users = require('../../server/models/users');
   var adminToken, adminId, userToken, userId;
+  var nock = require('nock');
 
   describe('Users', function() {
     before(function(done) {
@@ -136,9 +137,22 @@
     });
 
     describe('Creates a new user (POST /users/)', function() {
+      beforeEach(function(){
+        nock.cleanAll();
+      })
       it('successfully creates a new user', function(done) {
+        nock('https://gender-api.com')
+          .get('/get')
+          .query({
+            name: 'New',
+            ip: 'auto',
+            key: process.env.GENDER_API_KEY
+          })
+          .reply(200, {
+            gender: 'male',
+          });
         request(app)
-          .post('/users')
+          .post('/api/users')
           .send({
             email: 'new@user.com',
             username: 'newuser',
@@ -157,8 +171,18 @@
       });
 
       it('requires an email to be provided', function(done) {
+        nock('https://gender-api.com')
+          .get('/get')
+          .query({
+            name: 'Unique',
+            ip: 'auto',
+            key: process.env.GENDER_API_KEY
+          })
+          .reply(200, {
+            gender: 'male',
+          });
         request(app)
-          .post('/users')
+          .post('/api/users')
           .send({
             username: 'uniquename',
             firstName: 'Unique',
@@ -176,50 +200,19 @@
           });
       });
 
-      it('requires a username to be provided', function(done) {
-        request(app)
-          .post('/users')
-          .send({
-            email: 'unique@email.com',
-            firstName: 'Unique',
-            lastName: 'Name',
-            password: 'uniquePass',
-            role: 'user'
-          })
-          .set('Accept', 'application/json')
-          .end(function(error, res) {
-            should.not.exist(error);
-            res.status.should.equal(400);
-            (res.body.success).should.equal(false);
-            (res.body.message).should.containEql('username must be provided');
-            done();
-          });
-      });
-
-      it('requires a unique email', function(done) {
-        request(app)
-          .post('/users')
-          .send({
-            email: 'new@user.com',
-            username: 'uniquename',
-            firstName: 'Unique',
-            lastName: 'Name',
-            password: 'uniquePass',
-            role: 'user'
-          })
-          .set('Accept', 'application/json')
-          .end(function(error, res) {
-            should.not.exist(error);
-            res.status.should.equal(409);
-            (res.body.success).should.equal(false);
-            (res.body.message).should.containEql('Duplicate key error');
-            done();
-          });
-      });
-
       it('requires a unique username', function(done) {
+        nock('https://gender-api.com')
+          .get('/get')
+          .query({
+            name: 'Unique',
+            ip: 'auto',
+            key: process.env.GENDER_API_KEY
+          })
+          .reply(200, {
+            gender: 'male',
+          });
         request(app)
-          .post('/users')
+          .post('/api/users')
           .send({
             email: 'unique@email.com',
             username: 'newuser',
@@ -239,8 +232,17 @@
       });
 
       it('requires first name to be provided', function(done) {
+        nock('https://gender-api.com')
+          .get('/get')
+          .query({
+            ip: 'auto',
+            key: process.env.GENDER_API_KEY
+          })
+          .reply(200, {
+            gender: 'male',
+          });
         request(app)
-          .post('/users')
+          .post('/api/users')
           .send({
             email: 'unique@email.com',
             username: 'uniquename',
@@ -259,8 +261,18 @@
       });
 
       it('requires last name to be provided', function(done) {
+        nock('https://gender-api.com')
+          .get('/get')
+          .query({
+            name: 'Unique',
+            ip: 'auto',
+            key: process.env.GENDER_API_KEY
+          })
+          .reply(200, {
+            gender: 'male',
+          });
         request(app)
-          .post('/users')
+          .post('/api/users')
           .send({
             email: 'unique@email.com',
             username: 'uniquename',
@@ -279,8 +291,18 @@
       });
 
       it('created user has a role defined', function(done) {
+        nock('https://gender-api.com')
+          .get('/get')
+          .query({
+            name: 'Unique',
+            ip: 'auto',
+            key: process.env.GENDER_API_KEY
+          })
+          .reply(200, {
+            gender: 'male',
+          });
         request(app)
-          .post('/users')
+          .post('/api/users')
           .send({
             email: 'unique@email.com',
             username: 'uniquename',
@@ -299,7 +321,7 @@
       });
     });
 
-    describe('All user\'s documents (GET /users/<id>/documents)', function() {
+    describe('All user\'s documents (GET /api/users/<id>/documents)', function() {
       it('responds with an array of all the user\'s documents', function(done) {
         request(app)
           .get('/users/' + adminId + '/documents')
@@ -330,27 +352,27 @@
       });
     });
 
-    describe('Logs in a user (POST /users/login)', function() {
+    describe('Logs in a user (POST /api/users/login)', function() {
       it('logs in user and returns expected user details', function(done) {
         request(app)
-          .post('/users/login/')
+          .post('/api/users/login/')
           .send({
-            username: 'newuser',
-            password: 'newPass'
+            username: 'admin',
+            password: 'adminPassword'
           })
           .set('Accept', 'application/json')
           .end(function(error, res) {
             should.not.exist(error);
             res.status.should.equal(200);
             should.exist(res.body.token);
-            (res.body.username).should.equal('newuser');
+            (res.body.username).should.equal('admin');
             done();
           });
       });
 
       it('returns error message when given non existent user', function(done) {
         request(app)
-          .post('/users/login/')
+          .post('/api/users/login/')
           .send({
             username: 'newuser12',
             password: 'newPass'
@@ -358,7 +380,7 @@
           .set('Accept', 'application/json')
           .end(function(error, res) {
             should.not.exist(error);
-            res.status.should.equal(404);
+            res.status.should.equal(401);
             (res.body.success).should.equal(false);
             (res.body.message).should.containEql('User does not exist');
             done();
@@ -367,9 +389,9 @@
 
       it('returns error message when given wrong password', function(done) {
         request(app)
-          .post('/users/login/')
+          .post('/api/users/login/')
           .send({
-            username: 'newuser',
+            username: 'admin',
             password: 'wrongPass'
           })
           .set('Accept', 'application/json')
@@ -377,7 +399,7 @@
             should.not.exist(error);
             (res.status).should.equal(401);
             (res.body.success).should.equal(false);
-            (res.body.message).should.containEql('failed. Wrong password.');
+            (res.body.message).should.containEql('Incorrect password.');
             done();
           });
       });
@@ -437,7 +459,7 @@
             (res.status).should.equal(200);
             should.not.exist(error);
             (res.body).should.be.an.Array;
-            should(res.body.length).be.exactly(4);
+            should(res.body.length).be.above(2);
             done();
           });
       });

@@ -116,7 +116,7 @@
     // Delete specified tag
     destroy: function(req, res) {
       // Get user's role from the decoded token
-      var usersRoles = req.decoded._doc.roles;
+      var usersRoles = req.user.roles;
       if (usersRoles.indexOf('admin') > -1) {
         // Find role to delete
         Roles.findByIdAndRemove(req.params.id, function(error, role) {
