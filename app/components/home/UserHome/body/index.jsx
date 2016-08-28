@@ -2,7 +2,8 @@ import React from 'react';
 import { Map, List } from 'immutable';
 import FAB from './FAB.jsx';
 import DocumentCard from './DocumentCard.jsx';
-
+import AddDocumentDialog from '../../../../redux/containers/dialogs/AddDocument.js';
+// import AddDocumentDialog from './AddDocument/index.jsx';
 const bodyStyle = {
   paddingTop: '64px',
   display: 'flex',
@@ -63,7 +64,10 @@ const Body = (props) => {
 
   return (
     <div style={bodyStyle}>
+      {/* Array of DocumentCards */ }
       {nodes}
+      { /* Displayed on clicking the FAB */ }
+      <AddDocumentDialog />
       {/* Floating action button to add new documents */}
       <FAB />
     </div>
@@ -78,5 +82,5 @@ Body.propTypes = {
   history: React.PropTypes.object
 };
 
-export default FAB;
+export default Body;
 

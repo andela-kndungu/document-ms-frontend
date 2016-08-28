@@ -33,9 +33,9 @@ const toggleLogOutDialog = (callback) => {
 };
 
 // Toggles the add document dialog display boolean
-const toggleAddDocuments = (callback) => {
+const toggleAddDocument = (callback) => {
   return callback({
-    type: constants.TOGGLE_LOG_OUT
+    type: constants.TOGGLE_ADD_DOCUMENT
   });
 };
 
@@ -43,6 +43,6 @@ export {
   toggleLogInDialog,
   fetchDocuments,
   toggleLogOutDialog,
-  toggleAddDocuments
+  toggleAddDocument
 };
 
