@@ -7,68 +7,14 @@ import Toggle from 'material-ui/Toggle';
 import { Editor, EditorState, convertToRaw } from 'draft-js';
 import store from '../../../../../redux/store';
 import constants from '../../../../../redux/constants';
-
-const divStyle = {
-  marginTop: '20px',
-};
-
-const fieldStyle = {
-  display: 'block',
-  margin: 'auto',
-  width: '75%',
-};
-
-const titleStyle = {
-  display: 'block',
-  margin: 'auto',
-  width: '75%',
-  boxSizing: 'border-box',
-  border: '1px solid #ddd',
-  cursor: 'text',
-  borderRadius: '2px',
-  marginBottom: '2em',
-  boxShadow: 'inset 0px 1px 8px -3px #ABABAB',
-  background: '#fefefe',
-  maxHeight: '30px',
-  overflow: 'auto',
-  paddingTop: '5px',
-  paddingBottom: '10px',
-  paddingLeft: '10px'
-};
-
-const contentStyle = {
-  display: 'block',
-  margin: 'auto',
-  width: '75%',
-  boxSizing: 'border-box',
-  border: '1px solid #ddd',
-  cursor: 'text',
-  borderRadius: '2px',
-  marginBottom: '2em',
-  boxShadow: 'inset 0px 1px 8px -3px #ABABAB',
-  background: '#fefefe',
-  maxHeight: '250px',
-  overflow: 'auto',
-  paddingTop: '5px',
-  paddingBottom: '10px',
-  paddingLeft: '10px'
-};
-
-const buttonStyle = {
-  display: 'block',
-  margin: 'auto',
-  width: '75%',
-  color: '#FFFFFF',
-  backgroundColor: '#607D8B',
-  marginTop: '20px',
-};
+import styles from './styles';
 
 class AddDocumentForm extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      category: '',
+      tag: '',
       public: true,
       titleState: EditorState.createEmpty(),
       contentState: EditorState.createEmpty()
@@ -82,13 +28,14 @@ class AddDocumentForm extends React.Component {
 
   createDocument() {
     const title = convertToRaw(this.state.titleState.getCurrentContent());
-    const content = convertToRaw(this.state.contentState.getCurrentContent());
+		const content = convertToRaw(this.state.contentState.getCurrentContent());
+		console.log(this.state.tag)
     request
       .post('api/documents')
       .send({
         title: JSON.stringify(title),
         content: JSON.stringify(content),
-        category: this.state.category,
+        tags: [this.state.tag],
         accessibleBy: this.state.public ? ['user'] : [this.props.userDetails.get('username')]
       })
       .set('x-access-token', localStorage.getItem('token'))
@@ -108,8 +55,8 @@ class AddDocumentForm extends React.Component {
       return categoryObject.title;
     });
     return (
-      <div style={divStyle}>
-        <div style={fieldStyle}>
+      <div style={styles.divStyle}>
+        <div style={styles.fieldStyle}>
           <AutoComplete
             style={{ width: '100%' }}
             floatingLabelText="Choose or create category"
@@ -122,25 +69,26 @@ class AddDocumentForm extends React.Component {
               });
             }}
             onBlur={(event) => {
+              console.log(this.state.category)
               this.setState({
-                category: event.target.value
+                tag: event.target.value
               });
             }}
           />
         </div>
-        <div style={fieldStyle}>
+        <div style={styles.fieldStyle}>
           <p>Title</p>
         </div>
-        <div style={titleStyle}>
+        <div style={styles.titleStyle}>
           <Editor editorState={this.state.titleState} onChange={this.titleChange} />
         </div>
-        <div style={fieldStyle}>
+        <div style={styles.fieldStyle}>
           <p>Content</p>
         </div>
-        <div style={contentStyle}>
+        <div style={styles.contentStyle}>
           <Editor editorState={this.state.contentState} onChange={this.contentChange} />
         </div>
-        <div style={fieldStyle}>
+        <div style={styles.fieldStyle}>
           <Toggle
             style={{ width: '100px', marginTop: '20px', marginBottom: '10px' }}
             label="Public"
@@ -151,7 +99,7 @@ class AddDocumentForm extends React.Component {
           />
         </div>
         <FlatButton
-          style={buttonStyle}
+          style={styles.buttonStyle}
           label="Add"
           onClick={this.createDocument}
         />

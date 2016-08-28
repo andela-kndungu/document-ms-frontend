@@ -17,7 +17,7 @@ const router = (app) => {
   app.use('/users', usersRoutes);
   app.use('/roles', rolesRoutes);
   app.use('/tags', tagsRoutes);
-  app.use('/documents', documentsRoutes);
+  app.use('/api/documents', documentsRoutes);
 };
 
 export default router;
