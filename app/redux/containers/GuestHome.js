@@ -1,10 +1,10 @@
 import { connect } from 'react-redux';
 
-import GuestHome from '../../components/home/GuestHome.jsx';
+import GuestHome from '../../components/home/GuestHome/Index.jsx';
 
 const mapStateToProps = (state) => {
   return ({
-    documents: state.app.get('documents')
+    documents: state.documents.get('documents')
   });
 };
 

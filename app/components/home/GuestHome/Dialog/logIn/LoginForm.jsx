@@ -3,7 +3,7 @@ import FlatButton from 'material-ui/FlatButton';
 import Snackbar from 'material-ui/Snackbar';
 import request from 'superagent';
 import TextField from 'material-ui/TextField';
-import store from '../../../..//redux/store';
+import store from '../../../../../redux/store';
 
 const fieldStyle = {
   display: 'block',

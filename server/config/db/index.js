@@ -5,7 +5,9 @@ if (!process.env.MONGODB_URI) {
   require('dotenv').config();
 }
 
-const databaseUri = process.env.MONGODB_URI;
+const databaseUri = process.env.NODE_ENV === 'test' ?
+  process.env.MONGODB_URI_TEST :
+  process.env.MONGODB_URI;
 const dbConnect = () => {
   // Connect to the database and get the connection
   mongoose.connect(databaseUri);
