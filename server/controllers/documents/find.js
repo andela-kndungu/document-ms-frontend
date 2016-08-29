@@ -108,6 +108,7 @@ find.all = (req, res) => {
         message: 'There was a databse error'
       };
     }
+    console.log(documents);
     // Return result
     status = status || 200;
     body = body || documents;

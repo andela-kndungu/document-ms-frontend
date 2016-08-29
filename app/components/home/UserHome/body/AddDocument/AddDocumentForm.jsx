@@ -7,6 +7,7 @@ import Toggle from 'material-ui/Toggle';
 import { Editor, EditorState, convertToRaw } from 'draft-js';
 import store from '../../../../../redux/store';
 import constants from '../../../../../redux/constants';
+import socket from '../../../../../socket';
 import styles from './styles';
 
 class AddDocumentForm extends React.Component {
@@ -38,13 +39,16 @@ class AddDocumentForm extends React.Component {
         accessibleBy: this.state.public ? ['user'] : [this.props.userDetails.get('username')]
       })
       .set('x-access-token', localStorage.getItem('token'))
-      .end((error, response) => {
+      .end((error) => {
         if (error) {
           return null;
         }
-        console.log(response.body);
 
+        // Document sent to server, close the dialog
         store.dispatch({ type: constants.TOGGLE_ADD_DOCUMENT });
+
+        // Tell socket server to emit fetch documents event
+        socket.emit('fetchDocuments');
       });
   }
 

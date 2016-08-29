@@ -3,6 +3,16 @@ import AppBar from '../../../redux/containers/dialogs/UserAppBar.js';
 import Body from '../../../redux/containers/UserHome/Body.js';
 import { fetchDocuments } from '../../../redux/actions';
 import store from '../../../redux/store';
+import socket from '../../../socket';
+
+// When this client receives the fetch documents event from the server
+socket.on('fetchDocuments', () => {
+  // Fetch documents from server to reflect the change
+  const token = localStorage.getItem('token');
+  fetchDocuments(token, {}, (action) => {
+    store.dispatch(action);
+  });
+});
 
 class UserHome extends React.Component {
   // After the component has been loaded

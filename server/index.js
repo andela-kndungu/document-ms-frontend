@@ -1,6 +1,7 @@
 import express from 'express';
 
 import config from './config';
+import socketServer from './socket-server';
 
 const app = express();
 
@@ -23,6 +24,9 @@ const webServer = app.listen(process.env.PORT, (error) => {
     console.info('Server listening at port', process.env.PORT);
   }
 });
+
+// Create a server end point for socket.io
+socketServer(webServer);
 
 // To be able to use with supertest
 module.exports = webServer;

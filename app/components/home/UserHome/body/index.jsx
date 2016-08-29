@@ -29,6 +29,7 @@ const filterDocuments = (searchTerm, documents) => {
 };
 
 const Body = (props) => {
+  console.log('CALLED');
   // Term typed in the search bar
   const searchTerm = props.searchTerm;
 
@@ -51,7 +52,7 @@ const Body = (props) => {
 
     return (
       <DocumentCard
-        key={index}
+        key={index + Math.random()}
         owner={document.owner}
         title={document.title}
         content={document.content}

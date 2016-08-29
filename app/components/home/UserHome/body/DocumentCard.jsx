@@ -19,6 +19,7 @@ import {
 
 import { fetchDocuments } from '../../../../redux/actions';
 import store from '../../../../redux/store';
+import socket from '../../../../socket';
 
 const cardStyle = {
   width: '350px',
@@ -41,7 +42,7 @@ const deleteDocument = (documentId) => {
         return null;
       }
 
-      return null;
+      socket.emit('fetchDocuments');
     });
 };
 
@@ -68,6 +69,7 @@ class DocumentCard extends React.Component {
     const titleState = convertFromRaw(JSON.parse(props.title));
     const contentState = convertFromRaw(JSON.parse(props.content));
 
+    console.log(titleState.getPlainText());
     // Pass the objects to EditorState to display the text and any formatting
     this.state = {
       titleState: EditorState.createWithContent(titleState),
