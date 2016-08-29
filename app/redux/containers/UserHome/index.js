@@ -5,6 +5,8 @@ import UserHome from '../../../../app/components/home/UserHome/Index.jsx';
 const mapStateToProps = (state) => {
   return ({
     documents: state.documents.get('documents'),
+    userDetails: state.auth.get('userDetails'),
+    searchTerm: state.searchTerm
   });
 };
 

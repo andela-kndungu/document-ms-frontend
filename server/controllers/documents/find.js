@@ -53,6 +53,8 @@ find.all = (req, res) => {
     }]
   });
 
+  query.populate('owner');
+
   // Return documents created on a specific day
   if (req.query.date) {
     const nextDay = new Date();

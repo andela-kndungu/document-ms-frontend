@@ -13,6 +13,7 @@ const container = {
 };
 
 const LogOutCard = (props) => {
+  // Bring all the elements together
   const first = props.userDetails.getIn(['name', 'first']);
   const last = props.userDetails.getIn(['name', 'last']);
   return (

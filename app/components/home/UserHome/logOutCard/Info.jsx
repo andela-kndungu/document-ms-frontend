@@ -18,6 +18,7 @@ const email = {
 };
 
 const Info = (props) => {
+  // Simply displays the name and email wiht some styling
   return (
     <div style={infoDiv}>
       <p style={name}>{`${props.name.first} ${props.name.last}` || 'Jane Doe'}</p>

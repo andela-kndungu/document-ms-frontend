@@ -18,6 +18,7 @@ const fetchDocuments = (token, query, callback) => {
     .query(query)
     .set('x-access-token', token)
     .end((error, response) => {
+      console.log(response.body);
       return callback({
         type: constants.FETCHED_DOCUMENTS,
         payload: response.body

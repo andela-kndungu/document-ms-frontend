@@ -10,10 +10,12 @@ const button = {
 };
 
 const handleLogOut = () => {
+  // When logging out first remove the token from local storage
   if (localStorage.getItem('token')) {
     localStorage.removeItem('token');
   }
 
+  // Then tell the store the user has logged out
   store.dispatch({
     type: constants.LOG_OUT_USER
   });

@@ -16,19 +16,23 @@ class UserAppBar extends React.Component {
 
     this.state = {};
 
+    // So that key wor `this` works as expected inside toggleLogOut
     this.toggleLogOut = this.toggleLogOut.bind(this);
   }
 
+  // Called when log out button is clicked
   toggleLogOut(event) {
     // This prevents ghost click.
     if (event.preventDefault) {
       event.preventDefault();
     }
 
+    // Send action that toggles current display state of log out popover
     toggleLogOutDialog((action) => {
       store.dispatch(action);
     });
 
+    // So that popover knows where to display from
     this.setState({
       anchorEl: event.currentTarget
     });
@@ -46,12 +50,12 @@ class UserAppBar extends React.Component {
               icon={<HomeIcon />}
               label="ennovate"
               onTouchTap={() => {
+                // Clicking home should display all the documents, no filters
                 fetchDocuments(localStorage.getItem('token'), {}, (action) => {
                   store.dispatch(action);
                 });
               }}
             />
-
           }
           title={<SearchBar />}
           iconElementRight={
@@ -59,18 +63,18 @@ class UserAppBar extends React.Component {
               label={this.props.userDetails.get('username')}
               onTouchTap={this.toggleLogOut}
             />
-            }
-          />
-          <Popover
-            open={this.props.logOutOpen}
-            anchorEl={this.state.anchorEl}
-            anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
-            targetOrigin={{ horizontal: 'left', vertical: 'top' }}
-            onRequestClose={this.toggleLogOut}
-          >
-            <LogOutCard userDetails={this.props.userDetails} />
-          </Popover>
-        </div>
+          }
+        />
+        <Popover
+          open={this.props.logOutOpen}
+          anchorEl={this.state.anchorEl}
+          anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+          targetOrigin={{ horizontal: 'left', vertical: 'top' }}
+          onRequestClose={this.toggleLogOut}
+        >
+          <LogOutCard userDetails={this.props.userDetails} />
+        </Popover>
+      </div>
     );
   }
 }

@@ -18,6 +18,7 @@ const FAB = () => {
   return (
     <FloatingActionButton
       onTouchTap={() => {
+        // On clicking toggle display status of add `document` dilaog
         toggleAddDocument((action) => {
           store.dispatch(action);
         });

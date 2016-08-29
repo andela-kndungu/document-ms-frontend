@@ -20,6 +20,18 @@ import {
 import { fetchDocuments } from '../../../../redux/actions';
 import store from '../../../../redux/store';
 
+const cardStyle = {
+  width: '350px',
+  margin: '20px',
+  float: 'left'
+};
+
+const cardHeaderStyle = {
+  fontSize: '15px',
+  cursor: 'pointer'
+};
+
+// Called when delete button of document card is clicked
 const deleteDocument = (documentId) => {
   request
     .delete(`api/documents/${documentId}`)
@@ -33,6 +45,7 @@ const deleteDocument = (documentId) => {
     });
 };
 
+// Called when user updates their document then removes focus from the card
 const updateDocument = (data, documentId) => {
   request
     .put(`api/documents/${documentId}`)
@@ -50,19 +63,24 @@ const updateDocument = (data, documentId) => {
 class DocumentCard extends React.Component {
   constructor(props) {
     super(props);
+
+    // Convert JSON strings into objects before passing to EditorState
     const titleState = convertFromRaw(JSON.parse(props.title));
     const contentState = convertFromRaw(JSON.parse(props.content));
 
+    // Pass the objects to EditorState to display the text and any formatting
     this.state = {
       titleState: EditorState.createWithContent(titleState),
       contentState: EditorState.createWithContent(contentState),
     };
 
+    // So that `this` works as expected inside the functions
     this.onTitleChange = this.onTitleChange.bind(this);
     this.onContentChange = this.onContentChange.bind(this);
   }
 
   onTitleChange(titleState) {
+    // Only allow the user to type if they can edit the document
     if (this.props.canDelete) {
       this.setState({ titleState });
     } else {
@@ -71,6 +89,7 @@ class DocumentCard extends React.Component {
   }
 
   onContentChange(contentState) {
+    // Only allow the user to type if they can edit the document
     if (this.props.canDelete) {
       this.setState({ contentState });
     } else {
@@ -80,100 +99,113 @@ class DocumentCard extends React.Component {
 
   render() {
     return (
-      <Card style={{ width: '350px', margin: '20px', float: 'left' }}>
+      <Card style={cardStyle}>
         <CardHeader
-          style={{ fontSize: '15px', cursor: 'pointer' }}
+          style={cardHeaderStyle}
           title={this.props.owner.username}
           subtitle={
-            <div style={{ fontSize: '11px'  }}>
+            <div style={{ fontSize: '11px' }}>
               <div>{moment(this.props.date).format('Do MMMM YYYY')}</div>
               <div>{moment(this.props.date).format('h:mm:ss a')}</div>
             </div>
-            }
-            avatar={this.props.owner.photo}
-            onTouchTap={() => {
-              fetchDocuments({ username: this.props.owner.username }, (action) => {
-                store.dispatch(action);
-              });
-            }}
-          />
-          <CardTitle
-            title={
+          }
+          avatar={this.props.owner.photo}
+          onTouchTap={() => {
+            // Show all the documents belonging to the username in header
+            const token = localStorage.getItem('token');
+            const username = this.props.owner.username;
+            fetchDocuments(token, username, (action) => {
+              store.dispatch(action);
+            });
+          }}
+        />
+        <CardTitle
+          title={
+            <Editor
+              editorState={this.state.titleState}
+              onChange={this.onTitleChange}
+              onBlur={() => {
+                if (this.props.canDelete) {
+                  // Convert editor state from object to string for storage
+                  const title = convertToRaw(this.state.titleState.getCurrentContent());
+                  const titleString = JSON.stringify(title);
+
+                  // Send update to db
+                  updateDocument({ title: titleString }, this.props.documentId);
+                } else {
+                  return null;
+                }
+              }}
+            />
+          }
+          actAsExpander
+          style={{ paddingTop: '0px', paddingBottom: '0px' }}
+        />
+        <CardText expandable>
+          <div>
+            <div style={{ fontWeight: '300' }}>
               <Editor
-                editorState={this.state.titleState}
-                onChange={this.onTitleChange}
+                editorState={this.state.contentState}
+                onChange={this.onContentChange}
                 onBlur={() => {
                   if (this.props.canDelete) {
-                    const title = convertToRaw(this.state.titleState.getCurrentContent());
-                    const titleString = JSON.stringify(title);
-                    updateDocument({ title: titleString }, this.props.documentId);
+                    // Convert editor state from object to string for storage
+                    const content = convertToRaw(this.state.contentState.getCurrentContent());
+                    const contentString = JSON.stringify(content);
+
+                    // Send update to db
+                    updateDocument({ content: contentString }, this.props.documentId);
                   } else {
                     return null;
                   }
                 }}
               />
-              }
-              actAsExpander
-              style={{ paddingTop: '0px', paddingBottom: '0px' }}
-            />
-            <CardText expandable>
-              <div>
-                <div style={{ fontWeight: '300' }}>
-                  <Editor
-                    editorState={this.state.contentState}
-                    onChange={this.onContentChange}
-                    onBlur={() => {
-                      if (this.props.canDelete) {
-                        const content = convertToRaw(this.state.contentState.getCurrentContent());
-                        const contentString = JSON.stringify(content);
-                        updateDocument({ content: contentString }, this.props.documentId);
-                      } else {
-                        return null;
-                      }
-                    }}
-                  />
-                </div>
-              </div>
-            </CardText>
-            <CardActions style={{ textAlign: 'right' }}>
-              <Chip
-                style={{
-                  float: 'left',
-                  marginBottom: '12px',
-                  marginLeft: '7px',
-                  backgroundColor: this.props.isPublic ? 'lightgreen' : 'lightblue'
-                }}
-                onTouchTap={() => {
-                  fetchDocuments({ category: this.props.category }, (action) => {
-                    store.dispatch(action);
-                  });
-                }}
-              >
-                {this.props.category}
-              </Chip>
-              <FlatButton
-                label="Delete"
-                secondary
-                disabled={!this.props.canDelete}
-                onTouchTap={(event) => {
-                  event.preventDefault();
-                  deleteDocument(this.props.documentId);
-                }}
-              />
-            </CardActions>
-          </Card>
+            </div>
+          </div>
+        </CardText>
+        <CardActions style={{ textAlign: 'right' }}>
+          <Chip
+            style={{
+              float: 'left',
+              marginBottom: '12px',
+              marginLeft: '7px',
+              backgroundColor: this.props.isPublic ? 'lightgreen' : 'lightblue'
+            }}
+            onTouchTap={() => {
+              // Only show documents with this cards tag
+              const token = localStorage.getItem('token');
+              const tag = this.props.tag;
+              fetchDocuments(token, tag, (action) => {
+                store.dispatch(action);
+              });
+            }}
+          >
+            {this.props.tag}
+          </Chip>
+          <FlatButton
+            label="Delete"
+            secondary
+            disabled={!this.props.canDelete}
+            onTouchTap={(event) => {
+              event.preventDefault();
+              deleteDocument(this.props.documentId);
+            }}
+          />
+        </CardActions>
+      </Card>
     );
   }
 }
 
 DocumentCard.propTypes = {
-  date: React.PropTypes.string,
-  title: React.PropTypes.string,
-  content: React.PropTypes.string,
   canDelete: React.PropTypes.bool,
-  isPublic: React.PropTypes.bool,
-  category: React.PropTypes.string,
+  content: React.PropTypes.string,
+  date: React.PropTypes.string,
   documentId: React.PropTypes.string,
+  isPublic: React.PropTypes.bool,
+  owner: React.PropTypes.obj,
+  tag: React.PropTypes.string,
+  title: React.PropTypes.string,
 };
 
 export default DocumentCard;

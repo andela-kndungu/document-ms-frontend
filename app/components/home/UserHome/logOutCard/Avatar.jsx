@@ -13,6 +13,7 @@ const ProfileAvatar = (props) => {
       <Avatar
         size={70}
         src={
+          // Display photo stored in database, but have a backup as a precaution
           props.photo ||
           'https://upload.wikimedia.org/wikipedia/commons/0/07/Avatar_girl_face.png'
         }

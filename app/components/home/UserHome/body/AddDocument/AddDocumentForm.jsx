@@ -28,8 +28,7 @@ class AddDocumentForm extends React.Component {
 
   createDocument() {
     const title = convertToRaw(this.state.titleState.getCurrentContent());
-		const content = convertToRaw(this.state.contentState.getCurrentContent());
-		console.log(this.state.tag)
+    const content = convertToRaw(this.state.contentState.getCurrentContent());
     request
       .post('api/documents')
       .send({
@@ -69,7 +68,6 @@ class AddDocumentForm extends React.Component {
               });
             }}
             onBlur={(event) => {
-              console.log(this.state.category)
               this.setState({
                 tag: event.target.value
               });
