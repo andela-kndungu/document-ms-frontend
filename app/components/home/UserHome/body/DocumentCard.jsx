@@ -19,7 +19,6 @@ import {
 
 import { fetchDocuments } from '../../../../redux/actions';
 import store from '../../../../redux/store';
-import socket from '../../../../socket';
 
 const cardStyle = {
   width: '350px',
@@ -204,7 +203,7 @@ DocumentCard.propTypes = {
   date: React.PropTypes.string,
   documentId: React.PropTypes.string,
   isPublic: React.PropTypes.bool,
-  owner: React.PropTypes.obj,
+  owner: React.PropTypes.object,
   tag: React.PropTypes.string,
   title: React.PropTypes.string,
 };
