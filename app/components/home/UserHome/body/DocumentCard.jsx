@@ -175,7 +175,7 @@ class DocumentCard extends React.Component {
               // Only show documents with this cards tag
               const token = localStorage.getItem('token');
               const tag = this.props.tag;
-              fetchDocuments(token, tag, (action) => {
+              fetchDocuments(token, { tag }, (action) => {
                 store.dispatch(action);
               });
             }}

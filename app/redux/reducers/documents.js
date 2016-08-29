@@ -10,7 +10,6 @@ const defaultState = fromJS({
 const reducer = (state = defaultState, action) => {
   switch (action.type) {
     case constants.FETCHED_DOCUMENTS:
-      console.log(action.payload);
       return fromJS({
         documents: action.payload
       });
