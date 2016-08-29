@@ -9,7 +9,7 @@ const AddDocumentTab = (props) => {
       <Tab label="ADD DOCUMENT" >
         <div>
           <AddDocumentForm
-            categories={props.categories}
+            tags={props.tags}
             userDetails={props.userDetails}
           />
         </div>
@@ -19,7 +19,7 @@ const AddDocumentTab = (props) => {
 };
 
 AddDocumentTab.propTypes = {
-  categories: React.PropTypes.instanceOf(List),
+  tags: React.PropTypes.instanceOf(List),
   userDetails: React.PropTypes.instanceOf(Map)
 };
 

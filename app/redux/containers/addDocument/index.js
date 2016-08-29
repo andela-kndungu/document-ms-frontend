@@ -5,7 +5,7 @@ import AddDocumentTab from
 
 const mapStateToProps = (state) => {
   return ({
-    categories: state.addDocument.get('categories'),
+    tags: state.addDocument.get('tags'),
     userDetails: state.auth.get('userDetails')
   });
 };

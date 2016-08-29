@@ -16,7 +16,7 @@ const router = (app) => {
   app.use(authenticate.token);
   app.use('/users', usersRoutes);
   app.use('/roles', rolesRoutes);
-  app.use('/tags', tagsRoutes);
+  app.use('/api/tags', tagsRoutes);
   app.use('/api/documents', documentsRoutes);
 };
 

@@ -39,10 +39,23 @@ const toggleAddDocument = (callback) => {
   });
 };
 
+// Fetches all tags created so far
+const fetchTags = (token, callback) => {
+  request.get(`${urlPrefix}api/tags`)
+    .set('x-access-token', token)
+    .end((error, response) => {
+      return callback({
+        type: constants.FETCHED_TAGS,
+        payload: response.body
+      });
+    });
+};
+
 export {
   toggleLogInDialog,
   fetchDocuments,
   toggleLogOutDialog,
-  toggleAddDocument
+  toggleAddDocument,
+  fetchTags
 };
 

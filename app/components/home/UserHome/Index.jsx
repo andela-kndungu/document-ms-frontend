@@ -1,7 +1,7 @@
 import React from 'react';
 import AppBar from '../../../redux/containers/dialogs/UserAppBar.js';
 import Body from '../../../redux/containers/UserHome/Body.js';
-import { fetchDocuments } from '../../../redux/actions';
+import { fetchDocuments, fetchTags } from '../../../redux/actions';
 import store from '../../../redux/store';
 import socket from '../../../socket';
 
@@ -24,6 +24,12 @@ class UserHome extends React.Component {
     // fetchDocuments(token, queryParameters, callbck)
     fetchDocuments(token, {}, (action) => {
       // Send action to update store after document receipt
+      store.dispatch(action);
+    });
+
+    // Fetch tags for when creaing a new document
+    fetchTags(token, (action) => {
+      // Send action to update store after tags receipt
       store.dispatch(action);
     });
   }

@@ -53,8 +53,8 @@ class AddDocumentForm extends React.Component {
   }
 
   render() {
-    let categories = this.props.categories.toJS();
-    categories = categories.map((categoryObject) => {
+    let tags = this.props.tags.toJS();
+    tags = tags.map((categoryObject) => {
       return categoryObject.title;
     });
     return (
@@ -65,7 +65,7 @@ class AddDocumentForm extends React.Component {
             floatingLabelText="Choose or create category"
             filter={AutoComplete.fuzzyFilter}
             openOnFocus
-            dataSource={categories}
+            dataSource={tags}
             onNewRequest={(chosen) => {
               this.setState({
                 category: chosen
@@ -111,7 +111,7 @@ class AddDocumentForm extends React.Component {
 }
 
 AddDocumentForm.propTypes = {
-  categories: React.PropTypes.instanceOf(List),
+  tags: React.PropTypes.instanceOf(List),
   userDetails: React.PropTypes.instanceOf(Map)
 };
 

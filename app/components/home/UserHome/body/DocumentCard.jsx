@@ -42,7 +42,7 @@ const deleteDocument = (documentId) => {
         return null;
       }
 
-      socket.emit('fetchDocuments');
+      return null;
     });
 };
 
@@ -69,7 +69,6 @@ class DocumentCard extends React.Component {
     const titleState = convertFromRaw(JSON.parse(props.title));
     const contentState = convertFromRaw(JSON.parse(props.content));
 
-    console.log(titleState.getPlainText());
     // Pass the objects to EditorState to display the text and any formatting
     this.state = {
       titleState: EditorState.createWithContent(titleState),
