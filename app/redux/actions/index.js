@@ -51,11 +51,23 @@ const fetchTags = (token, callback) => {
     });
 };
 
+// Fetches all public documents
+const fetchPublicDocuments = (callback) => {
+  request.get(`${urlPrefix}api/documents/public`)
+    .end((error, response) => {
+      return callback({
+        type: constants.FETCHED_PUBLIC_DOCUMENTS,
+        payload: response.body
+      });
+    });
+};
+
 export {
   toggleLogInDialog,
   fetchDocuments,
   toggleLogOutDialog,
   toggleAddDocument,
-  fetchTags
+  fetchTags,
+  fetchPublicDocuments
 };
 
