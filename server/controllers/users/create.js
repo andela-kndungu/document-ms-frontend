@@ -1,4 +1,3 @@
-import request from 'superagent';
 import Users from '../../models/users.js';
 import parseError from '../parseError.js';
 
@@ -26,46 +25,27 @@ const create = (req, res) => {
         return res.json(user);
       });
     } else {
-      // Else, new user. Query gender api to get user's sex
-      request
-        .get('https://gender-api.com/get')
-        .query({ name: req.body.firstName })
-        .query({ ip: 'auto' })
-        .query({ key: process.env.GENDER_API_KEY })
-        .end((err, resp) => {
-          // Declare new instance of the Users model
-          const newUser = new Users();
+      // Declare new instance of the Users model
+      const newUser = new Users();
 
-          // Define values of the new object to add
-          newUser.username = req.body.username.toLowerCase();
-          newUser.name.first = req.body.firstName;
-          newUser.name.last = req.body.lastName;
-          newUser.email = req.body.email;
-          newUser.password = req.body.password;
-          newUser.roles = [req.body.username];
+      // Define values of the new object to add
+      newUser.username = req.body.username.toLowerCase();
+      newUser.name.first = req.body.firstName;
+      newUser.name.last = req.body.lastName;
+      newUser.email = req.body.email;
+      newUser.password = req.body.password;
+      newUser.roles = [req.body.username];
+      newUser.photo = 'http://www.bitrebels.com/wp-content/uploads/2011/02/Original-Facebook-Geek-Profile-Avatar-6.jpg';
 
-          // Set profile image based on user's sex
-          switch (resp.body.gender) {
-            case 'male':
-              newUser.photo = 'http://www.lovemarks.com/wp-content/uploads/profile-avatars/default-avatar-tech-guy.png';
-              break;
-            case 'female':
-              newUser.photo = 'https://upload.wikimedia.org/wikipedia/commons/0/07/Avatar_girl_face.png';
-              break;
-            default:
-              newUser.photo = 'http://www.bitrebels.com/wp-content/uploads/2011/02/Original-Facebook-Geek-Profile-Avatar-6.jpg';
-          }
+      // Save the new user parsing the error if request is invalid
+      newUser.save((er) => {
+        if (er) {
+          return parseError(res, er);
+        }
 
-          // Save the new user parsing the error if request is invalid
-          newUser.save((er) => {
-            if (er) {
-              return parseError(res, er);
-            }
-
-            // User created, return created user
-            return res.json(newUser);
-          });
-        });
+        // User created, return created user
+        return res.json(newUser);
+      });
     }
   });
 };
