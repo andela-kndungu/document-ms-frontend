@@ -11,6 +11,7 @@ const create = (req, res) => {
   document.content = req.body.content;
   document.tags = req.body.tags || [];
   document.accessibleBy = req.body.accessibleBy || ['user'];
+  document.owner = req.user._id;
 
   // Create new tags if necessary
   document.tags.forEach((tag) => {

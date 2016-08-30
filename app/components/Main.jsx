@@ -2,7 +2,8 @@ import React from 'react';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
-import GuestHome from './GuestHome/Index.jsx';
+import Home from '../redux/containers/Home.jsx';
+import { oauthToken } from '../login';
 
 const muiTheme = getMuiTheme({
   palette: {
@@ -11,14 +12,29 @@ const muiTheme = getMuiTheme({
   },
 });
 
-const App = () => {
+const Main = (props) => {
+  // Check whether token is provided in the url
+  if (oauthToken(props.location.query.token)) {
+    // If it is process and redirect to home url
+    props.history.push('/');
+  }
+
   { /* Provide the same theme to the entire app */ }
   return (
     <MuiThemeProvider muiTheme={muiTheme}>
-      <GuestHome />
+      <Home />
     </MuiThemeProvider>
   );
 };
 
-export default App;
+Main.propTypes = {
+  location: React.PropTypes.shape({
+    query: React.PropTypes.shape({
+      token: React.PropTypes.string
+    })
+  }),
+  history: React.PropTypes.object
+};
+
+export default Main;
 

@@ -4,7 +4,10 @@ import constants from '../constants';
 // At first all dialogs are not visiible
 const defaultState = fromJS({
   dialogs: {
-    logInOpen: false
+    logInOpen: false,
+    logOutOpen: false,
+    addDocumentOpen: false,
+    updatedSnackbarOpen: false
   }
 });
 
@@ -14,6 +17,16 @@ const reducer = (state = defaultState, action) => {
     case constants.TOGGLE_LOG_IN:
       // Negate the current value, i.e. if open close
       return state.updateIn(['dialogs', 'logInOpen'], (currentValue) => {
+        return !currentValue;
+      });
+    case constants.TOGGLE_LOG_OUT:
+      // Negate the current value, i.e. if open close
+      return state.updateIn(['dialogs', 'logOutOpen'], (currentValue) => {
+        return !currentValue;
+      });
+    case constants.TOGGLE_ADD_DOCUMENT:
+      // Negate the current value, i.e. if open close
+      return state.updateIn(['dialogs', 'addDocumentOpen'], (currentValue) => {
         return !currentValue;
       });
     default:

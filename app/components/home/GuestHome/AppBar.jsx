@@ -2,8 +2,8 @@ import React from 'react';
 import AppBar from 'material-ui/AppBar';
 import FlatButton from 'material-ui/FlatButton';
 import LogInIcon from 'material-ui/svg-icons/action/input';
-import { toggleLogInDialog } from '../../redux/actions';
-import store from '../../redux/store';
+import { toggleLogInDialog } from '../../../redux/actions';
+import store from '../../../redux/store';
 
 // Called when log in button is clicked
 const openLogIn = () => {

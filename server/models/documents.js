@@ -1,38 +1,37 @@
-(function() {
-  'use strict';
+import mongoose from 'mongoose';
 
-  var mongoose = require('mongoose'),
-    Schema = mongoose.Schema;
+const Schema = mongoose.Schema;
 
-  var DocumentsSchema = new Schema({
-    ownerId: {
-      type: String,
-    },
+const DocumentsSchema = new Schema({
+  owner: {
+    type: Schema.ObjectId,
+    ref: 'Users'
+  },
 
-    title: {
-      type: String,
-      required: [true, 'A title must be provided'],
-    },
+  title: {
+    type: String,
+    required: [true, 'A title must be provided'],
+  },
 
-    content: {
-      type: String,
-      required: [true, 'Some content must be provided']
-    },
+  content: {
+    type: String,
+    required: [true, 'Some content must be provided']
+  },
 
-    tags: {
-      type: Array,
-    },
+  tags: {
+    type: Array,
+  },
 
-    accessibleBy: {
-      type: Array,
-      default: []
-    }
-  }, {
-    timestamps: {
-      createdAt: 'createdAt',
-      updatedAt: 'updatedAt'
-    }
-  });
+  accessibleBy: {
+    type: Array,
+    default: []
+  }
+}, {
+  timestamps: {
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  }
+});
 
-  module.exports = mongoose.model('Documents', DocumentsSchema);
-})();
+export default mongoose.model('Documents', DocumentsSchema);
+
