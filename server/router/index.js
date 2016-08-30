@@ -14,7 +14,7 @@ const router = (app) => {
 
   // Protect sensitive routes
   app.use(authenticate.token);
-  app.use('/users', usersRoutes);
+  app.use('/api/users', usersRoutes);
   app.use('/roles', rolesRoutes);
   app.use('/api/tags', tagsRoutes);
   app.use('/api/documents', documentsRoutes);

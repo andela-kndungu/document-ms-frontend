@@ -46,7 +46,7 @@ find.all = (req, res) => {
 find.documents = (req, res) => {
   // Get all documents with specified owner_id
   Documents.find({
-    ownerId: req.params.id,
+    owner: req.params.id,
   }, (error, documents) => {
     // Inform user of errors with the database
     if (error) {

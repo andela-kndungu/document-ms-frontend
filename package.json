@@ -15,7 +15,7 @@
     "postinstall": "npm run build",
     "posttest": "npm run coverage",
     "start": "NODE_ENV=production node compiled/index.js",
-    "test": "istanbul cover --dir ./test/coverage ./node_modules/.bin/_mocha -- -u exports --compilers js:babel-core/register --require ./test/setup.js \"test/**/*.spec@(.js|.jsx)\" ",
+    "test": "NODE_ENV=test istanbul cover --dir ./test/coverage ./node_modules/.bin/_mocha -- -u exports --compilers js:babel-core/register --require ./test/setup.js \"test/**/*.spec@(.js|.jsx)\" ",
     "test:watch": "npm test -- --watch"
   },
   "dependencies": {

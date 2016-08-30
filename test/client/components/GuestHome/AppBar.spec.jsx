@@ -2,7 +2,7 @@ import React from 'react';
 import { expect } from 'chai';
 import { shallow } from 'enzyme';
 
-import AppBar from '../../../../app/components/GuestHome/AppBar.jsx';
+import AppBar from '../../../../app/components/home/GuestHome/AppBar.jsx';
 
 describe('GuestHome :: <AppBar />', () => {
   const wrapper = shallow(<AppBar />);
