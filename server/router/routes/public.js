@@ -3,6 +3,7 @@ import path from 'path';
 import passport from 'passport';
 
 import UsersController from '../../controllers/users';
+import DocumentsController from '../../controllers/documents';
 
 const router = Router();
 
@@ -52,6 +53,9 @@ router.get('/api/users/login/auth/github/callback',
   passport.authenticate('github', {
     session: false
   }), UsersController.logIn.social);
+
+// To access only public documents
+router.get('/api/documents/public', DocumentsController.find.public);
 
 export default router;
 

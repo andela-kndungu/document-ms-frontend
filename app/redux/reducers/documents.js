@@ -3,7 +3,8 @@ import constants from '../constants';
 
 // At first all dialogs are not visiible
 const defaultState = fromJS({
-  documents: []
+  documents: [],
+  public: []
 });
 
 // If state is undefined use default state
@@ -12,6 +13,10 @@ const reducer = (state = defaultState, action) => {
     case constants.FETCHED_DOCUMENTS:
       return fromJS({
         documents: action.payload
+      });
+    case constants.FETCHED_PUBLIC_DOCUMENTS:
+      return fromJS({
+        public: action.payload
       });
     default:
       // Always return current state as the default

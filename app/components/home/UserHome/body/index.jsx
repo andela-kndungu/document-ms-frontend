@@ -1,10 +1,8 @@
 import React from 'react';
 import { Map, List } from 'immutable';
-import Snackbar from 'material-ui/Snackbar';
 import FAB from './FAB.jsx';
 import DocumentCard from './DocumentCard.jsx';
 import AddDocumentDialog from '../../../../redux/containers/dialogs/AddDocument.js';
-import store from '../../../../redux/store';
 
 const bodyStyle = {
   paddingTop: '64px',
