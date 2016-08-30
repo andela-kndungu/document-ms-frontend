@@ -114,7 +114,7 @@ class DocumentCard extends React.Component {
             // Show all the documents belonging to the username in header
             const token = localStorage.getItem('token');
             const username = this.props.owner.username;
-            fetchDocuments(token, username, (action) => {
+            fetchDocuments(token, { username }, (action) => {
               store.dispatch(action);
             });
           }}

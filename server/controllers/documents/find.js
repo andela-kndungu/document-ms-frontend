@@ -108,7 +108,14 @@ find.all = (req, res) => {
         message: 'There was a databse error'
       };
     }
-    console.log(documents);
+
+    if (req.query.username) {
+      documents = documents.filter((document) => {
+        const user = document.owner.username;
+        return user === req.query.username;
+      });
+    }
+
     // Return result
     status = status || 200;
     body = body || documents;

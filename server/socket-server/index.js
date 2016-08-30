@@ -13,6 +13,12 @@ export default function (server) {
       });
     });
 
+    socket.on('updateDocuments', (data) => {
+      connections.forEach(connectedSocket => {
+        connectedSocket.emit('updateDocuments', data);
+      });
+    });
+
     socket.on('disconnect', () => {
       const index = connections.indexOf(socket);
       connections.splice(index, 1);

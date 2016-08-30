@@ -47,8 +47,9 @@ class AddDocumentForm extends React.Component {
         // Document sent to server, close the dialog
         store.dispatch({ type: constants.TOGGLE_ADD_DOCUMENT });
 
-        // Tell socket server to emit fetch documents event
+        // For all clients to instantly view new documents and categories
         socket.emit('fetchDocuments');
+        socket.emit('fetchCategories');
       });
   }
 

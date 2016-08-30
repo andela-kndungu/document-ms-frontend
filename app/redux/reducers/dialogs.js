@@ -6,7 +6,8 @@ const defaultState = fromJS({
   dialogs: {
     logInOpen: false,
     logOutOpen: false,
-    addDocumentOpen: false
+    addDocumentOpen: false,
+    updatedSnackbarOpen: false
   }
 });
 

@@ -1,15 +1,22 @@
 import React from 'react';
 import AppBar from '../../../redux/containers/dialogs/UserAppBar.js';
 import Body from '../../../redux/containers/UserHome/Body.js';
-import { fetchDocuments, fetchTags } from '../../../redux/actions';
+import {
+  fetchDocuments,
+  fetchTags
+} from '../../../redux/actions';
 import store from '../../../redux/store';
 import socket from '../../../socket';
 
 // When this client receives the fetch documents event from the server
 socket.on('fetchDocuments', () => {
-  // Fetch documents from server to reflect the change
+  // Fetch documents and tags from server to reflect the change
   const token = localStorage.getItem('token');
   fetchDocuments(token, {}, (action) => {
+    store.dispatch(action);
+  });
+
+  fetchTags(token, (action) => {
     store.dispatch(action);
   });
 });
