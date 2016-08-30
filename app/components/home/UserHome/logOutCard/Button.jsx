@@ -26,7 +26,7 @@ const LogOutButton = () => {
     <div style={button}>
       <FlatButton
         label="LOG OUT"
-        primary
+        secondary
         onClick={handleLogOut}
       />
     </div>
