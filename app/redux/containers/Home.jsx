@@ -4,8 +4,8 @@ import Home from '../../components/home/index.jsx';
 
 const mapStateToProps = (state) => {
   return ({
-    isAuthenticated: state.app.get('auth').get('isAuthenticated'),
-    userDetails: state.app.get('auth').get('userDetails'),
+    isAuthenticated: state.auth.get('isAuthenticated'),
+    userDetails: state.auth.get('userDetails'),
   });
 };
 

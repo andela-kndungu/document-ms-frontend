@@ -1,5 +1,4 @@
 import Documents from '../../models/documents.js';
-import Tags from '../../models/tags.js';
 import authorised from '../helpers/authorise.js';
 
 const find = {};
@@ -53,6 +52,8 @@ find.all = (req, res) => {
     }]
   });
 
+  query.populate('owner');
+
   // Return documents created on a specific day
   if (req.query.date) {
     const nextDay = new Date();
@@ -66,25 +67,7 @@ find.all = (req, res) => {
   // Returns all documents in requested tag
   if (req.query.tag) {
     // Find requested tag in the Tags model
-    Tags.find()
-      .where('title').equals(req.query.tag)
-      .exec((error, tags) => {
-        if (error) {
-          throw error;
-        }
-
-        // If the tag is found
-        if (tags[0]) {
-          // Look for documents with the tag's id
-          query.where('tags').in(['req.query.tag']);
-        } else {
-          status = 404;
-          body = {
-            success: false,
-            message: 'Tag does not exist'
-          };
-        }
-      });
+    query.where('tags').in([req.query.tag]);
   }
 
   // Returns all documents in requested role
@@ -125,6 +108,14 @@ find.all = (req, res) => {
         message: 'There was a databse error'
       };
     }
+
+    if (req.query.username) {
+      documents = documents.filter((document) => {
+        const user = document.owner.username;
+        return user === req.query.username;
+      });
+    }
+
     // Return result
     status = status || 200;
     body = body || documents;
