@@ -123,5 +123,29 @@ find.all = (req, res) => {
   });
 };
 
+find.public = (req, res) => {
+  const query = Documents.find({ accessibleBy: 'user' });
+
+  query.populate('owner');
+
+  // Sort by date in descendig order (latest first)
+  query.sort({
+    createdAt: -1
+
+  });
+
+  // Execute the query and return the results
+  query.exec((error, documents) => {
+    // Inform user of errors with the database
+    if (error) {
+      documents = {
+        success: false,
+        message: 'There was a databse error'
+      };
+    }
+    res.json(documents);
+  });
+};
+
 export default find;
 
