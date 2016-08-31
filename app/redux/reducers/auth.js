@@ -4,9 +4,7 @@ import constants from '../constants';
 
 // At first all dialogs are not visiible
 const defaultState = fromJS({
-  auth: {
-    isAuthenticated: false,
-  }
+  isAuthenticated: false,
 });
 
 // If state is undefined use default state
