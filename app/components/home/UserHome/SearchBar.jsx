@@ -1,8 +1,8 @@
 import React from 'react';
 import TextField from 'material-ui/TextField';
 
-import constants from '../../../redux/constants';
 import store from '../../../redux/store';
+import { updateSearchTerm } from '../../../redux/actions';
 
 const containerStyle = {
   width: '80%',
@@ -36,7 +36,9 @@ class SearchBar extends React.Component {
   }
 
   textChange(event) {
-    store.dispatch({ type: constants.SEARCH_DOCUMENTS, payload: event.target.value });
+    updateSearchTerm(event.target.value, (action) => {
+      store.dispatch(action);
+    });
   }
 
   render() {
