@@ -333,8 +333,7 @@ describe('Deletes a document (DELETE /documents/:id)', () => {
       if (error) {
         throw error;
       } else {
-        let unauthorizedToken = res.body.token;
-        let unauthorizedId = res.body._id;
+        const unauthorizedToken = res.body.token;
         request(app)
           .put(`/api/documents/${documentId}`)
           .set('x-access-token', unauthorizedToken)
