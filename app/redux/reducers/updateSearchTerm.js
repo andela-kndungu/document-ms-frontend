@@ -6,7 +6,7 @@ const defaultState = '';
 // If state is undefined use default state
 const reducer = (state = defaultState, action) => {
   switch (action.type) {
-    case constants.SEARCH_DOCUMENTS:
+    case constants.UPDATE_SEARCH_TERM:
       // Simply return the new search term
       return action.payload;
     default:

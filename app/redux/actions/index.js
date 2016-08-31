@@ -62,12 +62,21 @@ const fetchPublicDocuments = (callback) => {
     });
 };
 
+// Stores value typed into search bar
+const updateSearchTerm = (value, callback) => {
+  callback({
+    type: constants.UPDATE_SEARCH_TERM,
+    payload: value
+  });
+};
+
 export {
   toggleLogInDialog,
   fetchDocuments,
   toggleLogOutDialog,
   toggleAddDocument,
   fetchTags,
-  fetchPublicDocuments
+  fetchPublicDocuments,
+  updateSearchTerm
 };
 
