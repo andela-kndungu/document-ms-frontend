@@ -1,5 +1,5 @@
-import { toggleLogInDialog } from '../../../app/redux/actions';
-import constants from '../../../app/redux/constants';
+import { toggleLogInDialog } from '../../../../app/redux/actions';
+import constants from '../../../../app/redux/constants';
 
 describe('Actions :: toggleLogInDialog', () => {
   it('Returns expected object when called', () => {
