@@ -7,7 +7,6 @@ import Users from '../../server/models/users';
 
 let adminToken;
 let adminId;
-let userToken;
 let userId;
 
 describe('Users', () => {
@@ -38,7 +37,6 @@ describe('Users', () => {
           if (error) {
             throw error;
           } else {
-            userToken = res.body.token;
             userId = res.body._id;
           }
           done();
