@@ -22,20 +22,31 @@ describe('Users', () => {
           } else {
             adminToken = res.body.token;
             adminId = res.body._id;
-            loginHelper.user((error, res) => {
-              if (error) {
-                throw error;
-              } else {
-                userToken = res.body.token;
-                userId = res.body._id;
-              }
-              done();
-            });
+            done();
           }
         });
       }
     });
   });
+
+  before((done) => {
+    seeder((error) => {
+      if (error) {
+        throw (error);
+      } else {
+        loginHelper.user((error, res) => {
+          if (error) {
+            throw error;
+          } else {
+            userToken = res.body.token;
+            userId = res.body._id;
+          }
+          done();
+        });
+      }
+    });
+  });
+
   it('Does something', () => {
     (4).should.equal(4);
   });
