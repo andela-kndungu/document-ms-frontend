@@ -78,9 +78,7 @@ const Body = (props) => {
 
 Body.propTypes = {
   documents: React.PropTypes.instanceOf(List),
-  searchTerm: React.PropTypes.string,
   userDetails: React.PropTypes.instanceOf(Map),
-  updatedSnackbarOpen: React.PropTypes.bool
 };
 
 export default Body;
