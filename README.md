@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/andela-kndungu/document-ms-frontend.svg?branch=master)](https://travis-ci.org/andela-kndungu/document-ms-frontend)
 [![Coverage Status](https://coveralls.io/repos/github/andela-kndungu/document-ms-frontend/badge.svg?branch=master)](https://coveralls.io/github/andela-kndungu/document-ms-frontend?branch=master)
 
-# Document Management System
+# Document Management System - Front End
 
 Andela's Javascript curriculum fourth checkpoint.
 
