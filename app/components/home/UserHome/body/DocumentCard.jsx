@@ -139,7 +139,7 @@ class DocumentCard extends React.Component {
             />
           }
           actAsExpander
-          style={{ paddingTop: '0px', paddingBottom: '0px' }}
+          style={{ paddingTop: '0px', paddingBottom: '0px', height: '80px', overflow: 'auto' }}
         />
         <CardText expandable>
           <div>

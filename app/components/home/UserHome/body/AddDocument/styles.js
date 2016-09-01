@@ -19,8 +19,7 @@ const titleStyle = {
   marginBottom: '2em',
   boxShadow: 'inset 0px 1px 8px -3px #ABABAB',
   background: '#fefefe',
-  maxHeight: '30px',
-  overflow: 'auto',
+  height: '30px',
   paddingTop: '5px',
   paddingBottom: '10px',
   paddingLeft: '10px'
@@ -37,6 +36,7 @@ const contentStyle = {
   marginBottom: '2em',
   boxShadow: 'inset 0px 1px 8px -3px #ABABAB',
   background: '#fefefe',
+  height: '100px',
   maxHeight: '250px',
   overflow: 'auto',
   paddingTop: '5px',
