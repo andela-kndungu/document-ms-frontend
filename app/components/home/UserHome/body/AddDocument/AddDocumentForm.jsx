@@ -35,7 +35,7 @@ class AddDocumentForm extends React.Component {
       .send({
         title: JSON.stringify(title),
         content: JSON.stringify(content),
-        tags: [this.state.tag],
+        tags: [this.state.tag.toLowerCase()],
         accessibleBy: this.state.public ? ['user'] : [this.props.userDetails.get('username')]
       })
       .set('x-access-token', localStorage.getItem('token'))
@@ -56,7 +56,7 @@ class AddDocumentForm extends React.Component {
   render() {
     let tags = this.props.tags.toJS();
     tags = tags.map((categoryObject) => {
-      return categoryObject.title;
+      return categoryObject.title.toLowerCase();
     });
     return (
       <div style={styles.divStyle}>

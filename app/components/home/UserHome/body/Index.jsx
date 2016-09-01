@@ -1,6 +1,6 @@
 import React from 'react';
 import { Map, List } from 'immutable';
-import FAB from './FAB.jsx';
+import Fab from './FAB.jsx';
 import DocumentCard from './DocumentCard.jsx';
 import AddDocumentDialog from '../../../../redux/containers/dialogs/AddDocument.js';
 
@@ -66,18 +66,19 @@ const Body = (props) => {
 
   return (
     <div style={bodyStyle}>
-      {/* Array of DocumentCards */ }
+      {/* Array of DocumentCards */}
       {nodes}
-      { /* Displayed on clicking the FAB */ }
+      {/* Displayed on clicking the FAB */}
       <AddDocumentDialog />
       {/* Floating action button to add new documents */}
-      <FAB />
+      <Fab />
     </div>
   );
 };
 
 Body.propTypes = {
   documents: React.PropTypes.instanceOf(List),
+  searchTerm: React.PropTypes.string,
   userDetails: React.PropTypes.instanceOf(Map),
 };
 
