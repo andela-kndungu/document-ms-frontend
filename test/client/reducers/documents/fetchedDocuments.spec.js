@@ -29,7 +29,8 @@ describe('Reducers :: FETCHED_DOCUMENTS', () => {
         documents: [
           { title: 'firstDocument' },
           { title: 'secondDocument' }
-        ]
+        ],
+        public: []
       })
   );
   });

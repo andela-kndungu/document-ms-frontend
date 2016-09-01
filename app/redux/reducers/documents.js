@@ -12,11 +12,13 @@ const reducer = (state = defaultState, action) => {
   switch (action.type) {
     case constants.FETCHED_DOCUMENTS:
       return fromJS({
-        documents: action.payload
+        documents: action.payload,
+        public: []
       });
     case constants.FETCHED_PUBLIC_DOCUMENTS:
       return fromJS({
-        public: action.payload
+        public: action.payload,
+        documents: []
       });
     default:
       // Always return current state as the default
