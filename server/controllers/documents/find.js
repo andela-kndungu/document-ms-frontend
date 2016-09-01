@@ -1,6 +1,5 @@
 import Documents from '../../models/documents.js';
 import authorised from '../helpers/authorise.js';
-import filter from './filter.js';
 
 const find = {};
 
