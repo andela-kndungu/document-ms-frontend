@@ -41,6 +41,12 @@ const deleteDocument = (documentId) => {
         return null;
       }
 
+      // Refetch documents after deletion
+      const token = localStorage.getItem('token');
+      fetchDocuments(token, {}, (action) => {
+        store.dispatch(action);
+      });
+
       return null;
     });
 };
