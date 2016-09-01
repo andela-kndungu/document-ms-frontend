@@ -3,14 +3,8 @@
 
 # Document Management System
 
-![Quiz app icon](https://cloud.githubusercontent.com/assets/17295379/15103681/de0b7cb8-15b6-11e6-8d3e-1ae4500763c9.png)
+Andela's Javascript curriculum fourth checkpoint.
 
-Andela's Javascript curriculum third checkpoint.
-
-## Accessing the API the easy way
-Navigate to [http://ennovate.xyz](http://ennovate.xyz) on your browser
-
-## Accessing the API the hard way
 
 ##Prerequisites
 
@@ -30,9 +24,9 @@ From a terminal run the following commands:
 ```bash
 cd
 
-git clone https://github.com/andela-kndungu/document-ms.git
+git clone https://github.com/andela-kndungu/document-ms-frontend.git
 
-cd document-ms
+cd document-ms-frontend
 
 npm install
 ```
@@ -49,221 +43,28 @@ vim .env
 
 # Paste the following
 PORT=3000
-DATABASE_URI='mongodb://localhost/document-ms'
+MONGODB_URI='mongodb://localhost/document-ms'
+MONGODB_URI_TEST='mongodb://localhost/document-ms-test'
 SECRET_KEY='thisIsMySecret' # Can be any string
+GOOGLE_CLIENT_ID="yourId.apps.googleusercontent.com" # Any random string will do to run the tests
+GOOGLE_CLIENT_SECRET="I am a string" # Any random string will do to run the tests
+GOOGLE_CALLBACK_URL="http://127.0.0.1:3000/api/users/login/auth/google/callback"
+GITHUB_CLIENT_ID="I am a string" # Any random string will do to run the tests
+GITHUB_CLIENT_SECRET="I am a string" # Any random string will do to run the tests
+GITHUB_CALLBACK_URL="http://127.0.0.1:3000/api/users/login/auth/github/callback"
+
 
 # Press the escape key to get out of insert mode
 # Type ':wq' and then press enter to save and exit
 
 ```
 
-## Starting the server
-
-From a terminal run the following command:
-```bash
-sudo mongod # Provide your password when prompted then press enter
-```
-On a different terminal run the following commands
-
-```bash
-cd ~/document-ms
-
-node app.js
-```
-Now navigate to [http://localhost:3000/](http://localhost:3000/) on your browser
-
 ## Running the tests
 From a terminal run the following commands:
 
 ```bash
-# Press CTRL + C on your keyboard to stop node if it is running
 
-cd ~/document-ms # Just to be sure
+cd ~/document-ms-frontend # Just to be sure
 
 npm test
-```
-
-## API ENDPOINTS
-
-```json
-{
-    "/": {
-        "verbs": {
-            "GET": {
-                "purpose": "Check whether the server is running",
-                "token required": false
-            }
-        }
-    },
-    "/users/login": {
-        "verbs": {
-            "POST": {
-                "purpose": "Logs in a user",
-                "token required": false,
-                "request body": {
-                    "username": "Your user name",
-                    "password": "Your password"
-                }
-            }
-        }
-    },
-    "/users/": {
-        "verbs": {
-            "POST": {
-                "purpose": "Create a new user",
-                "token required": false,
-                "request body": {
-                    "username": "New user's user name",
-                    "name": {
-                        "first": "New user's first name",
-                        "last": "New user's last name"
-                    },
-                    "email": "New user's email addresss",
-                    "password": "New user's password",
-                }
-            },
-            "GET": {
-                "purpose": "Get all registered users",
-                "token required": true,
-                "request header": {
-                    "x-access-token": "Token received after logging in",
-                }
-            }
-        }
-    },
-    "/users/<id>": {
-        "verbs": {
-            "GET": {
-                "purpose": "Get user by id",
-                "token required": true,
-                "request header": {
-                    "x-access-token": "Token received after logging in",
-                }
-            },
-            "PUT": {
-                "purpose": "Update user specified by id",
-                "token required": true,
-                "request body": {
-                    "username": "New username (optional)",
-                    "name": {
-                        "first": "New first name (otional)",
-                        "last": "New last name (optional)"
-                    },
-                    "email": "New email address (optional)",
-                    "password": "New passwod (optional)",
-                    "roles": "Array of new roles (optional)"
-                },
-                "request header": {
-                    "x-access-token": "Token received after logging in",
-                }
-            },
-            "DELETE": {
-                "purpose": "Delete user by id",
-                "token required": true,
-                "request header": {
-                    "x-access-token": "Token received after logging in",
-                }
-            }
-        }
-    },
-    "/documents/": {
-        "verbs": {
-            "GET": {
-                "purpose": "Get all documents which you have access to",
-                "token required": true,
-                "request header": {
-                    "x-access-token": "Token received after logging in",
-                }
-            },
-            "POST": {
-                "purpose": "Create a new document",
-                "token required": true,
-                "request body": {
-                    "title": "New document's title",
-                    "content": "New document's content",
-                    "accessibleBy": "Array of roles which can access document",
-                    "tags": "Array of document's tags"
-                },
-                "request header": {
-                    "x-access-token": "Token received after logging in",
-                }
-            }
-        }
-    },
-    "/documents?query string": {
-        "verbs": {
-            "GET": {
-                "purpose": "Get all matching documents",
-                "token required": true,
-                "request header": {
-                    "x-access-token": "Token received after logging in",
-                }
-            }
-        },
-        "parameters": {
-            "date": {
-                "value": "Date string in ISO format",
-                "purpose": "Return documents created on a specific date"
-            },
-            "tag": {
-                "value": "Name of a tag as a string",
-                "purpose": "Return documents with specified tag"
-            },
-            "role": {
-                "value": "Name of a role as a string",
-                "purpose": "Return documents accessible by specified role"
-            },
-            "limit": {
-                "value": "An integer",
-                "purpose": "Return only specified number of documents"
-            },
-            "page": {
-                "value": "An integer",
-                "purpose": "Return documents from specified page (works with limit)"
-            }
-        }
-    },
-    "/documents/<id>": {
-        "verbs": {
-            "GET": {
-                "purpose": "Get document by id",
-                "token required": true,
-                "request header": {
-                    "x-access-token": "Token received after logging in",
-                }
-            },
-            "PUT": {
-                "purpose": "Update document specified by id",
-                "token required": true,
-                "request body": {
-                    "title": "New title (optional)",
-                    "content": "New content (optional)",
-                    "accessibleBy": "New array of access roles (optional)",
-                    "tags": "New array of tags (optional)"
-                },
-                "request header": {
-                    "x-access-token": "Token received after logging in",
-                }
-            },
-            "DELETE": {
-                "purpose": "Delete document by id",
-                "token required": true,
-                "request header": {
-                    "x-access-token": "Token received after logging in",
-                }
-            }
-        }
-    },
-    "/users/<id>/documents": {
-        "verbs": {
-            "GET": {
-                "purpose": "Get all documents belonging to specified user id",
-                "token required": true,
-                "request header": {
-                    "x-access-token": "Token received after logging in",
-                }
-            }
-        }
-    }
-}
 ```
