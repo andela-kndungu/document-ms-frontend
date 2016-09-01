@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 // Set up environment variables when not running on CIo
 if (!process.env.MONGODB_URI) {
-  require('dotenv').config();
+  require('dotenv').config(); // eslint-disable-line
 }
 
 const databaseUri = process.env.NODE_ENV === 'test' ?

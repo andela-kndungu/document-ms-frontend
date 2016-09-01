@@ -2,7 +2,7 @@ import React from 'react';
 import { List } from 'immutable';
 import AppBar from './AppBar.jsx';
 import Dialog from '../../../redux/containers/dialogs/LogIn.js';
-import Body from './body/index.jsx';
+import Body from './body/Index.jsx';
 import { fetchPublicDocuments } from '../../../redux/actions';
 import store from '../../../redux/store';
 import socket from '../../../socket';

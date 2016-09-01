@@ -1,19 +1,13 @@
-(function() {
-  'use strict';
+import _ from 'lodash';
 
-  module.exports = function(req, document) {
-    // User's roles
-    var userRoles = req.user.roles;
+module.exports = (req, document) => {
+  // User's roles
+  const userRoles = req.user.roles;
 
-    // Roles which can access the document
-    var documentRoles = document.accessibleBy;
+  // Roles which can access the document
+  const documentRoles = document.accessibleBy;
 
-    // Check whether the user is authorized to access the document
-    for (var i = 0; i < userRoles.length; i++) {
-      if (documentRoles.indexOf(userRoles[i]) > -1) {
-        return true;
-      }
-    }
-    return false;
-  };
-})();
+  // Check whether the user is authorized to access the document
+  return _.intersection(userRoles, documentRoles).length > 0;
+};
+

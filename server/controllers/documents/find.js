@@ -111,8 +111,7 @@ find.all = (req, res) => {
 
     if (req.query.username) {
       documents = documents.filter((document) => {
-        const user = document.owner.username;
-        return user === req.query.username;
+        return document.owner.username === req.query.username;
       });
     }
 

@@ -8,5 +8,6 @@ deploy:
   provider: heroku
   api_key:
     secure: "11d75fd8-504c-40b4-b2d2-906a96bb2da3"
-  app: ennovte
+  app:
+    master: ennovte
 
