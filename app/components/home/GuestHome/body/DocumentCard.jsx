@@ -21,6 +21,14 @@ const cardHeaderStyle = {
   cursor: 'pointer'
 };
 
+const cardTitleStyle = {
+  paddingTop: '0px',
+  paddingBottom: '0px',
+  overflow: 'auto',
+  overflowWrap: 'break-word',
+  height: '80px'
+};
+
 class DocumentCard extends React.Component {
   constructor(props) {
     super(props);
@@ -51,13 +59,13 @@ class DocumentCard extends React.Component {
           avatar={this.props.owner.photo}
         />
         <CardTitle
+          style={cardTitleStyle}
           title={this.state.titleState.getPlainText()}
           actAsExpander
-          style={{ paddingTop: '0px', paddingBottom: '0px' }}
         />
         <CardText expandable>
           <div>
-            <div style={{ fontWeight: '300' }}>
+            <div style={{ fontWeight: '300', overflowWrap: 'break-word' }}>
               {this.state.contentState.getPlainText()}
             </div>
           </div>
