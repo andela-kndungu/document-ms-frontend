@@ -20,6 +20,7 @@ describe('Reducers :: FETCHED_PUBLIC_DOCUMENTS', () => {
   it('Updates state with fetched documents', () => {
     expect(newState).to.eql(
       fromJS({
+        documents: [],
         public: [
           { title: 'firstDocument' },
           { title: 'secondDocument' }

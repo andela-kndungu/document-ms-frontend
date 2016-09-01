@@ -33,7 +33,7 @@ const Body = (props) => {
   const searchTerm = props.searchTerm;
 
   // All the documents user has requested for from the db
-  const documents = props.documents.toJS();
+  const documents = props.documents ? props.documents.toJS() : [];
 
   // Only display documentts containing the search term
   const filteredDocuments = filterDocuments(searchTerm, documents);
