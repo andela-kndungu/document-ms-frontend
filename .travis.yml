@@ -3,5 +3,10 @@ node_js:
   - '6'
 services: mongodb
 after_success:
- - npm run coverage
+  - npm run coverage
+deploy:
+  provider: heroku
+  api_key:
+    secure: "11d75fd8-504c-40b4-b2d2-906a96bb2da3"
+  app: ennovte
 
