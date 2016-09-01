@@ -35,7 +35,14 @@ class SignUpForm extends React.Component {
       email: '',
       password: '',
       disableButton: true,
-      errorText: ''
+      errorText: '',
+      changed: {
+        username: false,
+        firstName: false,
+        lastName: false,
+        email: false,
+        password: false
+      }
     };
 
     this.formReady = this.formReady.bind(this);
@@ -67,29 +74,45 @@ class SignUpForm extends React.Component {
   validate(field) {
     switch (field) {
       case ('username'):
-        return this.state.username ?
-          this.isAlphanumeric(this.state.username) :
-          'This field is required';
+        if (this.state.changed.username) {
+          return this.state.username ?
+            this.isAlphanumeric(this.state.username) :
+            'This field is required';
+        }
+        return '';
       case ('firstName'):
-        return this.state.firstName ?
+        if (this.state.changed.firstName) {
+          return this.state.firstName ?
           this.isAlphanumeric(this.state.firstName) :
           'This field is required';
+        }
+        return '';
       case ('lastName'):
-        return this.state.lastName ?
-          this.isAlphanumeric(this.state.lastName) :
-          'This field is required';
+        if (this.state.changed.lastName) {
+          return this.state.lastName ?
+            this.isAlphanumeric(this.state.lastName) :
+            'This field is required';
+        }
+        return '';
       case ('email'):
-        return this.state.email ?
-          this.isEmail(this.state.email) :
-          'This field is required';
+        if (this.state.changed.email) {
+          return this.state.email ?
+            this.isEmail(this.state.email) :
+            'This field is required';
+        }
+        return '';
       case ('password'):
-        return this.state.password ?
-          '' :
-          'This field is required';
+        if (this.state.changed.password) {
+          return this.state.password ?
+            '' :
+            'This field is required';
+        }
+        return '';
       default:
         return '';
     }
   }
+
   signUpUser() {
     request
       .post('api/users')
@@ -135,7 +158,9 @@ class SignUpForm extends React.Component {
             onBlur={this.formReady}
             onChange={
               (event) => {
-                this.setState({ username: event.target.value });
+                const changed = this.state.changed;
+                changed.username = true;
+                this.setState({ username: event.target.value, changed });
               }
             }
           />
@@ -150,7 +175,9 @@ class SignUpForm extends React.Component {
             onBlur={this.formReady}
             onChange={
               (event) => {
-                this.setState({ firstName: event.target.value });
+                const changed = this.state.changed;
+                changed.firstName = true;
+                this.setState({ firstName: event.target.value, changed });
               }
             }
           />
@@ -163,7 +190,9 @@ class SignUpForm extends React.Component {
             onBlur={this.formReady}
             onChange={
               (event) => {
-                this.setState({ lastName: event.target.value });
+                const changed = this.state.changed;
+                changed.lastName = true;
+                this.setState({ lastName: event.target.value, changed });
               }
             }
           />
@@ -178,7 +207,9 @@ class SignUpForm extends React.Component {
             onBlur={this.formReady}
             onChange={
               (event) => {
-                this.setState({ email: event.target.value });
+                const changed = this.state.changed;
+                changed.email = true;
+                this.setState({ email: event.target.value, changed });
               }
             }
           />
@@ -194,7 +225,9 @@ class SignUpForm extends React.Component {
             onBlur={this.formReady}
             onChange={
               (event) => {
-                this.setState({ password: event.target.value });
+                const changed = this.state.changed;
+                changed.password = true;
+                this.setState({ password: event.target.value, changed });
               }
             }
           />
