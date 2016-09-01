@@ -6,10 +6,11 @@ import router from '../../router';
 
 const expressConfig = (app) => {
   app.use(bodyParser.urlencoded({
+    limit: '50mb',
     extended: true,
   }));
 
-  app.use(bodyParser.json());
+  app.use(bodyParser.json({ limit: '50mb' }));
   app.use(passport.initialize());
   app.use(express.static('public'));
   router(app);
