@@ -1,5 +1,6 @@
 import Documents from '../../models/documents.js';
 import authorised from '../helpers/authorise.js';
+import queryParser from '../helpers/queryParser.js';
 
 const find = {};
 
@@ -42,7 +43,7 @@ find.all = (req, res) => {
 
   // Users can only access public documents or those
   // belonging to a role they are assigned
-  const query = Documents.find({
+  let query = Documents.find({
     $or: [{
       accessibleBy: 'user'
     }, {
@@ -54,49 +55,7 @@ find.all = (req, res) => {
 
   query.populate('owner');
 
-  // Return documents created on a specific day
-  if (req.query.date) {
-    const nextDay = new Date();
-    const requestedDay = new Date(req.query.date);
-    nextDay.setDate(requestedDay.getDate() + 1);
-    query.where('createdAt')
-      .gte(requestedDay)
-      .lt(nextDay);
-  }
-
-  // Returns all documents in requested tag
-  if (req.query.tag) {
-    // Find requested tag in the Tags model
-    query.where('tags').in([req.query.tag]);
-  }
-
-  // Returns all documents in requested role
-  if (req.query.role) {
-    query.where('accessibleBy').equals(req.query.role);
-  }
-
-  // Number of documents to be returned
-  const limit = req.query.limit ? parseInt(req.query.limit, 10) : undefined;
-
-  // Start page
-  const page = req.query.page ? parseInt(req.query.page, 10) : undefined;
-
-  // If a specific page is requested with a limit
-  if (page) {
-    // Move the cursor of the query result to skip
-    const skip = page > 0 ? ((page - 1) * limit) : 0;
-    query.skip(skip);
-  }
-
-  // If a limit is defined add it to the query
-  if (limit) {
-    query.limit(limit);
-  }
-
-  // Sort by date in descendig order (latest first)
-  query.sort({
-    createdAt: -1
-  });
+  query = queryParser(req.query, query);
 
   // Execute the query and return the results
   query.exec((error, documents) => {
