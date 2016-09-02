@@ -15,7 +15,8 @@
     "import/no-unresolved": 0,
     "no-unused-vars": 0,
     "no-console": 0,
-    "max-len": 0
+    "max-len": 0,
+    "no-case-declarations": 0
   },
   "env": {
     "browser": true,
