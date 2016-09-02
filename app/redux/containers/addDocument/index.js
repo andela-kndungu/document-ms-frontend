@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 
 import AddDocumentTab from
-'../../../components/home/UserHome/body/AddDocument/AddDocumentTab.jsx';
+'../../../components/home/UserHome/Body/AddDocument/AddDocumentTab.jsx';
 
 const mapStateToProps = (state) => {
   return ({
