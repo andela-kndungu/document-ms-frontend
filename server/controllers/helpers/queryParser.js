@@ -14,7 +14,8 @@ const queryParser = (queryParameters, query) => {
           .lt(nextDay);
         break;
       case 'tag':
-        query.where('tags').in([queryParameters.tag]);
+        const tag = new RegExp(queryParameters.tag, 'i');
+        query.where('tags').in([tag]);
         break;
       case 'role':
         query.where('accessibleBy').equals(queryParameters.role);

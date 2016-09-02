@@ -69,7 +69,7 @@ class AddDocumentForm extends React.Component {
             dataSource={tags}
             onNewRequest={(chosen) => {
               this.setState({
-                category: chosen
+                tag: chosen
               });
             }}
             onBlur={(event) => {
