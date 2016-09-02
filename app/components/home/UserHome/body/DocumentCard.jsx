@@ -186,7 +186,7 @@ class DocumentCard extends React.Component {
               });
             }}
           >
-            {this.props.tag}
+            {this.props.tag.toLowerCase()}
           </Chip>
           <FlatButton
             label="Delete"
