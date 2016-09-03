@@ -2,7 +2,7 @@ import React from 'react';
 import { Map } from 'immutable';
 
 import GuestHome from '../../redux/containers/GuestHome.js';
-import UserHome from '../../redux/containers/UserHome/index.js';
+import UserHome from '../../redux/containers/UserHome/Index.js';
 
 const Home = (props) => {
   return (
