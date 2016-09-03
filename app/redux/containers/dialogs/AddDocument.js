@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 
-import AddDocument from '../../../components/home/UserHome/Body/AddDocument/index.jsx';
+import AddDocument from '../../../components/Home/UserHome/Body/AddDocument/Index.jsx';
 
 const mapStateToProps = (state) => {
   return ({

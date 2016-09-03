@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 
-import UserAppBar from '../../../components/home/UserHome/AppBar.jsx';
+import UserAppBar from '../../../components/Home/UserHome/AppBar.jsx';
 
 const mapStateToProps = (state) => {
   return ({

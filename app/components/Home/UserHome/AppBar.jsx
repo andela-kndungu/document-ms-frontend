@@ -5,7 +5,7 @@ import HomeIcon from 'material-ui/svg-icons/action/home';
 import Popover from 'material-ui/Popover';
 import { Map } from 'immutable';
 
-import LogOutCard from './logOutCard/index.jsx';
+import LogOutCard from './LogOutCard/Index.jsx';
 import SearchBar from './SearchBar.jsx';
 import { fetchDocuments, toggleLogOutDialog } from '../../../redux/actions';
 import store from '../../../redux/store';

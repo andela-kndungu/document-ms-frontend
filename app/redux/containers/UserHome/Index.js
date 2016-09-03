@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 
-import UserHome from '../../../../app/components/home/UserHome/Index.jsx';
+import UserHome from '../../../../app/components/Home/UserHome/Index.jsx';
 
 const mapStateToProps = (state) => {
   return ({

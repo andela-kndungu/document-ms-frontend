@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 
-import Body from '../../../components/home/UserHome/Body/Index.jsx';
+import Body from '../../../components/Home/UserHome/Body/Index.jsx';
 
 const mapStateToProps = (state) => {
   return ({

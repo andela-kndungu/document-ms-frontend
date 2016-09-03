@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 
-import LogInDialog from '../../../components/home/GuestHome/Dialog/Index.jsx';
+import LogInDialog from '../../../components/Home/GuestHome/Dialog/Index.jsx';
 
 const mapStateToProps = (state) => {
   return ({
